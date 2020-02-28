@@ -4,7 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/uhppoted/uhppoted/src/uhppoted-rest/config"
+	"github.com/uhppoted/uhppoted-rest/config"
 	"net"
 	"os"
 	"os/user"
