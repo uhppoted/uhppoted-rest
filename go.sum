@@ -4,3 +4,5 @@ github.com/uhppoted/uhppoted-api v0.0.0-20200228200222-5bade7b61e14 h1:0+HMc9wjc
 github.com/uhppoted/uhppoted-api v0.0.0-20200228200222-5bade7b61e14/go.mod h1:yEzk/seFbjOEg7b2HSt4cqfwRM3vbm9tYxLZe+1aNyk=
 golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae h1:/WDfKMnPU+m5M4xB+6x4kaepxRw6jWvR5iDRdvjHgy8=
 golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20200302150141-5c8b2ff67527 h1:uYVVQ9WP/Ds2ROhcaGPeIdVq0RIXVLwsHlnvJ+cT1So=
+golang.org/x/sys v0.0.0-20200302150141-5c8b2ff67527/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
