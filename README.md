@@ -10,7 +10,7 @@ Supported operating systems:
 
 ## Raison d'être
 
-The `uhppoted-rest` implements a REST API that facilitates integration of the access control function with other 
+`uhppoted-rest` implements a REST API that facilitates integration of the access control function with other 
 systems (e.g. web servers, mobile applications) without requiring the device level functionality being built-in 
 to the application.
 
