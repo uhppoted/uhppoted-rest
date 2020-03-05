@@ -1,6 +1,7 @@
 # uhppoted-rest
 
-REST API for access control systems based on the *UHPPOTE UT0311-L0x* TCP/IP Wiegand access control boards. 
+Wraps the `uhppote-core` device API in a REST API for use with access control systems based on the 
+*UHPPOTE UT0311-L0x* TCP/IP Wiegand access control boards.
 
 Supported operating systems:
 - Linux
@@ -9,10 +10,13 @@ Supported operating systems:
 
 ## Raison d'être
 
-The manufacturer supplied application is 'Windows-only' and provides limited support for integration with other
-systems.
+The `uhppoted-rest` implements a REST API that facilitates integration of the access control function with other 
+systems (e.g. web servers, mobile applications) without requiring the device level functionality being built-in 
+to the application.
 
 ## Releases
+
+- v0.5.1: Initial release following restructuring into standalone Go *modules* and *git submodules*
 
 ## Installation
 
@@ -20,12 +24,12 @@ systems.
 
 #### Dependencies
 
-| *Dependency*                        | *Description*                                          |
-| ----------------------------------- | ------------------------------------------------------ |
-| com.github/uhppoted/uhppote-core    | Device level API implementation                        |
-| com.github/uhppoted/uhppoted-api    | External API implementation                            |
-| golang.org/x/sys/windows            | Support for Windows services                           |
-| golang.org/x/lint/golint            | Additional *lint* check for release builds             |
+| *Dependency*                          | *Description*                                          |
+| ------------------------------------- | ------------------------------------------------------ |
+| [com.github/uhppoted/uhppote-core][1] | Device level API implementation                        |
+| [com.github/uhppoted/uhppoted-api][2] | common API for external applications                   |
+| golang.org/x/sys/windows              | Support for Windows services                           |
+| golang.org/x/lint/golint              | Additional *lint* check for release builds             |
 
 ### Binaries
 
@@ -43,4 +47,7 @@ Defaults to 'run' unless one of the commands below is specified:
 Supported 'run' options:
 - --console
 - --debug
+
+[1]: https://github.com/uhppoted/uhppote-core
+[2]: https://github.com/uhppoted/uhppoted-api
 
