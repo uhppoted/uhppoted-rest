@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/uhppoted/uhppote-core/uhppote"
+	"github.com/uhppoted/uhppoted-rest/acl"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -68,6 +69,7 @@ type handler struct {
 type dispatcher struct {
 	corsEnabled bool
 	uhppote     *uhppote.UHPPOTE
+	devices     []*uhppote.Device
 	log         *log.Logger
 	handlers    []handler
 	openapi     http.Handler
@@ -75,9 +77,10 @@ type dispatcher struct {
 
 // Run configures and starts the REST daemon HTTP and HTTPS request listeners. It returns once the listen
 // connections have been closed.
-func (r *RESTD) Run(u *uhppote.UHPPOTE, l *log.Logger) {
+func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger) {
 	d := dispatcher{
 		uhppote: u,
+		devices: devices,
 		handlers: []handler{
 			handler{regexp.MustCompile("^/uhppote/device$"), http.MethodGet, getDevices},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+$"), http.MethodGet, getDevice},
@@ -95,6 +98,8 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, l *log.Logger) {
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodDelete, deleteCard},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/events$"), http.MethodGet, getEvents},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/event/[0-9]+$"), http.MethodGet, getEvent},
+
+			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+$"), http.MethodPut, acl.Grant},
 		},
 		log:         l,
 		corsEnabled: r.CORSEnabled,
@@ -204,6 +209,7 @@ func (d *dispatcher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	for _, h := range d.handlers {
 		if h.re.MatchString(url) && r.Method == h.method {
 			ctx := context.WithValue(context.Background(), "uhppote", d.uhppote)
+			ctx = context.WithValue(ctx, "devices", d.devices)
 			ctx = context.WithValue(ctx, "log", d.log)
 			ctx = context.WithValue(ctx, "compression", compression)
 			ctx = parse(ctx, r)

@@ -145,6 +145,11 @@ func (r *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.Sig
 		},
 	}
 
+	devices := []*uhppote.Device{}
+	for id, d := range c.Devices {
+		devices = append(devices, uhppote.NewDevice(id, d.Address, d.Rollover, d.Door))
+	}
+
 	u := uhppote.UHPPOTE{
 		BindAddress:      c.BindAddress,
 		BroadcastAddress: c.BroadcastAddress,
@@ -152,8 +157,8 @@ func (r *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.Sig
 		Debug:            r.debug,
 	}
 
-	for id, d := range c.Devices {
-		u.Devices[id] = uhppote.NewDevice(id, d.Address, d.Rollover, d.Door)
+	for _, d := range devices {
+		u.Devices[d.DeviceID] = d
 	}
 
 	// ... REST task
@@ -174,7 +179,7 @@ func (r *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.Sig
 	}
 
 	go func() {
-		restd.Run(&u, logger)
+		restd.Run(&u, devices, logger)
 	}()
 
 	defer rest.Close()
