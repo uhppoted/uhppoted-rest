@@ -8,19 +8,19 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 func Grant(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	url := r.URL.Path
 
-	matches := regexp.MustCompile("^/uhppote/acl/card/([0-9]+)$").FindStringSubmatch(url)
-	if matches == nil {
-		warn(ctx, "grant", fmt.Errorf("Missing card number"))
-		http.Error(w, "Invalid request: missing card number", http.StatusBadRequest)
+	matches := regexp.MustCompile("^/uhppote/acl/card/([0-9]+)/doors/(\\S.*)$").FindStringSubmatch(url)
+	if matches == nil || len(matches) < 3 {
+		warn(ctx, "grant", fmt.Errorf("Missing card number/door"))
+		http.Error(w, "Invalid request: missing card number/door", http.StatusBadRequest)
 		return
 	}
 
@@ -31,6 +31,22 @@ func Grant(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	doors := []string{}
+	tokens := strings.Split(matches[2], ",")
+	for _, s := range tokens {
+		if d := strings.TrimSpace(s); d != "" {
+			doors = append(doors, d)
+		}
+	}
+
+	if len(doors) == 0 {
+		warn(ctx, "grant", fmt.Errorf("Invalid list of doors '%s' (%w)", matches[2], err))
+		http.Error(w, "Invalid list of doors", http.StatusBadRequest)
+		return
+	}
+
+	fmt.Printf("%v\n", doors)
+
 	blob, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		warn(ctx, "grant", err)
@@ -39,9 +55,8 @@ func Grant(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	}
 
 	body := struct {
-		From  *types.Date `json:"start-date"`
-		To    *types.Date `json:"end-date"`
-		Doors []string    `json:"doors"`
+		From *types.Date `json:"start-date"`
+		To   *types.Date `json:"end-date"`
 	}{}
 
 	if err = json.Unmarshal(blob, &body); err != nil {
@@ -65,14 +80,10 @@ func Grant(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
 	devices := ctx.Value("devices").([]*uhppote.Device)
 
-	err = api.Grant(u, devices, uint32(cardID), *body.From, *body.To, body.Doors)
+	err = api.Grant(u, devices, uint32(cardID), *body.From, *body.To, doors)
 	if err != nil {
-		warn(ctx, "grant", err)
+		warn(ctx, "ACL::grant", err)
 		http.Error(w, "Error granting card access permissions", http.StatusInternalServerError)
 		return
 	}
-}
-
-func warn(ctx context.Context, operation string, err error) {
-	ctx.Value("log").(*log.Logger).Printf("WARN  %-20s %v\n", operation, err)
 }
