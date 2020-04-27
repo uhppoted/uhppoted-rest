@@ -10,8 +10,10 @@
 - [ ] get-acl
 - [ ] compare-acl
 - [x] PUT card
-- [ ] DELETE card
+- [x] DELETE card
 - [ ] rework to use uhppoted-api::Config
+- [ ] Move current 'REST' functions to 'device' package
+- [ ] Migrate current 'REST' functions to uhppoted-api
 - [ ] build documentation
 - [ ] install documentation
 
