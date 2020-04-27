@@ -45,8 +45,6 @@ func Grant(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("%v\n", doors)
-
 	blob, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		warn(ctx, "grant", err)

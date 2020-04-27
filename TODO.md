@@ -3,10 +3,14 @@
 ** IN PROGRESS **
 
 - [x] grant
-- [ ] revoke
+- [x] revoke
+- [x] show
 - [ ] rethink dates on grant/revoke ALL
-- [x] uhppoted-rest: PUT card
-- [ ] uhppoted-rest: DELETE card
+- [ ] load-acl
+- [ ] get-acl
+- [ ] compare-acl
+- [x] PUT card
+- [ ] DELETE card
 - [ ] rework to use uhppoted-api::Config
 - [ ] build documentation
 - [ ] install documentation
