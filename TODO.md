@@ -2,15 +2,17 @@
 
 ** IN PROGRESS **
 
+- [x] PUT card
+- [x] DELETE card
 - [x] grant
 - [x] revoke
 - [x] show
-- [ ] rethink dates on grant/revoke ALL
 - [ ] load-acl
+- [ ] Update OpenAPI 'show' returned object to be array
 - [ ] get-acl
 - [ ] compare-acl
-- [x] PUT card
-- [x] DELETE card
+- [ ] load-acl
+- [ ] rethink dates on grant/revoke ALL
 - [ ] rework to use uhppoted-api::Config
 - [ ] Move current 'REST' functions to 'device' package
 - [ ] Migrate current 'REST' functions to uhppoted-api
