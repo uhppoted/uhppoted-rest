@@ -7,7 +7,7 @@
 - [x] grant
 - [x] revoke
 - [x] show
-- [ ] load-acl
+- [x] load-acl
 - [ ] Update OpenAPI 'show' returned object to be array
 - [ ] get-acl
 - [ ] compare-acl

@@ -1004,15 +1004,10 @@ components:
           description: "List of doors and access"
 
     CardPermissions:
-      required:
-        - permissions
-      properties:
-        permissions:
-          type: array
-          items:
-            $ref: "#/components/schemas/CardPermission"        
-          description: "List of doors to which the card has been granted access, along with associated access date ranges"
-          example: [ { "door":"Entrance", "start-date":"2020-01-01", "end-date":"2020-12-31" },{ "door":"Workshop", "start-date":"2020-01-01", "end-date":"2020-12-31" },]
+      description: "List of doors to which the card has been granted access, along with associated access date ranges"      type: array
+      items:
+        $ref: "#/components/schemas/CardPermission"        
+      example: [ { "door":"Entrance", "start-date":"2020-01-01", "end-date":"2020-12-31" },{ "door":"Workshop", "start-date":"2020-01-01", "end-date":"2020-12-31" },]
           
     CardPermission:
       required: 
@@ -1068,11 +1063,14 @@ components:
           example: ["Entrance", "Upstairs", "Downstairs"]
 
     PutACLResult:
+      description: "Summary list of changes made to controller card lists"
       type: array
       items: 
           $ref: "#/components/schemas/PutACLResultRecord"        
+      example: [ { "device-id":405419896, "unchanged":1, "updated":3, "added": 2, "deleted":1, "failed":0 } ]
         
     PutACLResultRecord:
+      description: "Summary list of changes made to a controller card list"
       required: 
         - device-id
         - unchanged
@@ -1111,7 +1109,8 @@ components:
           format: integer
           description: "Number of records failed to updated by ACL update"
           example: 0
-                    
+      example: { "device-id":405419896, "unchanged":2, "updated":5, "added": 3, "deleted":1, "failed":0 }
+      
     Events:
       required: 
         - first
