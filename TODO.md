@@ -8,11 +8,11 @@
 - [x] revoke
 - [x] show
 - [x] load-acl
-- [ ] Update OpenAPI 'show' returned object to be array
 - [ ] get-acl
+- [ ] Update OpenAPI 'show' returned object to be array
 - [ ] compare-acl
-- [ ] load-acl
 - [ ] rethink dates on grant/revoke ALL
+- [ ] rethink dates on put/grant if current record has no permissions
 - [ ] rework to use uhppoted-api::Config
 - [ ] Move current 'REST' functions to 'device' package
 - [ ] Migrate current 'REST' functions to uhppoted-api

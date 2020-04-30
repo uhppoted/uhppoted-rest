@@ -701,6 +701,28 @@ paths:
           description: "Request failed"
 
   /acl:
+    get:
+      tags:
+        - acl
+      summary: "Retrieves an access control list from a set of controllers"
+      description: "Retrieves and consolidates the card lists from a set of controllers into a list of access permissions associated with each card."
+      operationId: aclGet
+      responses:
+        '200':
+          description: "Consolidated access control lists"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AccessListRecord"        
+        '405':
+          description: "Invalid request"
+        '500':
+          description: "Internal system error"
+        default:
+          description: "Request failed"
+  
     put:
       tags:
         - acl
@@ -1004,7 +1026,8 @@ components:
           description: "List of doors and access"
 
     CardPermissions:
-      description: "List of doors to which the card has been granted access, along with associated access date ranges"      type: array
+      description: "List of doors to which the card has been granted access, along with associated access date ranges"      
+      type: array
       items:
         $ref: "#/components/schemas/CardPermission"        
       example: [ { "door":"Entrance", "start-date":"2020-01-01", "end-date":"2020-12-31" },{ "door":"Workshop", "start-date":"2020-01-01", "end-date":"2020-12-31" },]
@@ -1063,14 +1086,13 @@ components:
           example: ["Entrance", "Upstairs", "Downstairs"]
 
     PutACLResult:
-      description: "Summary list of changes made to controller card lists"
       type: array
       items: 
           $ref: "#/components/schemas/PutACLResultRecord"        
+      description: "Summary list of changes made to controller card lists"
       example: [ { "device-id":405419896, "unchanged":1, "updated":3, "added": 2, "deleted":1, "failed":0 } ]
         
     PutACLResultRecord:
-      description: "Summary list of changes made to a controller card list"
       required: 
         - device-id
         - unchanged
@@ -1109,6 +1131,7 @@ components:
           format: integer
           description: "Number of records failed to updated by ACL update"
           example: 0
+      description: "Summary list of changes made to a controller card list"
       example: { "device-id":405419896, "unchanged":2, "updated":5, "added": 3, "deleted":1, "failed":0 }
       
     Events:
