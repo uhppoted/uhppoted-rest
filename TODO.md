@@ -8,8 +8,8 @@
 - [x] revoke
 - [x] show
 - [x] load-acl
-- [ ] get-acl
-- [ ] Update OpenAPI 'show' returned object to be array
+- [x] get-acl
+- [x] Update OpenAPI 'show' returned object to be array
 - [ ] compare-acl
 - [ ] rethink dates on grant/revoke ALL
 - [ ] rethink dates on put/grant if current record has no permissions
