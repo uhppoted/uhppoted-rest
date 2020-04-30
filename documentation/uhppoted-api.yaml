@@ -706,7 +706,7 @@ paths:
         - acl
       summary: "Loads an access control list to a set of controllers"
       description: "Updates the cards on a set of controllers from an access control list that specifies the access permissions for all users."
-      operationId: aclLoad
+      operationId: aclPut
       requestBody:
         description: "Access control list"
         required: true
@@ -718,7 +718,11 @@ paths:
                 $ref: "#/components/schemas/AccessListRecord"        
       responses:
         '200':
-          description: "Access control lists updated"
+          description: "Result of access control lists update"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/PutACLResult"        
         '405':
           description: "Invalid request"
         '500':
@@ -1062,6 +1066,51 @@ components:
             format: door ID
             description: "Door ID that matches entry in configuration"
           example: ["Entrance", "Upstairs", "Downstairs"]
+
+    PutACLResult:
+      type: array
+      items: 
+          $ref: "#/components/schemas/PutACLResultRecord"        
+        
+    PutACLResultRecord:
+      required: 
+        - device-id
+        - unchanged
+        - updated
+        - added
+        - deleted
+        - failed
+      properties:
+        device-id:  
+          type: number
+          format: uint32
+          description: "UHPPOTE device serial number"
+          example: 405419896
+        unchanged:  
+          type: number
+          format: integer
+          description: "Number of records unaffected by ACL update"
+          example: 3
+        updated:  
+          type: number
+          format: integer
+          description: "Number of records updated by ACL update"
+          example: 5
+        added:  
+          type: number
+          format: integer
+          description: "Number of records added by ACL update"
+          example: 3
+        deleted:  
+          type: number
+          format: integer
+          description: "Number of records deleted by ACL update"
+          example: 1
+        failed:  
+          type: number
+          format: integer
+          description: "Number of records failed to updated by ACL update"
+          example: 0
                     
     Events:
       required: 
