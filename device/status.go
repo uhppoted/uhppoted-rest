@@ -1,4 +1,4 @@
-package rest
+package device
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func getStatus(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func GetStatus(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	status, err := ctx.Value("uhppote").(*uhppote.UHPPOTE).GetStatus(deviceID)

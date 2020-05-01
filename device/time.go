@@ -1,4 +1,4 @@
-package rest
+package device
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func getTime(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func GetTime(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	result, err := ctx.Value("uhppote").(*uhppote.UHPPOTE).GetTime(deviceID)
@@ -29,7 +29,7 @@ func getTime(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	reply(ctx, w, response)
 }
 
-func setTime(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func SetTime(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	blob, err := ioutil.ReadAll(r.Body)

@@ -1,4 +1,4 @@
-package rest
+package device
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-func getCards(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func GetCards(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	N, err := ctx.Value("uhppote").(*uhppote.UHPPOTE).GetCards(deviceID)
@@ -42,7 +42,7 @@ func getCards(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	reply(ctx, w, response)
 }
 
-func getCard(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func GetCard(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	deviceID := ctx.Value("device-id").(uint32)
 	cardNumber := ctx.Value("card-number").(uint32)
 
@@ -67,7 +67,7 @@ func getCard(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	reply(ctx, w, response)
 }
 
-func putCard(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func PutCard(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	deviceID := ctx.Value("device-id").(uint32)
 	cardNumber := ctx.Value("card-number").(uint32)
 
@@ -124,7 +124,7 @@ func putCard(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func deleteCards(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func DeleteCards(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	result, err := ctx.Value("uhppote").(*uhppote.UHPPOTE).DeleteCards(deviceID)
@@ -141,7 +141,7 @@ func deleteCards(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func deleteCard(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func DeleteCard(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	deviceID := ctx.Value("device-id").(uint32)
 	cardNumber := ctx.Value("card-number").(uint32)
 

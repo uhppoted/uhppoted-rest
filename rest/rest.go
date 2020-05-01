@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-rest/acl"
+	"github.com/uhppoted/uhppoted-rest/device"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -82,22 +83,22 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 		uhppote: u,
 		devices: devices,
 		handlers: []handler{
-			handler{regexp.MustCompile("^/uhppote/device$"), http.MethodGet, getDevices},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+$"), http.MethodGet, getDevice},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/status$"), http.MethodGet, getStatus},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time$"), http.MethodGet, getTime},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time$"), http.MethodPut, setTime},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/delay$"), http.MethodGet, getDoorDelay},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/delay$"), http.MethodPut, setDoorDelay},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/control$"), http.MethodGet, getDoorControl},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/control$"), http.MethodPut, setDoorControl},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card$"), http.MethodGet, getCards},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodGet, getCard},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodPut, putCard},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card$"), http.MethodDelete, deleteCards},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodDelete, deleteCard},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/events$"), http.MethodGet, getEvents},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/event/[0-9]+$"), http.MethodGet, getEvent},
+			handler{regexp.MustCompile("^/uhppote/device$"), http.MethodGet, device.GetDevices},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+$"), http.MethodGet, device.GetDevice},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/status$"), http.MethodGet, device.GetStatus},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time$"), http.MethodGet, device.GetTime},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time$"), http.MethodPut, device.SetTime},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/delay$"), http.MethodGet, device.GetDoorDelay},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/delay$"), http.MethodPut, device.SetDoorDelay},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/control$"), http.MethodGet, device.GetDoorControl},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/control$"), http.MethodPut, device.SetDoorControl},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card$"), http.MethodGet, device.GetCards},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodGet, device.GetCard},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodPut, device.PutCard},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card$"), http.MethodDelete, device.DeleteCards},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodDelete, device.DeleteCard},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/events$"), http.MethodGet, device.GetEvents},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/event/[0-9]+$"), http.MethodGet, device.GetEvent},
 
 			handler{regexp.MustCompile("^/uhppote/acl$"), http.MethodGet, acl.GetACL},
 			handler{regexp.MustCompile("^/uhppote/acl$"), http.MethodPut, acl.PutACL},

@@ -13,7 +13,7 @@
 - [x] Rethink dates on grant if current record has no permissions
 - [x] Rethink dates on grant ALL
 - [x] Rework to use uhppoted-api::Config
-- [ ] Move current 'REST' functions to 'device' package
+- [x] Move current 'REST' functions to 'device' package
 - [ ] Migrate current 'REST' functions to uhppoted-api
 - [ ] build documentation
 - [ ] install documentation

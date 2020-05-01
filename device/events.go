@@ -1,4 +1,4 @@
-package rest
+package device
 
 import (
 	"context"
@@ -19,7 +19,7 @@ type event struct {
 	Result     uint8          `json:"event-result"`
 }
 
-func getEvents(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func GetEvents(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	first, err := ctx.Value("uhppote").(*uhppote.UHPPOTE).GetEvent(deviceID, 0)
@@ -66,7 +66,7 @@ func getEvents(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	reply(ctx, w, response)
 }
 
-func getEvent(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func GetEvent(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	deviceID := ctx.Value("device-id").(uint32)
 	eventID := ctx.Value("event-id").(uint32)
 

@@ -1,4 +1,4 @@
-package rest
+package device
 
 import (
 	"context"
@@ -17,7 +17,7 @@ type device struct {
 	DeviceType   string             `json:"device-type"`
 }
 
-func getDevices(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func GetDevices(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	debug(ctx, 0, "get-devices", r)
 
 	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
@@ -79,7 +79,7 @@ func getDevices(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	reply(ctx, w, response)
 }
 
-func getDevice(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func GetDevice(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	device, err := ctx.Value("uhppote").(*uhppote.UHPPOTE).FindDevice(deviceID)

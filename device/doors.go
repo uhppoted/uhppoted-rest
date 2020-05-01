@@ -1,4 +1,4 @@
-package rest
+package device
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-func getDoorDelay(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func GetDoorDelay(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	deviceID := ctx.Value("device-id").(uint32)
 	door := ctx.Value("door").(uint8)
 
@@ -29,7 +29,7 @@ func getDoorDelay(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	reply(ctx, w, response)
 }
 
-func setDoorDelay(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func SetDoorDelay(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	deviceID := ctx.Value("device-id").(uint32)
 	door := ctx.Value("door").(uint8)
 
@@ -74,7 +74,7 @@ func setDoorDelay(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	reply(ctx, w, response)
 }
 
-func getDoorControl(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func GetDoorControl(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	lookup := map[uint8]string{
 		1: "normally open",
 		2: "normally closed",
@@ -100,7 +100,7 @@ func getDoorControl(ctx context.Context, w http.ResponseWriter, r *http.Request)
 	reply(ctx, w, response)
 }
 
-func setDoorControl(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func SetDoorControl(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	states := map[string]uint8{
 		"normally open":   1,
 		"normally closed": 2,
