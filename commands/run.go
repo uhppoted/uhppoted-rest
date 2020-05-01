@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted-rest/config"
+	"github.com/uhppoted/uhppoted-api/config"
 	"github.com/uhppoted/uhppoted-rest/rest"
 	"io/ioutil"
 	"log"
@@ -147,7 +147,7 @@ func (r *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.Sig
 
 	devices := []*uhppote.Device{}
 	for id, d := range c.Devices {
-		devices = append(devices, uhppote.NewDevice(id, d.Address, d.Rollover, d.Door))
+		devices = append(devices, uhppote.NewDevice(id, d.Address, d.Rollover, d.Doors))
 	}
 
 	u := uhppote.UHPPOTE{
@@ -173,8 +173,8 @@ func (r *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.Sig
 		CACertificateFile:  c.REST.CACertificateFile,
 		CORSEnabled:        c.REST.CORSEnabled,
 		OpenAPI: rest.OpenAPI{
-			Enabled:   c.OpenApi.Enabled,
-			Directory: c.OpenApi.Directory,
+			Enabled:   c.OpenAPI.Enabled,
+			Directory: c.OpenAPI.Directory,
 		},
 	}
 

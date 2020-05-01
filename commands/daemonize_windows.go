@@ -4,7 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/uhppoted/uhppoted-rest/config"
+	"github.com/uhppoted/uhppoted-api/config"
 	"golang.org/x/sys/windows/svc/eventlog"
 	"golang.org/x/sys/windows/svc/mgr"
 	"net"
@@ -90,7 +90,7 @@ func (c *Daemonize) Execute(ctx context.Context) error {
 		return err
 	}
 
-	bind, broadcast := config.DefaultIpAddresses()
+	bind, broadcast, _ := config.DefaultIpAddresses()
 
 	d := info{
 		Name:             c.name,

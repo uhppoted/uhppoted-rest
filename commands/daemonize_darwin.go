@@ -4,8 +4,8 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/uhppoted/uhppoted-api/config"
 	xpath "github.com/uhppoted/uhppoted-api/encoding/plist"
-	"github.com/uhppoted/uhppoted-rest/config"
 	"net"
 	"os"
 	"os/exec"
@@ -102,7 +102,7 @@ func (c *Daemonize) Execute(ctx context.Context) error {
 		return err
 	}
 
-	bind, broadcast := config.DefaultIpAddresses()
+	bind, broadcast, _ := config.DefaultIpAddresses()
 
 	d := info{
 		Label:            "com.github.twystd.uhppoted-rest",
