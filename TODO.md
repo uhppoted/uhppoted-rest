@@ -17,6 +17,7 @@
 - [x] build documentation
 - [x] install documentation
 - [ ] Migrate current 'REST' functions to uhppoted-api
+- [ ] Use uhppoted-api event logging
 - [ ] command documentation
 
 ## TODO

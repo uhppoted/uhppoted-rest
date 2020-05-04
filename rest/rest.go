@@ -8,8 +8,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/uhppoted/uhppote-core/uhppote"
+	"github.com/uhppoted/uhppoted-api/uhppoted"
 	"github.com/uhppoted/uhppoted-rest/acl"
 	"github.com/uhppoted/uhppoted-rest/device"
+	"github.com/uhppoted/uhppoted-rest/errors"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -60,6 +62,7 @@ type RESTD struct {
 }
 
 type handlerfn func(context.Context, http.ResponseWriter, *http.Request)
+type handlerfnx func(*uhppoted.UHPPOTED, context.Context, http.ResponseWriter, *http.Request) (interface{}, *errors.IError)
 
 type handler struct {
 	re     *regexp.Regexp
@@ -67,12 +70,20 @@ type handler struct {
 	fn     handlerfn
 }
 
+type handlerx struct {
+	re     *regexp.Regexp
+	method string
+	fn     handlerfnx
+}
+
 type dispatcher struct {
 	corsEnabled bool
 	uhppote     *uhppote.UHPPOTE
+	uhppoted    *uhppoted.UHPPOTED
 	devices     []*uhppote.Device
 	log         *log.Logger
 	handlers    []handler
+	handlersx   []handlerx
 	openapi     http.Handler
 }
 
@@ -81,9 +92,15 @@ type dispatcher struct {
 func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger) {
 	d := dispatcher{
 		uhppote: u,
+		uhppoted: &uhppoted.UHPPOTED{
+			Uhppote:         u,
+			ListenBatchSize: 32,
+			Log:             l,
+		},
 		devices: devices,
+
 		handlers: []handler{
-			handler{regexp.MustCompile("^/uhppote/device$"), http.MethodGet, device.GetDevices},
+			// handler{regexp.MustCompile("^/uhppote/device$"), http.MethodGet, device.GetDevices},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+$"), http.MethodGet, device.GetDevice},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/status$"), http.MethodGet, device.GetStatus},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time$"), http.MethodGet, device.GetTime},
@@ -106,6 +123,11 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/doors/\\S.*$"), http.MethodPut, acl.Grant},
 			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/doors/\\S.*$"), http.MethodDelete, acl.Revoke},
 		},
+
+		handlersx: []handlerx{
+			handlerx{regexp.MustCompile("^/uhppote/device$"), http.MethodGet, device.GetDevices},
+		},
+
 		log:         l,
 		corsEnabled: r.CORSEnabled,
 		openapi:     http.NotFoundHandler(),
@@ -211,6 +233,27 @@ func (d *dispatcher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Dispatch to handler
 	url := r.URL.Path
+
+	for _, h := range d.handlersx {
+		if h.re.MatchString(url) && r.Method == h.method {
+			ctx := context.WithValue(context.Background(), "uhppote", d.uhppote)
+			ctx = context.WithValue(ctx, "devices", d.devices)
+			ctx = context.WithValue(ctx, "log", d.log)
+			ctx = context.WithValue(ctx, "compression", compression)
+			ctx = parse(ctx, r)
+
+			response, err := h.fn(d.uhppoted, ctx, w, r)
+			if err != nil {
+				warn(ctx, err.DeviceID, err.Tag, err.Err)
+				http.Error(w, err.Message, err.Code)
+			} else if response != nil {
+				reply(ctx, w, response)
+			}
+
+			return
+		}
+	}
+
 	for _, h := range d.handlers {
 		if h.re.MatchString(url) && r.Method == h.method {
 			ctx := context.WithValue(context.Background(), "uhppote", d.uhppote)

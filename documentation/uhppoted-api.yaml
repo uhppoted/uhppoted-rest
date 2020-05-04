@@ -762,7 +762,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/DeviceID"        
-          description: "List of simulator devices"
+          description: "List of 'found' devices"
 
     DeviceID:
       required: 

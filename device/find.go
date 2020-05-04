@@ -5,78 +5,45 @@ import (
 	"fmt"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
+	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-rest/errors"
 	"net"
 	"net/http"
 	"strconv"
 	"strings"
-	"sync"
 )
 
 type device struct {
-	SerialNumber types.SerialNumber `json:"serial-number"`
-	DeviceType   string             `json:"device-type"`
+	SerialNumber uint32 `json:"device-id"`
+	DeviceType   string `json:"device-type"`
 }
 
-func GetDevices(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func GetDevices(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
 	debug(ctx, 0, "get-devices", r)
 
-	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
-	wg := sync.WaitGroup{}
-	list := sync.Map{}
+	rq := uhppoted.GetDevicesRequest{}
 
-	for id, _ := range u.Devices {
-		deviceID := id
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			if device, err := u.FindDevice(deviceID); err != nil {
-				warn(ctx, deviceID, "get-devices", err)
-			} else if device != nil {
-				list.Store(uint32(device.SerialNumber), device)
-			}
-		}()
+	response, err := impl.GetDevices(rq)
+	if err != nil {
+		return nil, errors.Errorf(err, 0, "get-device", "Error searching for active devices")
+	} else if response == nil {
+		return nil, nil
 	}
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		if devices, err := u.FindDevices(); err != nil {
-			warn(ctx, 0, "get-devices", err)
-		} else {
-			for _, d := range devices {
-				list.Store(uint32(d.SerialNumber), d)
-			}
-		}
-	}()
-
-	wg.Wait()
-
 	devices := make([]device, 0)
-	list.Range(func(key, value interface{}) bool {
-		if d, ok := value.(types.Device); ok {
-			devices = append(devices, device{
-				SerialNumber: d.SerialNumber,
-				DeviceType:   identify(d.SerialNumber),
-			})
-		}
 
-		if d, ok := value.(*types.Device); ok {
-			devices = append(devices, device{
-				SerialNumber: d.SerialNumber,
-				DeviceType:   identify(d.SerialNumber),
-			})
-		}
+	for k, _ := range response.Devices {
+		devices = append(devices, device{
+			SerialNumber: k,
+			DeviceType:   identify(k),
+		})
+	}
 
-		return true
-	})
-
-	response := struct {
+	return struct {
 		Devices []device `json:"devices"`
 	}{
 		Devices: devices,
-	}
-
-	reply(ctx, w, response)
+	}, nil
 }
 
 func GetDevice(ctx context.Context, w http.ResponseWriter, r *http.Request) {
@@ -106,7 +73,7 @@ func GetDevice(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		Date         types.Date         `json:"date"`
 	}{
 		SerialNumber: device.SerialNumber,
-		DeviceType:   identify(device.SerialNumber),
+		DeviceType:   identify(uint32(device.SerialNumber)),
 		IPAddress:    device.IpAddress,
 		SubnetMask:   device.SubnetMask,
 		Gateway:      device.Gateway,
@@ -118,7 +85,7 @@ func GetDevice(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	reply(ctx, w, response)
 }
 
-func identify(deviceID types.SerialNumber) string {
+func identify(deviceID uint32) string {
 	id := strconv.FormatUint(uint64(deviceID), 10)
 
 	if strings.HasPrefix(id, "4") {
