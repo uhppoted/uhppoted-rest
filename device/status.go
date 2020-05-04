@@ -2,58 +2,27 @@ package device
 
 import (
 	"context"
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
+	"fmt"
+	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-rest/errors"
 	"net/http"
 )
 
-func GetStatus(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func GetStatus(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
 	deviceID := ctx.Value("device-id").(uint32)
 
-	status, err := ctx.Value("uhppote").(*uhppote.UHPPOTE).GetStatus(deviceID)
+	rq := uhppoted.GetStatusRequest{
+		DeviceID: uhppoted.DeviceID(deviceID),
+	}
+
+	response, err := impl.GetStatus(rq)
 	if err != nil {
-		warn(ctx, deviceID, "get-status", err)
-		http.Error(w, "Error retrieving device status", http.StatusInternalServerError)
-		return
+		return nil, errors.Errorf(err, deviceID, "get-status", fmt.Sprintf("Error retrieving status for %v", deviceID))
 	}
 
-	response := struct {
-		LastEventIndex uint32         `json:"last-event-index"`
-		EventType      byte           `json:"event-type"`
-		Granted        bool           `json:"access-granted"`
-		Door           byte           `json:"door"`
-		DoorOpened     bool           `json:"door-opened"`
-		UserID         uint32         `json:"user-id"`
-		EventTimestamp types.DateTime `json:"event-timestamp"`
-		EventResult    byte           `json:"event-result"`
-		DoorState      []bool         `json:"door-states"`
-		DoorButton     []bool         `json:"door-buttons"`
-		SystemState    byte           `json:"system-state"`
-		SystemDateTime types.DateTime `json:"system-datetime"`
-		PacketNumber   uint32         `json:"packet-number"`
-		Backup         uint32         `json:"backup-state"`
-		SpecialMessage byte           `json:"special-message"`
-		Battery        byte           `json:"battery-status"`
-		FireAlarm      byte           `json:"fire-alarm-status"`
-	}{
-		LastEventIndex: status.LastIndex,
-		EventType:      status.EventType,
-		Granted:        status.Granted,
-		Door:           status.Door,
-		DoorOpened:     status.DoorOpened,
-		UserID:         status.UserID,
-		EventTimestamp: status.EventTimestamp,
-		EventResult:    status.EventResult,
-		DoorState:      status.DoorState,
-		DoorButton:     status.DoorButton,
-		SystemState:    status.SystemState,
-		SystemDateTime: status.SystemDateTime,
-		PacketNumber:   status.PacketNumber,
-		Backup:         status.Backup,
-		SpecialMessage: status.SpecialMessage,
-		Battery:        status.Battery,
-		FireAlarm:      status.FireAlarm,
+	if response == nil {
+		return nil, nil
 	}
 
-	reply(ctx, w, response)
+	return response.Status, nil
 }
