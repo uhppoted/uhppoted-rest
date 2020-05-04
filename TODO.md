@@ -14,9 +14,10 @@
 - [x] Rethink dates on grant ALL
 - [x] Rework to use uhppoted-api::Config
 - [x] Move current 'REST' functions to 'device' package
+- [x] build documentation
+- [x] install documentation
 - [ ] Migrate current 'REST' functions to uhppoted-api
-- [ ] build documentation
-- [ ] install documentation
+- [ ] command documentation
 
 ## TODO
 
