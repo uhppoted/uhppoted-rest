@@ -100,8 +100,6 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 		devices: devices,
 
 		handlers: []handler{
-			// handler{regexp.MustCompile("^/uhppote/device$"), http.MethodGet, device.GetDevices},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+$"), http.MethodGet, device.GetDevice},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/status$"), http.MethodGet, device.GetStatus},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time$"), http.MethodGet, device.GetTime},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time$"), http.MethodPut, device.SetTime},
@@ -126,6 +124,7 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 
 		handlersx: []handlerx{
 			handlerx{regexp.MustCompile("^/uhppote/device$"), http.MethodGet, device.GetDevices},
+			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+$"), http.MethodGet, device.GetDevice},
 		},
 
 		log:         l,
