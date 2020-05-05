@@ -5,73 +5,79 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/uhppoted/uhppote-core/uhppote"
+	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-rest/errors"
 	"io/ioutil"
 	"net/http"
 )
 
-func GetDoorDelay(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func GetDoorDelay(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
 	deviceID := ctx.Value("device-id").(uint32)
 	door := ctx.Value("door").(uint8)
 
-	result, err := ctx.Value("uhppote").(*uhppote.UHPPOTE).GetDoorControlState(deviceID, door)
-	if err != nil {
-		warn(ctx, deviceID, "get-door-delay", err)
-		http.Error(w, "Error retrieving door delay", http.StatusInternalServerError)
-		return
+	rq := uhppoted.GetDoorDelayRequest{
+		DeviceID: uhppoted.DeviceID(deviceID),
+		Door:     door,
 	}
 
-	response := struct {
+	response, err := impl.GetDoorDelay(rq)
+	if err != nil {
+		return nil, errors.Errorf(err, deviceID, "get-door-delay", fmt.Sprintf("Error retrieving door delay for device %v, door %d", deviceID, door))
+	}
+
+	if response == nil {
+		return nil, nil
+	}
+
+	return &struct {
 		Delay uint8 `json:"delay"`
 	}{
-		Delay: result.Delay,
-	}
-
-	reply(ctx, w, response)
+		Delay: response.Delay,
+	}, nil
 }
 
-func SetDoorDelay(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func SetDoorDelay(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
 	deviceID := ctx.Value("device-id").(uint32)
 	door := ctx.Value("door").(uint8)
 
 	blob, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		warn(ctx, deviceID, "set-door-delay", err)
-		http.Error(w, "Error reading request", http.StatusInternalServerError)
-		return
+		return nil, errors.Errorf(fmt.Errorf("Error reading request (%w)", err), deviceID, "set-door-delay", "Error reading request")
 	}
 
 	body := struct {
-		Delay uint8 `json:"delay"`
+		Delay *uint8 `json:"delay"`
 	}{}
 
 	err = json.Unmarshal(blob, &body)
 	if err != nil {
-		warn(ctx, deviceID, "set-door-delay", err)
-		http.Error(w, "Invalid request format", http.StatusBadRequest)
-		return
+		return nil, errors.Errorf(fmt.Errorf("%w: %v", uhppoted.BadRequest, err), deviceID, "set-door-delay", "Error parsing request")
 	}
 
-	state, err := ctx.Value("uhppote").(*uhppote.UHPPOTE).GetDoorControlState(deviceID, door)
+	if body.Delay == nil {
+		return nil, errors.Errorf(errors.InvalidDoorDelay, deviceID, "set-door-delay", "Missing/invalid door delay")
+	}
+
+	rq := uhppoted.SetDoorDelayRequest{
+		DeviceID: uhppoted.DeviceID(deviceID),
+		Door:     door,
+		Delay:    *body.Delay,
+	}
+
+	response, err := impl.SetDoorDelay(rq)
 	if err != nil {
-		warn(ctx, deviceID, "set-door-delay", err)
-		http.Error(w, "Error setting door delay", http.StatusInternalServerError)
-		return
+		return nil, errors.Errorf(err, deviceID, "set-door-delay", "Error setting device door delay")
 	}
 
-	result, err := ctx.Value("uhppote").(*uhppote.UHPPOTE).SetDoorControlState(deviceID, door, state.ControlState, body.Delay)
-	if err != nil {
-		warn(ctx, deviceID, "set-door-delay", err)
-		http.Error(w, "Error setting door delay", http.StatusInternalServerError)
-		return
+	if response == nil {
+		return nil, nil
 	}
 
-	response := struct {
+	return &struct {
 		Delay uint8 `json:"delay"`
 	}{
-		Delay: result.Delay,
-	}
-
-	reply(ctx, w, response)
+		Delay: response.Delay,
+	}, nil
 }
 
 func GetDoorControl(ctx context.Context, w http.ResponseWriter, r *http.Request) {
