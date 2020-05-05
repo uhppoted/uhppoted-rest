@@ -100,8 +100,6 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 		devices: devices,
 
 		handlers: []handler{
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time$"), http.MethodGet, device.GetTime},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time$"), http.MethodPut, device.SetTime},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/delay$"), http.MethodGet, device.GetDoorDelay},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/delay$"), http.MethodPut, device.SetDoorDelay},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/control$"), http.MethodGet, device.GetDoorControl},
@@ -125,6 +123,8 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 			handlerx{regexp.MustCompile("^/uhppote/device$"), http.MethodGet, device.GetDevices},
 			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+$"), http.MethodGet, device.GetDevice},
 			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/status$"), http.MethodGet, device.GetStatus},
+			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/time$"), http.MethodGet, device.GetTime},
+			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/time$"), http.MethodPut, device.SetTime},
 		},
 
 		log:         l,

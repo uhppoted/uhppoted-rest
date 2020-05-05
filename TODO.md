@@ -19,6 +19,7 @@
 - [ ] Migrate current 'REST' functions to uhppoted-api
 - [ ] Use uhppoted-api event logging
 - [ ] command documentation
+- [ ] skeleton integration test
 
 ## TODO
 
@@ -26,7 +27,6 @@
 - [ ] Get events after XXX
 - [ ] Client certificate revocation list
 - [ ] uhppoted-rest: get-events date/id range
-- [ ] commonalise functionality with uhppoted-mqttd
 
 ### Documentation
 

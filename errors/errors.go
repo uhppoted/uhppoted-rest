@@ -15,6 +15,16 @@ type IError struct {
 	Message  string `json:"message"`
 }
 
+var (
+	InvalidDeviceID    = fmt.Errorf("%w: Missing device ID", uhppoted.BadRequest)
+	InvalidCardNumber  = fmt.Errorf("%w: Missing/invalid card number", uhppoted.BadRequest)
+	InvalidDoorID      = fmt.Errorf("%w: Missing/invalid door ID", uhppoted.BadRequest)
+	InvalidDoorDelay   = fmt.Errorf("%w: Missing/invalid door delay", uhppoted.BadRequest)
+	InvalidDoorControl = fmt.Errorf("%w: Missing/invalid door control", uhppoted.BadRequest)
+	InvalidEventID     = fmt.Errorf("%w: Missing/invalid event ID", uhppoted.BadRequest)
+	InvalidDateTime    = fmt.Errorf("%w: Missing/invalid date/time", uhppoted.BadRequest)
+)
+
 func (e *IError) Error() string {
 	return fmt.Sprintf("%v", e.Err)
 }

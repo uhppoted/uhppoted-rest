@@ -94,7 +94,10 @@ paths:
           content:
             application/json:
               schema:
-                  $ref: "#/components/schemas/DeviceStatus"        
+                type: object
+                properties:
+                  status:
+                    $ref: "#/components/schemas/DeviceStatus"        
         '404':
           description: "No device with ID matching device-id"
         '405':

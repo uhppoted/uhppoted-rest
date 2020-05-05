@@ -17,12 +17,16 @@ func GetStatus(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrit
 
 	response, err := impl.GetStatus(rq)
 	if err != nil {
-		return nil, errors.Errorf(err, deviceID, "get-status", fmt.Sprintf("Error retrieving status for %v", deviceID))
+		return nil, errors.Errorf(err, deviceID, "get-status", fmt.Sprintf("Error retrieving device status for %v", deviceID))
 	}
 
 	if response == nil {
 		return nil, nil
 	}
 
-	return response.Status, nil
+	return struct {
+		Status uhppoted.Status `json:"status"`
+	}{
+		Status: response.Status,
+	}, nil
 }
