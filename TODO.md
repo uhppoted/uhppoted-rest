@@ -20,6 +20,7 @@
 - [ ] Use uhppoted-api event logging
 - [ ] command documentation
 - [ ] skeleton integration test
+- [ ] Add from/to/doors validity check for parsing JSON cards
 
 ## TODO
 

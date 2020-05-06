@@ -17,12 +17,15 @@ type IError struct {
 
 var (
 	InvalidDeviceID    = fmt.Errorf("%w: Missing device ID", uhppoted.BadRequest)
+	InvalidCard        = fmt.Errorf("%w: Missing/invalid card", uhppoted.BadRequest)
 	InvalidCardNumber  = fmt.Errorf("%w: Missing/invalid card number", uhppoted.BadRequest)
 	InvalidDoorID      = fmt.Errorf("%w: Missing/invalid door ID", uhppoted.BadRequest)
 	InvalidDoorDelay   = fmt.Errorf("%w: Missing/invalid door delay", uhppoted.BadRequest)
 	InvalidDoorControl = fmt.Errorf("%w: Missing/invalid door control", uhppoted.BadRequest)
 	InvalidEventID     = fmt.Errorf("%w: Missing/invalid event ID", uhppoted.BadRequest)
+	InvalidDate        = fmt.Errorf("%w: Missing/invalid date", uhppoted.BadRequest)
 	InvalidDateTime    = fmt.Errorf("%w: Missing/invalid date/time", uhppoted.BadRequest)
+	RequestFailed      = fmt.Errorf("%w: Request failed", uhppoted.InternalServerError)
 )
 
 func (e *IError) Error() string {

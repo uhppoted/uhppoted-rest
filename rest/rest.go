@@ -100,9 +100,6 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 		devices: devices,
 
 		handlers: []handler{
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodGet, device.GetCard},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodPut, device.PutCard},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodDelete, device.DeleteCard},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/events$"), http.MethodGet, device.GetEvents},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/event/[0-9]+$"), http.MethodGet, device.GetEvent},
 
@@ -125,6 +122,9 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/control$"), http.MethodPut, device.SetDoorControl},
 			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/cards$"), http.MethodGet, device.GetCards},
 			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/cards$"), http.MethodDelete, device.DeleteCards},
+			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodGet, device.GetCard},
+			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodPut, device.PutCard},
+			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodDelete, device.DeleteCard},
 		},
 
 		log:         l,

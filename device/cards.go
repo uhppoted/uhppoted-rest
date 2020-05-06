@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 	"github.com/uhppoted/uhppoted-rest/errors"
 	"io/ioutil"
@@ -23,7 +22,7 @@ func GetCards(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrite
 	if err != nil {
 		return nil, errors.Errorf(err, deviceID, "get-cards", fmt.Sprintf("Error retrieving cards for device %v", deviceID))
 	} else if response == nil {
-		return nil, nil
+		return nil, errors.Errorf(errors.RequestFailed, deviceID, "get-cards", fmt.Sprintf("Error retrieving all cards from device %v", deviceID))
 	}
 
 	return &struct {
@@ -44,7 +43,7 @@ func DeleteCards(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWr
 	if err != nil {
 		return nil, errors.Errorf(err, deviceID, "delete-cards", fmt.Sprintf("Error deleting all cards for device %v", deviceID))
 	} else if response == nil {
-		return nil, nil
+		return nil, errors.Errorf(errors.RequestFailed, deviceID, "delete-cards", fmt.Sprintf("Error deleting all cards for device %v", deviceID))
 	}
 
 	if !response.Deleted {
@@ -54,40 +53,32 @@ func DeleteCards(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWr
 	return nil, nil
 }
 
-func GetCard(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func GetCard(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
 	deviceID := ctx.Value("device-id").(uint32)
 	cardNumber := ctx.Value("card-number").(uint32)
 
-	card, err := ctx.Value("uhppote").(*uhppote.UHPPOTE).GetCardByID(deviceID, cardNumber)
+	rq := uhppoted.GetCardRequest{
+		DeviceID:   uhppoted.DeviceID(deviceID),
+		CardNumber: cardNumber,
+	}
+
+	response, err := impl.GetCard(rq)
 	if err != nil {
-		warn(ctx, deviceID, "get-card-by-id", err)
-		http.Error(w, "Error retrieving card", http.StatusInternalServerError)
-		return
+		return nil, errors.Errorf(err, deviceID, "get-card", fmt.Sprintf("Error retrieving card %v from device %v", cardNumber, deviceID))
+	} else if response == nil {
+		return nil, errors.Errorf(errors.RequestFailed, deviceID, "get-card", fmt.Sprintf("Error retrieving card %v from device %v", cardNumber, deviceID))
 	}
 
-	if card == nil {
-		http.Error(w, "Card record does not exist", http.StatusNotFound)
-		return
-	}
-
-	response := struct {
-		Card types.Card `json:"card"`
-	}{
-		Card: *card,
-	}
-
-	reply(ctx, w, response)
+	return response.Card, nil
 }
 
-func PutCard(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func PutCard(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
 	deviceID := ctx.Value("device-id").(uint32)
 	cardNumber := ctx.Value("card-number").(uint32)
 
 	blob, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		warn(ctx, deviceID, "put-card", err)
-		http.Error(w, "Error reading request", http.StatusInternalServerError)
-		return
+		return nil, errors.Errorf(fmt.Errorf("Error reading request (%w)", err), deviceID, "put-card", "Error reading request")
 	}
 
 	body := struct {
@@ -96,60 +87,54 @@ func PutCard(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		Doors []bool      `json:"doors"`
 	}{}
 
-	err = json.Unmarshal(blob, &body)
-	if err != nil {
-		warn(ctx, deviceID, "put-card", err)
-		http.Error(w, "Invalid request format", http.StatusBadRequest)
-		return
+	if err = json.Unmarshal(blob, &body); err != nil {
+		return nil, errors.Errorf(fmt.Errorf("%w: %v", uhppoted.BadRequest, err), deviceID, "put-card", "Error parsing request")
 	}
 
 	if body.From == nil {
-		warn(ctx, deviceID, "put-card", fmt.Errorf("Missing 'start-date'"))
-		http.Error(w, "Invalid request: missing 'start-date'", http.StatusBadRequest)
-		return
+		return nil, errors.Errorf(errors.InvalidDate, deviceID, "put-card", "Missing 'start-date'")
 	}
 
 	if body.To == nil {
-		warn(ctx, deviceID, "put-card", fmt.Errorf("Missing 'end-date'"))
-		http.Error(w, "Invalid request: missing 'end-date'", http.StatusBadRequest)
-		return
+		return nil, errors.Errorf(errors.InvalidDate, deviceID, "put-card", "Missing 'end-date'")
 	}
 
-	card := types.Card{
-		CardNumber: cardNumber,
-		From:       *body.From,
-		To:         *body.To,
-		Doors:      body.Doors,
+	rq := uhppoted.PutCardRequest{
+		DeviceID: uhppoted.DeviceID(deviceID),
+		Card: types.Card{
+			CardNumber: cardNumber,
+			From:       *body.From,
+			To:         *body.To,
+			Doors:      body.Doors,
+		},
 	}
 
-	result, err := ctx.Value("uhppote").(*uhppote.UHPPOTE).PutCard(deviceID, card)
-	if err != nil {
-		warn(ctx, deviceID, "put-card", err)
-		http.Error(w, "Error adding/updating card", http.StatusInternalServerError)
-		return
+	if _, err = impl.PutCard(rq); err != nil {
+		return nil, errors.Errorf(err, deviceID, "put-card", fmt.Sprintf("Error storing card %v to device %v", cardNumber, deviceID))
 	}
 
-	if !result.Succeeded {
-		warn(ctx, deviceID, "put-card", fmt.Errorf("Request failed"))
-		http.Error(w, "Error adding/updating card", http.StatusInternalServerError)
-		return
-	}
+	return nil, nil
 }
 
-func DeleteCard(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func DeleteCard(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
 	deviceID := ctx.Value("device-id").(uint32)
 	cardNumber := ctx.Value("card-number").(uint32)
 
-	result, err := ctx.Value("uhppote").(*uhppote.UHPPOTE).DeleteCard(deviceID, cardNumber)
-	if err != nil {
-		warn(ctx, deviceID, "delete-card-by-id", err)
-		http.Error(w, "Error retrieving card", http.StatusInternalServerError)
-		return
+	rq := uhppoted.DeleteCardRequest{
+		DeviceID:   uhppoted.DeviceID(deviceID),
+		CardNumber: cardNumber,
 	}
 
-	if !result.Succeeded {
-		warn(ctx, deviceID, "delete-card", fmt.Errorf("Request failed"))
-		http.Error(w, "Error deleting card", http.StatusInternalServerError)
-		return
+	response, err := impl.DeleteCard(rq)
+	if err != nil {
+		return nil, errors.Errorf(err, deviceID, "delete-card", fmt.Sprintf("Error deleting card %v from device %v", cardNumber, deviceID))
+	} else if response == nil {
+		return nil, errors.Errorf(errors.RequestFailed, deviceID, "delete-card", fmt.Sprintf("Error deleting card %v from device %v", cardNumber, deviceID))
 	}
+
+	if !response.Deleted {
+		return nil, errors.Errorf(err, deviceID, "delete-card", fmt.Sprintf("Failed to delete card %v from device %v", cardNumber, deviceID))
+	}
+
+	return nil, nil
 }

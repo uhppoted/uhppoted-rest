@@ -438,7 +438,7 @@ paths:
           content:
             application/json:
               schema:
-                  $ref: "#/components/schemas/Cardd"        
+                  $ref: "#/components/schemas/Card"        
         '404':
           description: "No matching device and/or card"
         '405':
