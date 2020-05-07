@@ -2,9 +2,11 @@ package device
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
+	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-rest/errors"
 	"net/http"
 )
 
@@ -19,36 +21,23 @@ type event struct {
 	Result     uint8          `json:"event-result"`
 }
 
-func GetEvents(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func GetEvents(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
 	deviceID := ctx.Value("device-id").(uint32)
 
-	first, err := ctx.Value("uhppote").(*uhppote.UHPPOTE).GetEvent(deviceID, 0)
+	rq := uhppoted.GetEventRangeRequest{
+		DeviceID: uhppoted.DeviceID(deviceID),
+		Start:    nil,
+		End:      nil,
+	}
+
+	response, err := impl.GetEventRange(rq)
 	if err != nil {
-		warn(ctx, deviceID, "get-events", err)
-		http.Error(w, "Error retrieving events", http.StatusInternalServerError)
-		return
+		return nil, errors.Errorf(err, deviceID, "get-events", fmt.Sprintf("Error retrieving event indices from %v", deviceID))
+	} else if response == nil {
+		return nil, errors.Errorf(errors.RequestFailed, deviceID, "get-events", fmt.Sprintf("Error retrieving event indices from %v", deviceID))
 	}
 
-	if first == nil {
-		warn(ctx, deviceID, "get-events", errors.New("No record returned for 'first' event"))
-		http.Error(w, "Error retrieving events", http.StatusInternalServerError)
-		return
-	}
-
-	last, err := ctx.Value("uhppote").(*uhppote.UHPPOTE).GetEvent(deviceID, 0xffffffff)
-	if err != nil {
-		warn(ctx, deviceID, "get-events", err)
-		http.Error(w, "Error retrieving events", http.StatusInternalServerError)
-		return
-	}
-
-	if last == nil {
-		warn(ctx, deviceID, "get-events", errors.New("No record returned for 'last' event"))
-		http.Error(w, "Error retrieving events", http.StatusInternalServerError)
-		return
-	}
-
-	response := struct {
+	return &struct {
 		Events struct {
 			First uint32 `json:"first"`
 			Last  uint32 `json:"last"`
@@ -58,12 +47,10 @@ func GetEvents(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 			First uint32 `json:"first"`
 			Last  uint32 `json:"last"`
 		}{
-			First: first.Index,
-			Last:  last.Index,
+			First: response.Events.First,
+			Last:  response.Events.Last,
 		},
-	}
-
-	reply(ctx, w, response)
+	}, nil
 }
 
 func GetEvent(ctx context.Context, w http.ResponseWriter, r *http.Request) {
