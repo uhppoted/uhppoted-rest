@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 	"github.com/uhppoted/uhppoted-rest/errors"
 	"net/http"
@@ -53,41 +52,23 @@ func GetEvents(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrit
 	}, nil
 }
 
-func GetEvent(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func GetEvent(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
 	deviceID := ctx.Value("device-id").(uint32)
 	eventID := ctx.Value("event-id").(uint32)
 
-	record, err := ctx.Value("uhppote").(*uhppote.UHPPOTE).GetEvent(deviceID, eventID)
+	rq := uhppoted.GetEventRequest{
+		DeviceID: uhppoted.DeviceID(deviceID),
+		EventID:  eventID,
+	}
+
+	response, err := impl.GetEvent(rq)
 	if err != nil {
-		warn(ctx, deviceID, "get-event", err)
-		http.Error(w, "Error retrieving event", http.StatusInternalServerError)
-		return
+		return nil, errors.Errorf(err, deviceID, "get-event", fmt.Sprintf("Error retrieving event %v from %v", eventID, deviceID))
 	}
 
-	if record == nil {
-		http.Error(w, "Event record does not exist", http.StatusNotFound)
-		return
+	if response == nil {
+		return nil, errors.Errorf(fmt.Errorf("%w: No record for event %v", uhppoted.NotFound, eventID), deviceID, "get-event", fmt.Sprintf("Error retrieving event %v from %v", eventID, deviceID))
 	}
 
-	if record.Index != eventID {
-		http.Error(w, "Event record does not exist", http.StatusNotFound)
-		return
-	}
-
-	response := struct {
-		Event event `json:"event"`
-	}{
-		Event: event{
-			Index:      record.Index,
-			Type:       record.Type,
-			Granted:    record.Granted,
-			Door:       record.Door,
-			DoorOpened: record.DoorOpened,
-			UserID:     record.UserID,
-			Timestamp:  record.Timestamp,
-			Result:     record.Result,
-		},
-	}
-
-	reply(ctx, w, response)
+	return response.Event, nil
 }
