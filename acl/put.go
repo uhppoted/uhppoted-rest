@@ -3,33 +3,32 @@ package acl
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-api/acl"
+	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-rest/errors"
 	"io/ioutil"
 	"net/http"
 )
 
-func PutACL(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
 	blob, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		warn(ctx, "put-acl", err)
-		http.Error(w, "Error reading request", http.StatusInternalServerError)
-		return
+		return nil, errors.Errorf(fmt.Errorf("%w: Error reading request", err), 0, "put-acl", "Error reading request")
 	}
 
-	body := permissions{}
+	body := struct {
+		ACL []permission `json:"acl"`
+	}{}
 
 	if err = json.Unmarshal(blob, &body); err != nil {
-		warn(ctx, "put-acl", err)
-		http.Error(w, "Invalid request format", http.StatusBadRequest)
-		return
+		return nil, errors.Errorf(fmt.Errorf("%w: Invalid request format", err), 0, "put-acl", "Invalid request format")
 	}
 
-	table, err := body.toTable()
+	table, err := PermissionsToTable(body.ACL)
 	if err != nil {
-		warn(ctx, "put-acl", err)
-		http.Error(w, "Error parsing request", http.StatusInternalServerError)
-		return
+		return nil, errors.Errorf(fmt.Errorf("%w: Error parsing request", err), 0, "put-acl", "Error parsing request")
 	}
 
 	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
@@ -37,19 +36,15 @@ func PutACL(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	acl, err := api.ParseTable(*table, devices)
 	if err != nil {
-		warn(ctx, "put-acl", err)
-		http.Error(w, "Error processing access control list", http.StatusInternalServerError)
-		return
+		return nil, errors.Errorf(fmt.Errorf("%w: Error processing access control list", err), 0, "put-acl", "Error processing access control list")
 	}
 
 	rpt, err := api.PutACL(u, *acl)
 	if err != nil {
-		warn(ctx, "put-acl", err)
-		http.Error(w, "Error put-acling access control list", http.StatusInternalServerError)
-		return
+		return nil, errors.Errorf(fmt.Errorf("%w: Error storing access control list", err), 0, "grant", "Error storing access control list")
 	}
 
-	response := []struct {
+	report := []struct {
 		DeviceID  uint32 `json:"device-id"`
 		Unchanged int    `json:"unchanged"`
 		Updated   int    `json:"updated"`
@@ -59,7 +54,7 @@ func PutACL(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	}{}
 
 	for k, v := range rpt {
-		response = append(response, struct {
+		report = append(report, struct {
 			DeviceID  uint32 `json:"device-id"`
 			Unchanged int    `json:"unchanged"`
 			Updated   int    `json:"updated"`
@@ -76,5 +71,16 @@ func PutACL(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	reply(ctx, w, response)
+	return &struct {
+		Report []struct {
+			DeviceID  uint32 `json:"device-id"`
+			Unchanged int    `json:"unchanged"`
+			Updated   int    `json:"updated"`
+			Added     int    `json:"added"`
+			Deleted   int    `json:"deleted"`
+			Failed    int    `json:"failed"`
+		} `json:"report"`
+	}{
+		Report: report,
+	}, nil
 }

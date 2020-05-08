@@ -20,8 +20,6 @@ type permission struct {
 	Doors      []string    `json:"doors"`
 }
 
-type permissions []permission
-
 func reply(ctx context.Context, w http.ResponseWriter, response interface{}) {
 	b, err := json.Marshal(response)
 	if err != nil {
@@ -41,12 +39,12 @@ func reply(ctx context.Context, w http.ResponseWriter, response interface{}) {
 	}
 }
 
-func (p *permissions) toTable() (*api.Table, error) {
+func PermissionsToTable(p []permission) (*api.Table, error) {
 	header := []string{"Card Number", "From", "To"}
 	records := [][]string{}
 	index := map[string]int{}
 
-	for _, r := range *p {
+	for _, r := range p {
 		if r.From == nil {
 			return nil, fmt.Errorf("Card %v: missing 'start-date'", r.CardNumber)
 		}
@@ -67,7 +65,7 @@ func (p *permissions) toTable() (*api.Table, error) {
 		header = append(header, h)
 	}
 
-	for _, r := range *p {
+	for _, r := range p {
 		record := make([]string, len(header))
 		record[0] = fmt.Sprintf("%v", r.CardNumber)
 		record[1] = fmt.Sprintf("%s", r.From)
@@ -96,7 +94,7 @@ func (p *permissions) toTable() (*api.Table, error) {
 	return &table, nil
 }
 
-func (p *permissions) fromTable(table *api.Table) error {
+func PermissionsFromTable(table *api.Table) ([]permission, error) {
 	index := struct {
 		cardnumber int
 		from       int
@@ -123,31 +121,32 @@ func (p *permissions) fromTable(table *api.Table) error {
 	}
 
 	if index.cardnumber == 0 {
-		return fmt.Errorf("Invalid ACL table - missing 'card number'")
+		return nil, fmt.Errorf("Invalid ACL table - missing 'card number'")
 	}
 
 	if index.from == 0 {
-		return fmt.Errorf("Invalid ACL table - missing 'from' date")
+		return nil, fmt.Errorf("Invalid ACL table - missing 'from' date")
 	}
 
 	if index.to == 0 {
-		return fmt.Errorf("Invalid ACL table - missing 'to' date")
+		return nil, fmt.Errorf("Invalid ACL table - missing 'to' date")
 	}
 
+	permissions := []permission{}
 	for _, row := range table.Records {
 		cardID, err := strconv.ParseUint(row[index.cardnumber-1], 10, 32)
 		if err != nil {
-			return fmt.Errorf("Invalid ACL table - invalid 'card number':%s (%w)", row[index.cardnumber-1], err)
+			return nil, fmt.Errorf("Invalid ACL table - invalid 'card number':%s (%w)", row[index.cardnumber-1], err)
 		}
 
 		from, err := types.DateFromString(row[index.from-1])
 		if err != nil {
-			return fmt.Errorf("Invalid ACL table - invalid 'from' date:%s (%w)", row[index.from-1], err)
+			return nil, fmt.Errorf("Invalid ACL table - invalid 'from' date:%s (%w)", row[index.from-1], err)
 		}
 
 		to, err := types.DateFromString(row[index.to-1])
 		if err != nil {
-			return fmt.Errorf("Invalid ACL table - invalid 'to' date:%s (%w)", row[index.to-1], err)
+			return nil, fmt.Errorf("Invalid ACL table - invalid 'to' date:%s (%w)", row[index.to-1], err)
 		}
 
 		doors := []string{}
@@ -157,7 +156,7 @@ func (p *permissions) fromTable(table *api.Table) error {
 			}
 		}
 
-		*p = append(*p, permission{
+		permissions = append(permissions, permission{
 			CardNumber: uint32(cardID),
 			From:       from,
 			To:         to,
@@ -165,7 +164,7 @@ func (p *permissions) fromTable(table *api.Table) error {
 		})
 	}
 
-	return nil
+	return permissions, nil
 }
 
 func clean(s string) string {

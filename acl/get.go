@@ -24,11 +24,14 @@ func GetACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 		return nil, errors.Errorf(fmt.Errorf("%w: Error processing access control list", err), 0, "get-acl", "Error processing access control list")
 	}
 
-	response := permissions{}
-
-	if err = response.fromTable(table); err != nil {
+	permissions, err := PermissionsFromTable(table)
+	if err != nil {
 		return nil, errors.Errorf(fmt.Errorf("%w: Error processing access control table", err), 0, "get-acl", "Error processing access control table")
 	}
 
-	return &response, nil
+	return &struct {
+		ACL []permission `json:"acl"`
+	}{
+		ACL: permissions,
+	}, nil
 }
