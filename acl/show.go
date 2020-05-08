@@ -34,14 +34,14 @@ func Show(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r
 		return nil, errors.Errorf(fmt.Errorf("%w: Error retrieving card access permissions", err), 0, "show", "Error retrieving card access permissions")
 	}
 
-	response := []struct {
+	permissions := []struct {
 		Door      string     `json:"door"`
 		StartDate types.Date `json:"start-date"`
 		EndDate   types.Date `json:"end-date"`
 	}{}
 
 	for k, v := range acl {
-		response = append(response, struct {
+		permissions = append(permissions, struct {
 			Door      string     `json:"door"`
 			StartDate types.Date `json:"start-date"`
 			EndDate   types.Date `json:"end-date"`
@@ -52,5 +52,13 @@ func Show(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r
 		})
 	}
 
-	return &response, nil
+	return &struct {
+		Permissions []struct {
+			Door      string     `json:"door"`
+			StartDate types.Date `json:"start-date"`
+			EndDate   types.Date `json:"end-date"`
+		} `json:"permissions"`
+	}{
+		Permissions: permissions,
+	}, nil
 }

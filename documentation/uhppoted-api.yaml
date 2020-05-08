@@ -597,112 +597,6 @@ paths:
         default:
           description: "Request failed"
         
-  /acl/card/{card-number}:
-    get:
-      tags:
-        - acl
-      summary: "Retrieves the access permissions for a card"
-      description: "Retrieves the access permissions for a card, using the configuration to resolve the door ID to the controller + door number."
-      operationId: aclShow
-      parameters:
-        - name: card-number
-          in: path
-          description: "Card number"
-          required: true
-          schema:
-            type: integer
-            format: uint32
-            example: 192837465
-      responses:
-        '200':
-          description: "List of current card access permissions"
-          content:
-            application/json:
-              schema:
-                  $ref: "#/components/schemas/CardPermissions"        
-        '405':
-          description: "Invalid request"
-        '500':
-          description: "Internal system error"
-        default:
-          description: "Request failed"
-        
-  /acl/card/{card-number}/doors/{door*}:
-    put:
-      tags:
-        - acl
-      summary: "Grants a card access to a door (or doors)"
-      description: "Grants a card access to a 'named' door, using the configuration to resolve the door ID to the controller + door number. A 'granted' access is added to the existing permissions for the card and access dates are 'widened' to accommodate the earliest 'start' date and the latest 'end' date."
-      operationId: aclGrant
-      parameters:
-        - name: card-number
-          in: path
-          description: "Card number"
-          required: true
-          schema:
-            type: integer
-            format: uint32
-            example: 192837465
-        - name: door*
-          in: path
-          description: "Door ID's ('ALL' will grant access to all doors)"
-          required: true
-          explode: true
-          schema:
-            type: string
-            format: Alphanumeric door name (space- and case-insensitive).
-            example: "Entrance, Upstairs"
-      requestBody:
-        description: "Card valid dates"
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/DateRange"        
-      responses:
-        '200':
-          description: "Access granted"
-        '405':
-          description: "Invalid request"
-        '500':
-          description: "Internal system error"
-        default:
-          description: "Request failed"
-
-    delete:
-      tags:
-        - acl
-      summary: "Revokes a card access to a door (or doors)"
-      description: "Revokes a card's access to a 'named' door, using the configuration to resolve the door ID to the controller + door number. A 'revoked' access is removed from the existing permissions for the card without modifying the card start/end dates."
-      operationId: aclRevoke
-      parameters:
-        - name: card-number
-          in: path
-          description: "Card number"
-          required: true
-          schema:
-            type: integer
-            format: uint32
-            example: 192837465
-        - name: door*
-          in: path
-          description: "Door ID's ('ALL' will revoke access to all doors)"
-          required: true
-          explode: true
-          schema:
-            type: string
-            format: Alphanumeric door name (space- and case-insensitive).
-            example: "Entrance"
-      responses:
-        '200':
-          description: "Access revoked"
-        '405':
-          description: "Invalid request"
-        '500':
-          description: "Internal system error"
-        default:
-          description: "Request failed"
-
   /acl:
     get:
       tags:
@@ -748,6 +642,187 @@ paths:
             application/json:
               schema:
                   $ref: "#/components/schemas/PutACLResult"        
+        '405':
+          description: "Invalid request"
+        '500':
+          description: "Internal system error"
+        default:
+          description: "Request failed"
+        
+  /acl/card/{card-number}:
+    get:
+      tags:
+        - acl
+      summary: "Retrieves the access permissions for a card"
+      description: "Retrieves the access permissions for a card, using the configuration to resolve the door ID to the controller + door number."
+      operationId: aclShow
+      parameters:
+        - name: card-number
+          in: path
+          description: "Card number"
+          required: true
+          schema:
+            type: integer
+            format: uint32
+            example: 192837465
+      responses:
+        '200':
+          description: "List of current card access permissions"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/CardPermissions"        
+        '405':
+          description: "Invalid request"
+        '500':
+          description: "Internal system error"
+        default:
+          description: "Request failed"
+
+    put:
+      tags:
+        - acl
+      summary: "Grants a card access to a door (or doors)"
+      description: "Grants a card access to a named door, using the configuration to resolve the door ID to the controller + door number. A granted access is added to the existing permissions for the card and access dates are widened to accommodate the earliest start date and the latest end date. NOTE: the date range for any one permissions will be automatically widened to accommodate the widest date range on a controller i.e. the final permissions at the controller level may not correspond to the requested permissions unless they are consistent across all controllers. This operation is also not atomic - permissions may have been partially granted if the request returns an error."
+      operationId: aclGrant
+      parameters:
+        - name: card-number
+          in: path
+          description: "Card number"
+          required: true
+          schema:
+            type: integer
+            format: uint32
+            example: 192837465
+        - name: door*
+          in: path
+          description: "List of doors"
+          required: true
+          explode: true
+          schema:
+            type: string
+            format: Alphanumeric door name (space- and case-insensitive).
+            example: "Entrance, Upstairs"
+      requestBody:
+        description: "Card valid dates"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CardPermissions"        
+      responses:
+        '200':
+          description: "Access granted"
+        '405':
+          description: "Invalid request"
+        '500':
+          description: "Internal system error"
+        default:
+          description: "Request failed"
+
+    delete:
+      tags:
+        - acl
+      summary: "Revokes a card access to a door (or doors)"
+      description: "Revokes a card's access to a 'named' door, using the configuration to resolve the door ID to the controller + door number. A 'revoked' access is removed from the existing permissions for the card without modifying the card start/end dates."
+      operationId: aclRevoke
+      parameters:
+        - name: card-number
+          in: path
+          description: "Card number"
+          required: true
+          schema:
+            type: integer
+            format: uint32
+            example: 192837465
+        - name: door
+          in: path
+          description: "Door ID ('ALL' will revoke access to all doors)"
+          required: true
+          explode: true
+          schema:
+            type: string
+            format: Alphanumeric door name (space- and case-insensitive).
+            example: "Entrance"
+      responses:
+        '200':
+          description: "Access revoked"
+        '405':
+          description: "Invalid request"
+        '500':
+          description: "Internal system error"
+        default:
+          description: "Request failed"
+        
+  /acl/card/{card-number}/door/{door}:
+    put:
+      tags:
+        - acl
+      summary: "Grants a card access to a door"
+      description: "Grants a card access to a single named door, using the configuration to resolve the door ID to the controller + door number. A granted access is added to the existing permissions for the card and access dates are widened to accommodate the earliest start date and the latest end date. The ALL door will grant access to all configured doors."
+      operationId: aclGrantDoor
+      parameters:
+        - name: card-number
+          in: path
+          description: "Card number"
+          required: true
+          schema:
+            type: integer
+            format: uint32åç
+            example: 192837465
+        - name: door
+          in: path
+          description: "Door ID ('ALL' will grant access to all doors)"
+          required: true
+          explode: true
+          schema:
+            type: string
+            format: Alphanumeric door name (space- and case-insensitive).
+            example: "Entrance"
+      requestBody:
+        description: "Card valid dates"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DateRange"        
+      responses:
+        '200':
+          description: "Access granted"
+        '405':
+          description: "Invalid request"
+        '500':
+          description: "Internal system error"
+        default:
+          description: "Request failed"
+
+    delete:
+      tags:
+        - acl
+      summary: "Revokes a card access to a door"
+      description: "Revokes a card's access to a 'named' door, using the configuration to resolve the door ID to the controller + door number. A 'revoked' access is removed from the existing permissions for the card without modifying the card start/end dates."
+      operationId: aclRevokeDoor
+      parameters:
+        - name: card-number
+          in: path
+          description: "Card number"
+          required: true
+          schema:
+            type: integer
+            format: uint32
+            example: 192837465
+        - name: door
+          in: path
+          description: "Door ID ('ALL' will revoke access to all doors)"
+          required: true
+          explode: true
+          schema:
+            type: string
+            format: Alphanumeric door name (space- and case-insensitive).
+            example: "Entrance"
+      responses:
+        '200':
+          description: "Access revoked"
         '405':
           description: "Invalid request"
         '500':
@@ -1029,11 +1104,15 @@ components:
           description: "List of doors and access"
 
     CardPermissions:
+      required:
+        - permissions
+      properties:
+        permissions:
+          type: array
+          items:
+            $ref: "#/components/schemas/CardPermission"                
       description: "List of doors to which the card has been granted access, along with associated access date ranges"      
-      type: array
-      items:
-        $ref: "#/components/schemas/CardPermission"        
-      example: [ { "door":"Entrance", "start-date":"2020-01-01", "end-date":"2020-12-31" },{ "door":"Workshop", "start-date":"2020-01-01", "end-date":"2020-12-31" },]
+      example: { "permissions": [ { "door":"Entrance", "start-date":"2020-01-01", "end-date":"2020-12-31" },{ "door":"Workshop", "start-date":"2020-01-01", "end-date":"2020-12-31" }] }
           
     CardPermission:
       required: 
