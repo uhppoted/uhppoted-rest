@@ -610,9 +610,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/AccessListRecord"        
+                $ref: "#/components/schemas/ACL"        
         '405':
           description: "Invalid request"
         '500':
@@ -632,9 +630,7 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: "#/components/schemas/AccessListRecord"        
+              $ref: "#/components/schemas/ACL"        
       responses:
         '200':
           description: "Result of access control lists update"
@@ -1061,6 +1057,16 @@ components:
           description: "Last date card is enabled (until 23:59)"
           example: "2020-12-31"
 
+    ACL:
+      required:
+        - acl
+      properties:
+        acl:
+          type: array
+          items:
+            $ref: "#/components/schemas/AccessListRecord"                
+          description: "List of cards and doors to which the cards have been granted access, along with associated card access date ranges"      
+          
     AccessListRecord:
       required: 
         - card-number
@@ -1093,11 +1099,15 @@ components:
           example: ["Entrance", "Upstairs", "Downstairs"]
 
     PutACLResult:
-      type: array
-      items: 
-          $ref: "#/components/schemas/PutACLResultRecord"        
+      required:
+        - report
+      properties:
+        report:
+          type: array
+          items: 
+            $ref: "#/components/schemas/PutACLResultRecord"        
       description: "Summary list of changes made to controller card lists"
-      example: [ { "device-id":405419896, "unchanged":1, "updated":3, "added": 2, "deleted":1, "failed":0 } ]
+      example: { "report": [ { "device-id":405419896, "unchanged":1, "updated":3, "added": 2, "deleted":1, "failed":0 } ] }
         
     PutACLResultRecord:
       required: 
