@@ -2,8 +2,8 @@ openapi: "3.0.2"
 
 info:
   version: 0.6.2
-  title: "twystd-uhppoted"
-  description: "REST API for the twystd UHPPOTE service. The API currently supports both device level functions and higher level access control list management."
+  title: "uhppoted"
+  description: "REST API for the uhppoted-rest service. The API currently supports both device level functions and higher level access control list management."
   license:
     name: "MIT"
     url: "https://github.com/uhppoted/uhppoted/blob/master/LICENSE"

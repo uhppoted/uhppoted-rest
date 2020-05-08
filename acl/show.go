@@ -6,26 +6,24 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-api/acl"
+	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-rest/errors"
 	"net/http"
 	"regexp"
 	"strconv"
 )
 
-func Show(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func Show(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
 	url := r.URL.Path
 
 	matches := regexp.MustCompile("^/uhppote/acl/card/([0-9]+)$").FindStringSubmatch(url)
 	if matches == nil || len(matches) < 2 {
-		warn(ctx, "show", fmt.Errorf("Missing card number"))
-		http.Error(w, "Invalid request: missing card number", http.StatusBadRequest)
-		return
+		return nil, errors.Errorf(fmt.Errorf("%w: Missing card number/door", uhppoted.BadRequest), 0, "show", "Missing card number/door")
 	}
 
 	cardID, err := strconv.ParseUint(matches[1], 10, 32)
 	if err != nil {
-		warn(ctx, "show", fmt.Errorf("Invalid card number '%s' (%w)", matches[1], err))
-		http.Error(w, "Invalid card number", http.StatusBadRequest)
-		return
+		return nil, errors.Errorf(fmt.Errorf("%w: Invalid card number (%s)", uhppoted.BadRequest, matches[1]), 0, "show", "Invalid card number")
 	}
 
 	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
@@ -33,9 +31,7 @@ func Show(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	acl, err := api.GetCard(u, devices, uint32(cardID))
 	if err != nil {
-		warn(ctx, "ACL::show", err)
-		http.Error(w, "Error retrieving card access permissions", http.StatusInternalServerError)
-		return
+		return nil, errors.Errorf(fmt.Errorf("%w: Error retrieving card access permissions", err), 0, "show", "Error retrieving card access permissions")
 	}
 
 	response := []struct {
@@ -56,5 +52,5 @@ func Show(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	reply(ctx, w, response)
+	return &response, nil
 }
