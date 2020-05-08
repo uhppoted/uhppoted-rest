@@ -5,50 +5,39 @@ import (
 	"fmt"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-api/acl"
+	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-rest/errors"
 	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-func Revoke(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func Revoke(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
 	url := r.URL.Path
 
-	matches := regexp.MustCompile("^/uhppote/acl/card/([0-9]+)/doors/(\\S.*)$").FindStringSubmatch(url)
+	matches := regexp.MustCompile("^/uhppote/acl/card/([0-9]+)/door/(\\S.*)$").FindStringSubmatch(url)
 	if matches == nil || len(matches) < 3 {
-		warn(ctx, "revoke", fmt.Errorf("Missing card number/door"))
-		http.Error(w, "Invalid request: missing card number/door", http.StatusBadRequest)
-		return
+		return nil, errors.Errorf(fmt.Errorf("%w: Missing card number/door", uhppoted.BadRequest), 0, "revoke", "Missing card number/door")
 	}
 
 	cardID, err := strconv.ParseUint(matches[1], 10, 32)
 	if err != nil {
-		warn(ctx, "revoke", fmt.Errorf("Invalid card number '%s' (%w)", matches[1], err))
-		http.Error(w, "Invalid card number", http.StatusBadRequest)
-		return
+		return nil, errors.Errorf(fmt.Errorf("%w: Invalid card number (%s)", uhppoted.BadRequest, matches[1]), 0, "revoke", "Invalid card number")
 	}
 
-	doors := []string{}
-	tokens := strings.Split(matches[2], ",")
-	for _, s := range tokens {
-		if d := strings.TrimSpace(s); d != "" {
-			doors = append(doors, d)
-		}
-	}
-
-	if len(doors) == 0 {
-		warn(ctx, "revoke", fmt.Errorf("Invalid list of doors '%s' (%w)", matches[2], err))
-		http.Error(w, "Invalid list of doors", http.StatusBadRequest)
-		return
+	door := matches[2]
+	if strings.TrimSpace(door) == "" {
+		return nil, errors.Errorf(fmt.Errorf("%w: Invalid door", uhppoted.BadRequest, matches[1]), 0, "revoke", "Invalid door")
 	}
 
 	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
 	devices := ctx.Value("devices").([]*uhppote.Device)
 
-	err = api.Revoke(u, devices, uint32(cardID), doors)
+	err = api.Revoke(u, devices, uint32(cardID), []string{door})
 	if err != nil {
-		warn(ctx, "revoke", err)
-		http.Error(w, "Error revoking card access permissions", http.StatusInternalServerError)
-		return
+		return nil, errors.Errorf(fmt.Errorf("%w: Error revoking card access permissions", err), 0, "revoke", "Error revoking card access permissions")
 	}
+
+	return nil, nil
 }
