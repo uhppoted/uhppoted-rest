@@ -3,7 +3,6 @@ package acl
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
@@ -15,7 +14,7 @@ import (
 func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
 	blob, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return nil, errors.Errorf(fmt.Errorf("%w: Error reading request", err), 0, "put-acl", "Error reading request")
+		return nil, errors.ErrorX(err, "put-acl", http.StatusInternalServerError, "Error reading request")
 	}
 
 	body := struct {
@@ -23,12 +22,12 @@ func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 	}{}
 
 	if err = json.Unmarshal(blob, &body); err != nil {
-		return nil, errors.Errorf(fmt.Errorf("%w: Invalid request format", err), 0, "put-acl", "Invalid request format")
+		return nil, errors.ErrorX(err, "put-acl", http.StatusBadRequest, "Invalid request format")
 	}
 
 	table, err := PermissionsToTable(body.ACL)
 	if err != nil {
-		return nil, errors.Errorf(fmt.Errorf("%w: Error parsing request", err), 0, "put-acl", "Error parsing request")
+		return nil, errors.ErrorX(err, "put-acl", http.StatusInternalServerError, "Error parsing request")
 	}
 
 	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
@@ -36,12 +35,12 @@ func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 
 	acl, err := api.ParseTable(*table, devices)
 	if err != nil {
-		return nil, errors.Errorf(fmt.Errorf("%w: Error processing access control list", err), 0, "put-acl", "Error processing access control list")
+		return nil, errors.ErrorX(err, "put-acl", http.StatusInternalServerError, "Error processing access control list")
 	}
 
 	rpt, err := api.PutACL(u, *acl)
 	if err != nil {
-		return nil, errors.Errorf(fmt.Errorf("%w: Error storing access control list", err), 0, "grant", "Error storing access control list")
+		return nil, errors.ErrorX(err, "grant", http.StatusInternalServerError, "Error storing access control list")
 	}
 
 	report := []struct {

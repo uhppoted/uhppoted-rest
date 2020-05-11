@@ -2,7 +2,6 @@ package acl
 
 import (
 	"context"
-	"fmt"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
