@@ -100,6 +100,7 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 		devices: devices,
 
 		handlers: []handler{
+			handler{regexp.MustCompile("^/uhppote/acl$"), http.MethodGet, acl.GetACL},
 			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+$"), http.MethodGet, acl.Show},
 			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/door/\\S.*$"), http.MethodPut, acl.Grant},
 			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/door/\\S.*$"), http.MethodDelete, acl.Revoke},
@@ -123,7 +124,6 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/events$"), http.MethodGet, device.GetEvents},
 			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/event/[0-9]+$"), http.MethodGet, device.GetEvent},
 
-			handlerx{regexp.MustCompile("^/uhppote/acl$"), http.MethodGet, acl.GetACL},
 			handlerx{regexp.MustCompile("^/uhppote/acl$"), http.MethodPut, acl.PutACL},
 		},
 

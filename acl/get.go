@@ -16,17 +16,17 @@ func GetACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 
 	acl, err := api.GetACL(u, devices)
 	if err != nil {
-		return nil, errors.Errorf(fmt.Errorf("%w: Error retrieving access control list", err), 0, "get-acl", "Error retrieving access control list")
+		return nil, errors.ErrorX(err, "get-acl", http.StatusInternalServerError, "Error retrieving access control list")
 	}
 
 	table, err := api.MakeTable(acl, devices)
 	if err != nil {
-		return nil, errors.Errorf(fmt.Errorf("%w: Error processing access control list", err), 0, "get-acl", "Error processing access control list")
+		return nil, errors.ErrorX(err, "get-acl", http.StatusInternalServerError, "Error processing access control list")
 	}
 
 	permissions, err := PermissionsFromTable(table)
 	if err != nil {
-		return nil, errors.Errorf(fmt.Errorf("%w: Error processing access control table", err), 0, "get-acl", "Error processing access control table")
+		return nil, errors.ErrorX(err, "get-acl", http.StatusInternalServerError, "Error processing access control table")
 	}
 
 	return &struct {
