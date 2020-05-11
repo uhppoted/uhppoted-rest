@@ -18,12 +18,12 @@ func Show(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r
 
 	matches := regexp.MustCompile("^/uhppote/acl/card/([0-9]+)$").FindStringSubmatch(url)
 	if matches == nil || len(matches) < 2 {
-		return nil, errors.Errorf(fmt.Errorf("%w: Missing card number/door", uhppoted.BadRequest), 0, "show", "Missing card number/door")
+		return nil, errors.ErrorX(fmt.Errorf("Missing card number/door in request URL"), "show", http.StatusBadRequest, "Missing card number/door")
 	}
 
 	cardID, err := strconv.ParseUint(matches[1], 10, 32)
 	if err != nil {
-		return nil, errors.Errorf(fmt.Errorf("%w: Invalid card number (%s)", uhppoted.BadRequest, matches[1]), 0, "show", "Invalid card number")
+		return nil, errors.ErrorX(fmt.Errorf("Invalid card number (%s) in request URL", matches[1]), "show", http.StatusBadRequest, "Invalid card number")
 	}
 
 	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
@@ -31,7 +31,7 @@ func Show(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r
 
 	acl, err := api.GetCard(u, devices, uint32(cardID))
 	if err != nil {
-		return nil, errors.Errorf(fmt.Errorf("%w: Error retrieving card access permissions", err), 0, "show", "Error retrieving card access permissions")
+		return nil, errors.ErrorX(err, "show", http.StatusInternalServerError, "Error retrieving card access permissions")
 	}
 
 	permissions := []struct {
