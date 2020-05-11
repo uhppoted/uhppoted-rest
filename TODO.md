@@ -21,6 +21,7 @@
 - [ ] command documentation
 - [ ] Add from/to/doors validity check for parsing JSON cards
 - [ ] Log requests/responses
+- [ ] Return original column name in uhppoted-api::parseHeader error
 
 ## TODO
 
