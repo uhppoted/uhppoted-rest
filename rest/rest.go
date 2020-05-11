@@ -61,7 +61,7 @@ type RESTD struct {
 	OpenAPI
 }
 
-type handlerfn func(context.Context, http.ResponseWriter, *http.Request)
+type handlerfn func(*uhppoted.UHPPOTED, context.Context, http.ResponseWriter, *http.Request) (interface{}, *errors.IError)
 type handlerfnx func(*uhppoted.UHPPOTED, context.Context, http.ResponseWriter, *http.Request) (interface{}, *errors.IError)
 
 type handler struct {
@@ -99,7 +99,9 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 		},
 		devices: devices,
 
-		handlers: []handler{},
+		handlers: []handler{
+			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/door/\\S.*$"), http.MethodPut, acl.Grant},
+		},
 
 		handlersx: []handlerx{
 			handlerx{regexp.MustCompile("^/uhppote/device$"), http.MethodGet, device.GetDevices},
@@ -122,7 +124,6 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 			handlerx{regexp.MustCompile("^/uhppote/acl$"), http.MethodGet, acl.GetACL},
 			handlerx{regexp.MustCompile("^/uhppote/acl$"), http.MethodPut, acl.PutACL},
 			handlerx{regexp.MustCompile("^/uhppote/acl/card/[0-9]+$"), http.MethodGet, acl.Show},
-			handlerx{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/door/\\S.*$"), http.MethodPut, acl.Grant},
 			handlerx{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/door/\\S.*$"), http.MethodDelete, acl.Revoke},
 		},
 
@@ -242,8 +243,8 @@ func (d *dispatcher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 			response, err := h.fn(d.uhppoted, ctx, w, r)
 			if err != nil {
-				warn(ctx, err.DeviceID, err.Tag, err.Err)
-				http.Error(w, err.Message, err.Code)
+				d.log.Printf("WARN  %-20s %v", err.Tag, err.Err)
+				http.Error(w, err.Message, err.Status)
 			} else if response != nil {
 				reply(ctx, w, response)
 			}
@@ -259,13 +260,21 @@ func (d *dispatcher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			ctx = context.WithValue(ctx, "log", d.log)
 			ctx = context.WithValue(ctx, "compression", compression)
 			ctx = parse(ctx, r)
-			h.fn(ctx, w, r)
+
+			if response, err := h.fn(d.uhppoted, ctx, w, r); err != nil {
+				d.log.Printf("WARN  %-20s %v", err.Tag, err)
+				msg, _ := json.Marshal(err)
+				http.Error(w, string(msg), err.Status)
+			} else if response != nil {
+				reply(ctx, w, response)
+			}
+
 			return
 		}
 	}
 
 	// Fall-through handler
-	http.Error(w, "Unsupported API", http.StatusBadRequest)
+	http.Error(w, "Unsupported API", http.StatusNotImplemented)
 }
 
 func parse(ctx context.Context, r *http.Request) context.Context {
@@ -323,12 +332,4 @@ func reply(ctx context.Context, w http.ResponseWriter, response interface{}) {
 	} else {
 		w.Write(b)
 	}
-}
-
-func debug(ctx context.Context, serialNumber uint32, operation string, r *http.Request) {
-	ctx.Value("log").(*log.Logger).Printf("DEBUG %-12d %-20s %v\n", serialNumber, operation, *r)
-}
-
-func warn(ctx context.Context, serialNumber uint32, operation string, err error) {
-	ctx.Value("log").(*log.Logger).Printf("WARN  %-12d %-20s %v\n", serialNumber, operation, err)
 }

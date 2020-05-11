@@ -28,7 +28,7 @@ func Revoke(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 
 	door := matches[2]
 	if strings.TrimSpace(door) == "" {
-		return nil, errors.Errorf(fmt.Errorf("%w: Invalid door", uhppoted.BadRequest, matches[1]), 0, "revoke", "Invalid door")
+		return nil, errors.Errorf(fmt.Errorf("%w: Invalid door (%s)", uhppoted.BadRequest, matches[1]), 0, "revoke", "Invalid door")
 	}
 
 	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)

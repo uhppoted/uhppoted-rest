@@ -5,7 +5,7 @@ import (
 	"flag"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-api/config"
-	"github.com/uhppoted/uhppoted-rest/eventlog"
+	"github.com/uhppoted/uhppoted-api/eventlog"
 	"log"
 	"os"
 	"os/signal"

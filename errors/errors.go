@@ -10,9 +10,10 @@ import (
 type IError struct {
 	Err      error  `json:"-"`
 	DeviceID uint32 `json:"-"`
-	Tag      string `json:"-"`
-	Code     int    `json:"error-code"`
+	Tag      string `json:"tag"`
+	Status   int    `json:"-"`
 	Message  string `json:"message"`
+	Debug    string `json:"debug"`
 }
 
 var (
@@ -32,6 +33,16 @@ func (e *IError) Error() string {
 	return fmt.Sprintf("%v", e.Err)
 }
 
+func ErrorX(err error, tag string, status int, msg string) *IError {
+	return &IError{
+		Err:     err,
+		Tag:     tag,
+		Status:  status,
+		Message: msg,
+		Debug:   fmt.Sprintf("%v", err),
+	}
+}
+
 func Errorf(err error, deviceID uint32, tag string, msg string) *IError {
 	status := http.StatusInternalServerError
 
@@ -47,7 +58,7 @@ func Errorf(err error, deviceID uint32, tag string, msg string) *IError {
 		Err:      err,
 		DeviceID: deviceID,
 		Tag:      tag,
-		Code:     status,
+		Status:   status,
 		Message:  msg,
 	}
 }

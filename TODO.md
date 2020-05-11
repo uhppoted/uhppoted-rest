@@ -16,15 +16,16 @@
 - [x] Move current 'REST' functions to 'device' package
 - [x] build documentation
 - [x] install documentation
-- [ ] Migrate current 'REST' functions to uhppoted-api
-- [ ] Use uhppoted-api event logging
+- [x] Migrate current 'REST' functions to uhppoted-api
+- [x] Use uhppoted-api event logging
 - [ ] command documentation
-- [ ] skeleton integration test
 - [ ] Add from/to/doors validity check for parsing JSON cards
+- [ ] Log requests/responses
 
 ## TODO
 
 ### uhppoted-rest
+- [ ] Skeleton integration test
 - [ ] Get events after XXX
 - [ ] Client certificate revocation list
 - [ ] uhppoted-rest: get-events date/id range

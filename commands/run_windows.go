@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-api/config"
-	filelogger "github.com/uhppoted/uhppoted-rest/eventlog"
+	filelogger "github.com/uhppoted/uhppoted-api/eventlog"
 	"golang.org/x/sys/windows/svc"
 	"golang.org/x/sys/windows/svc/eventlog"
 	"log"
