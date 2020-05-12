@@ -11,7 +11,6 @@ import (
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 	"github.com/uhppoted/uhppoted-rest/acl"
 	"github.com/uhppoted/uhppoted-rest/device"
-	"github.com/uhppoted/uhppoted-rest/errors"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -62,18 +61,11 @@ type RESTD struct {
 }
 
 type handlerfn func(*uhppoted.UHPPOTED, context.Context, http.ResponseWriter, *http.Request) (int, interface{}, error)
-type handlerfnx func(*uhppoted.UHPPOTED, context.Context, http.ResponseWriter, *http.Request) (interface{}, *errors.IError)
 
 type handler struct {
 	re     *regexp.Regexp
 	method string
 	fn     handlerfn
-}
-
-type handlerx struct {
-	re     *regexp.Regexp
-	method string
-	fn     handlerfnx
 }
 
 type dispatcher struct {
@@ -83,7 +75,6 @@ type dispatcher struct {
 	devices     []*uhppote.Device
 	log         *log.Logger
 	handlers    []handler
-	handlersx   []handlerx
 	openapi     http.Handler
 }
 
@@ -114,17 +105,14 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodGet, device.GetCard},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodPut, device.PutCard},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodDelete, device.DeleteCard},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/events$"), http.MethodGet, device.GetEvents},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/event/[0-9]+$"), http.MethodGet, device.GetEvent},
 
 			handler{regexp.MustCompile("^/uhppote/acl$"), http.MethodGet, acl.GetACL},
 			handler{regexp.MustCompile("^/uhppote/acl$"), http.MethodPut, acl.PutACL},
 			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+$"), http.MethodGet, acl.Show},
 			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/door/\\S.*$"), http.MethodPut, acl.Grant},
 			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/door/\\S.*$"), http.MethodDelete, acl.Revoke},
-		},
-
-		handlersx: []handlerx{
-			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/events$"), http.MethodGet, device.GetEvents},
-			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/event/[0-9]+$"), http.MethodGet, device.GetEvent},
 		},
 
 		log:         l,
@@ -232,27 +220,6 @@ func (d *dispatcher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// Dispatch to handler
 	url := r.URL.Path
-
-	for _, h := range d.handlersx {
-		if h.re.MatchString(url) && r.Method == h.method {
-			ctx := context.WithValue(context.Background(), "uhppote", d.uhppote)
-			ctx = context.WithValue(ctx, "devices", d.devices)
-			ctx = context.WithValue(ctx, "log", d.log)
-			ctx = context.WithValue(ctx, "compression", compression)
-			ctx = parse(ctx, r)
-
-			response, err := h.fn(d.uhppoted, ctx, w, r)
-			if err != nil {
-				d.log.Printf("WARN  %-20s %v", err.Tag, err.Err)
-				http.Error(w, err.Message, err.Status)
-			} else if response != nil {
-				reply(ctx, w, http.StatusOK, response)
-			}
-
-			return
-		}
-	}
-
 	for _, h := range d.handlers {
 		if h.re.MatchString(url) && r.Method == h.method {
 			ctx := context.WithValue(context.Background(), "uhppote", d.uhppote)
