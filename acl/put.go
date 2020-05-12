@@ -11,10 +11,12 @@ import (
 	"net/http"
 )
 
-func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
+func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	blob, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return nil, errors.ErrorX(err, "put-acl", http.StatusInternalServerError, "Error reading request")
+		return http.StatusInternalServerError,
+			errors.NewRESTError("put-acl", "Error reading request"),
+			err
 	}
 
 	body := struct {
@@ -22,12 +24,16 @@ func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 	}{}
 
 	if err = json.Unmarshal(blob, &body); err != nil {
-		return nil, errors.ErrorX(err, "put-acl", http.StatusBadRequest, "Invalid request format")
+		return http.StatusBadRequest,
+			errors.NewRESTError("put-acl", "Invalid request format"),
+			err
 	}
 
 	table, err := PermissionsToTable(body.ACL)
 	if err != nil {
-		return nil, errors.ErrorX(err, "put-acl", http.StatusInternalServerError, "Error parsing request")
+		return http.StatusInternalServerError,
+			errors.NewRESTError("put-acl", "Error parsing request"),
+			err
 	}
 
 	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
@@ -35,12 +41,16 @@ func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 
 	acl, err := api.ParseTable(*table, devices)
 	if err != nil {
-		return nil, errors.ErrorX(err, "put-acl", http.StatusInternalServerError, "Error processing access control list")
+		return http.StatusInternalServerError,
+			errors.NewRESTError("put-acl", "Error processing access control list"),
+			err
 	}
 
 	rpt, err := api.PutACL(u, *acl)
 	if err != nil {
-		return nil, errors.ErrorX(err, "put-table", http.StatusInternalServerError, "Error storing access control list")
+		return http.StatusInternalServerError,
+			errors.NewRESTError("put-table", "Error storing access control list"),
+			err
 	}
 
 	report := []struct {
@@ -70,7 +80,7 @@ func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 		})
 	}
 
-	return &struct {
+	return http.StatusOK, &struct {
 		Report []struct {
 			DeviceID  uint32 `json:"device-id"`
 			Unchanged int    `json:"unchanged"`

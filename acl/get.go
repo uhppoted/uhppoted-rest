@@ -9,26 +9,32 @@ import (
 	"net/http"
 )
 
-func GetACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
+func GetACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
 	devices := ctx.Value("devices").([]*uhppote.Device)
 
 	acl, err := api.GetACL(u, devices)
 	if err != nil {
-		return nil, errors.ErrorX(err, "get-acl", http.StatusInternalServerError, "Error retrieving access control list")
+		return http.StatusInternalServerError,
+			errors.NewRESTError("get-acl", "Error retrieving access control list"),
+			err
 	}
 
 	table, err := api.MakeTable(acl, devices)
 	if err != nil {
-		return nil, errors.ErrorX(err, "get-acl", http.StatusInternalServerError, "Error processing access control list")
+		return http.StatusInternalServerError,
+			errors.NewRESTError("get-acl", "Error processing access control list"),
+			err
 	}
 
 	permissions, err := PermissionsFromTable(table)
 	if err != nil {
-		return nil, errors.ErrorX(err, "get-acl", http.StatusInternalServerError, "Error processing access control table")
+		return http.StatusInternalServerError,
+			errors.NewRESTError("get-acl", "Error processing access control table"),
+			err
 	}
 
-	return &struct {
+	return http.StatusOK, &struct {
 		ACL []permission `json:"acl"`
 	}{
 		ACL: permissions,

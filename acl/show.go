@@ -13,17 +13,21 @@ import (
 	"strconv"
 )
 
-func Show(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
+func Show(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	url := r.URL.Path
 
 	matches := regexp.MustCompile("^/uhppote/acl/card/([0-9]+)$").FindStringSubmatch(url)
 	if matches == nil || len(matches) < 2 {
-		return nil, errors.ErrorX(fmt.Errorf("Missing card number/door in request URL"), "show", http.StatusBadRequest, "Missing card number/door")
+		return http.StatusBadRequest,
+			errors.NewRESTError("show", "Missing card number/door"),
+			fmt.Errorf("Missing card number/door in request URL %s)", url)
 	}
 
 	cardID, err := strconv.ParseUint(matches[1], 10, 32)
 	if err != nil {
-		return nil, errors.ErrorX(fmt.Errorf("Invalid card number (%s) in request URL", matches[1]), "show", http.StatusBadRequest, "Invalid card number")
+		return http.StatusBadRequest,
+			errors.NewRESTError("show", "Invalid card number"),
+			err
 	}
 
 	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
@@ -31,7 +35,9 @@ func Show(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r
 
 	acl, err := api.GetCard(u, devices, uint32(cardID))
 	if err != nil {
-		return nil, errors.ErrorX(err, "show", http.StatusInternalServerError, "Error retrieving card access permissions")
+		return http.StatusInternalServerError,
+			errors.NewRESTError("show", "Error retrieving card access permissions"),
+			err
 	}
 
 	permissions := []struct {
@@ -52,7 +58,7 @@ func Show(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r
 		})
 	}
 
-	return &struct {
+	return http.StatusOK, &struct {
 		Permissions []struct {
 			Door      string     `json:"door"`
 			StartDate types.Date `json:"start-date"`

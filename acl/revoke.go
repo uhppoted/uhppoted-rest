@@ -13,22 +13,28 @@ import (
 	"strings"
 )
 
-func Revoke(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
+func Revoke(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	url := r.URL.Path
 
 	matches := regexp.MustCompile("^/uhppote/acl/card/([0-9]+)/door/(\\S.*)$").FindStringSubmatch(url)
 	if matches == nil || len(matches) < 3 {
-		return nil, errors.ErrorX(fmt.Errorf("Missing card number/doori in request URL"), "revoke", http.StatusBadRequest, "Missing card number/door")
+		return http.StatusBadRequest,
+			errors.NewRESTError("revoke", "Missing card number/door"),
+			fmt.Errorf("Missing card number/door in request URL (%s)", url)
 	}
 
 	cardID, err := strconv.ParseUint(matches[1], 10, 32)
 	if err != nil {
-		return nil, errors.ErrorX(fmt.Errorf("Invalid card number (%s) in request URL", matches[1]), "revoke", http.StatusBadRequest, "Invalid card number")
+		return http.StatusBadRequest,
+			errors.NewRESTError("revoke", "Invalid card number"),
+			err
 	}
 
 	door := matches[2]
 	if strings.TrimSpace(door) == "" {
-		return nil, errors.ErrorX(fmt.Errorf("Invalid door (%s) in request URL", matches[1]), "revoke", http.StatusBadRequest, "Invalid door")
+		return http.StatusBadRequest,
+			errors.NewRESTError("revoke", "Invalid door"),
+			fmt.Errorf("Invalid door (%s) in request URL", matches[1])
 	}
 
 	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
@@ -36,8 +42,10 @@ func Revoke(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 
 	err = api.Revoke(u, devices, uint32(cardID), []string{door})
 	if err != nil {
-		return nil, errors.ErrorX(err, "revoke", http.StatusInternalServerError, "Error revoking card access permissions")
+		return http.StatusInternalServerError,
+			errors.NewRESTError("revoke", "Error revoking card access permissions"),
+			err
 	}
 
-	return nil, nil
+	return http.StatusOK, nil, nil
 }

@@ -61,7 +61,7 @@ type RESTD struct {
 	OpenAPI
 }
 
-type handlerfn func(*uhppoted.UHPPOTED, context.Context, http.ResponseWriter, *http.Request) (interface{}, *errors.IError)
+type handlerfn func(*uhppoted.UHPPOTED, context.Context, http.ResponseWriter, *http.Request) (int, interface{}, error)
 type handlerfnx func(*uhppoted.UHPPOTED, context.Context, http.ResponseWriter, *http.Request) (interface{}, *errors.IError)
 
 type handler struct {
@@ -245,7 +245,7 @@ func (d *dispatcher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				d.log.Printf("WARN  %-20s %v", err.Tag, err.Err)
 				http.Error(w, err.Message, err.Status)
 			} else if response != nil {
-				reply(ctx, w, response)
+				reply(ctx, w, http.StatusOK, response)
 			}
 
 			return
@@ -260,14 +260,12 @@ func (d *dispatcher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			ctx = context.WithValue(ctx, "compression", compression)
 			ctx = parse(ctx, r)
 
-			if response, err := h.fn(d.uhppoted, ctx, w, r); err != nil {
-				d.log.Printf("WARN  %-20s %v", err.Tag, err)
-				msg, _ := json.Marshal(err)
-				http.Error(w, string(msg), err.Status)
-			} else if response != nil {
-				reply(ctx, w, response)
+			status, response, err := h.fn(d.uhppoted, ctx, w, r)
+			if err != nil {
+				d.log.Printf("WARN  %v", err)
 			}
 
+			reply(ctx, w, status, response)
 			return
 		}
 	}
@@ -314,21 +312,27 @@ func parse(ctx context.Context, r *http.Request) context.Context {
 	return ctx
 }
 
-func reply(ctx context.Context, w http.ResponseWriter, response interface{}) {
-	b, err := json.Marshal(response)
-	if err != nil {
-		http.Error(w, "Error generating response", http.StatusInternalServerError)
-		return
+func reply(ctx context.Context, w http.ResponseWriter, status int, response interface{}) {
+	var err error
+	b := []byte{}
+	if response != nil {
+		b, err = json.Marshal(response)
+		if err != nil {
+			http.Error(w, "Error generating response", http.StatusInternalServerError)
+			return
+		}
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 
 	if len(b) > 1024 && ctx.Value("compression") == "gzip" {
 		w.Header().Set("Content-Encoding", "gzip")
+		w.WriteHeader(status)
 		encoder := gzip.NewWriter(w)
 		encoder.Write(b)
 		encoder.Flush()
 	} else {
+		w.WriteHeader(status)
 		w.Write(b)
 	}
 }

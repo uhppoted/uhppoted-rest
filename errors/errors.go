@@ -8,12 +8,13 @@ import (
 )
 
 type IError struct {
-	Err      error  `json:"-"`
-	DeviceID uint32 `json:"-"`
-	Tag      string `json:"tag"`
-	Status   int    `json:"-"`
-	Message  string `json:"message"`
-	Debug    string `json:"debug"`
+	Err       error  `json:"-"`
+	DeviceID  uint32 `json:"-"`
+	RequestID string `json:"request-id,omitempty"`
+	Tag       string `json:"tag"`
+	Status    int    `json:"-"`
+	Message   string `json:"message"`
+	Debug     string `json:"debug,omitempty"`
 }
 
 var (
@@ -33,13 +34,11 @@ func (e *IError) Error() string {
 	return fmt.Sprintf("%v", e.Err)
 }
 
-func ErrorX(err error, tag string, status int, msg string) *IError {
+func NewRESTError(tag, msg string) error {
 	return &IError{
-		Err:     err,
-		Tag:     tag,
-		Status:  status,
-		Message: msg,
-		Debug:   fmt.Sprintf("%v", err),
+		RequestID: "",
+		Tag:       tag,
+		Message:   msg,
 	}
 }
 
