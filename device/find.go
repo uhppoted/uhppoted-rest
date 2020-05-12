@@ -15,14 +15,16 @@ type device struct {
 	DeviceType string `json:"device-type"`
 }
 
-func GetDevices(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
+func GetDevices(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	rq := uhppoted.GetDevicesRequest{}
 
 	response, err := impl.GetDevices(rq)
 	if err != nil {
-		return nil, errors.Errorf(err, 0, "get-devices", "Error searching for active devices")
+		return http.StatusInternalServerError,
+			errors.NewRESTError("get-devices", "Error searching for active devices"),
+			err
 	} else if response == nil {
-		return nil, nil
+		return http.StatusOK, nil, nil
 	}
 
 	devices := make([]device, 0)
@@ -34,14 +36,14 @@ func GetDevices(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWri
 		})
 	}
 
-	return struct {
+	return http.StatusOK, struct {
 		Devices []device `json:"devices"`
 	}{
 		Devices: devices,
 	}, nil
 }
 
-func GetDevice(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
+func GetDevice(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	rq := uhppoted.GetDeviceRequest{
@@ -50,11 +52,11 @@ func GetDevice(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrit
 
 	response, err := impl.GetDevice(rq)
 	if err != nil {
-		return nil, errors.Errorf(err, deviceID, "get-device", fmt.Sprintf("Could not retrieve device information for %d", deviceID))
-	}
-
-	if response == nil {
-		return nil, nil
+		return http.StatusInternalServerError,
+			errors.NewRESTError("get-device", fmt.Sprintf("Could not retrieve device information for %d", deviceID)),
+			err
+	} else if response == nil {
+		return http.StatusOK, nil, nil
 	}
 
 	reply := struct {
@@ -75,5 +77,5 @@ func GetDevice(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrit
 		Date:       response.Date,
 	}
 
-	return reply, nil
+	return http.StatusOK, reply, nil
 }
