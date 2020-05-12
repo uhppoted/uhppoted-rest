@@ -18,14 +18,14 @@
 - [x] install documentation
 - [x] Migrate current 'REST' functions to uhppoted-api
 - [x] Use uhppoted-api event logging
-- [ ] command documentation
+- [ ] Command documentation
 - [ ] Add from/to/doors validity check for parsing JSON cards
-- [ ] Log requests/responses
 - [ ] Return original column name in uhppoted-api::parseHeader error
 
 ## TODO
 
-### uhppoted-rest
+- [ ] Trace/log requests/responses
+- [ ] Request ID's
 - [ ] Skeleton integration test
 - [ ] Get events after XXX
 - [ ] Client certificate revocation list

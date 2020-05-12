@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-func GetDoorDelay(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
+func GetDoorDelay(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 	door := ctx.Value("door").(uint8)
 
@@ -21,25 +21,29 @@ func GetDoorDelay(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseW
 
 	response, err := impl.GetDoorDelay(rq)
 	if err != nil {
-		return nil, errors.Errorf(err, deviceID, "get-door-delay", fmt.Sprintf("Error retrieving door delay for device %v, door %d", deviceID, door))
+		return http.StatusInternalServerError,
+			errors.NewRESTError("get-door-delay", fmt.Sprintf("Error retrieving door delay for device %v, door %d", deviceID, door)),
+			err
 	} else if response == nil {
-		return nil, nil
+		return http.StatusOK, nil, nil
 	}
 
-	return &struct {
+	return http.StatusOK, &struct {
 		Delay uint8 `json:"delay"`
 	}{
 		Delay: response.Delay,
 	}, nil
 }
 
-func SetDoorDelay(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
+func SetDoorDelay(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 	door := ctx.Value("door").(uint8)
 
 	blob, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return nil, errors.Errorf(fmt.Errorf("Error reading request (%w)", err), deviceID, "set-door-delay", "Error reading request")
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-door-delay", "Error reading request"),
+			err
 	}
 
 	body := struct {
@@ -48,11 +52,15 @@ func SetDoorDelay(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseW
 
 	err = json.Unmarshal(blob, &body)
 	if err != nil {
-		return nil, errors.Errorf(fmt.Errorf("%w: %v", uhppoted.BadRequest, err), deviceID, "set-door-delay", "Error parsing request")
+		return http.StatusBadRequest,
+			errors.NewRESTError("set-door-delay", "Error parsing request"),
+			err
 	}
 
 	if body.Delay == nil {
-		return nil, errors.Errorf(errors.InvalidDoorDelay, deviceID, "set-door-delay", "Missing/invalid door delay")
+		return http.StatusBadRequest,
+			errors.NewRESTError("set-door-delay", "Missing/invalid door delay"),
+			fmt.Errorf("Missing/invalid door delay value in request body (%s)", string(blob))
 	}
 
 	rq := uhppoted.SetDoorDelayRequest{
@@ -63,19 +71,21 @@ func SetDoorDelay(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseW
 
 	response, err := impl.SetDoorDelay(rq)
 	if err != nil {
-		return nil, errors.Errorf(err, deviceID, "set-door-delay", "Error setting device door delay")
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-door-delay", "Error setting device door delay"),
+			err
 	} else if response == nil {
-		return nil, nil
+		return http.StatusOK, nil, nil
 	}
 
-	return &struct {
+	return http.StatusOK, &struct {
 		Delay uint8 `json:"delay"`
 	}{
 		Delay: response.Delay,
 	}, nil
 }
 
-func GetDoorControl(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
+func GetDoorControl(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 	door := ctx.Value("door").(uint8)
 
@@ -86,25 +96,29 @@ func GetDoorControl(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respons
 
 	response, err := impl.GetDoorControl(rq)
 	if err != nil {
-		return nil, errors.Errorf(err, deviceID, "get-door-control", fmt.Sprintf("Error retrieving door control for device %v, door %d", deviceID, door))
+		return http.StatusInternalServerError,
+			errors.NewRESTError("get-door-control", fmt.Sprintf("Error retrieving door control for device %v, door %d", deviceID, door)),
+			err
 	} else if response == nil {
-		return nil, nil
+		return http.StatusOK, nil, nil
 	}
 
-	return &struct {
+	return http.StatusOK, &struct {
 		ControlState uhppoted.ControlState `json:"control"`
 	}{
 		ControlState: response.Control,
 	}, nil
 }
 
-func SetDoorControl(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
+func SetDoorControl(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 	door := ctx.Value("door").(uint8)
 
 	blob, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return nil, errors.Errorf(fmt.Errorf("Error reading request (%w)", err), deviceID, "set-door-control", "Error reading request")
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-door-control", "Error reading request"),
+			err
 	}
 
 	body := struct {
@@ -113,11 +127,15 @@ func SetDoorControl(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respons
 
 	err = json.Unmarshal(blob, &body)
 	if err != nil {
-		return nil, errors.Errorf(fmt.Errorf("%w: %v", uhppoted.BadRequest, err), deviceID, "set-door-control", "Error parsing request")
+		return http.StatusBadRequest,
+			errors.NewRESTError("set-door-control", "Error parsing request"),
+			err
 	}
 
 	if body.Control == nil {
-		return nil, errors.Errorf(errors.InvalidDoorControl, deviceID, "set-door-control", "Missing/invalid door control")
+		return http.StatusBadRequest,
+			errors.NewRESTError("set-door-control", "Missing/invalid door control"),
+			fmt.Errorf("Missing/invalid door control value in request body (%s)", string(blob))
 	}
 
 	rq := uhppoted.SetDoorControlRequest{
@@ -128,12 +146,14 @@ func SetDoorControl(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respons
 
 	response, err := impl.SetDoorControl(rq)
 	if err != nil {
-		return nil, errors.Errorf(err, deviceID, "set-door-control", "Error setting device door control")
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-door-control", "Error setting device door control"),
+			err
 	} else if response == nil {
-		return nil, nil
+		return http.StatusOK, nil, nil
 	}
 
-	return &struct {
+	return http.StatusOK, &struct {
 		Control uhppoted.ControlState `json:"control"`
 	}{
 		Control: response.Control,
