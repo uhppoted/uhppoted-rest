@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func GetStatus(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
+func GetStatus(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	rq := uhppoted.GetStatusRequest{
@@ -17,14 +17,14 @@ func GetStatus(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrit
 
 	response, err := impl.GetStatus(rq)
 	if err != nil {
-		return nil, errors.Errorf(err, deviceID, "get-status", fmt.Sprintf("Error retrieving device status for %v", deviceID))
+		return http.StatusInternalServerError,
+			errors.NewRESTError("get-status", fmt.Sprintf("Error retrieving device status for %v", deviceID)),
+			err
+	} else if response == nil {
+		return http.StatusOK, nil, nil
 	}
 
-	if response == nil {
-		return nil, nil
-	}
-
-	return struct {
+	return http.StatusOK, struct {
 		Status uhppoted.Status `json:"status"`
 	}{
 		Status: response.Status,
