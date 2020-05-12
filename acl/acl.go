@@ -1,14 +1,9 @@
 package acl
 
 import (
-	"compress/gzip"
-	"context"
-	"encoding/json"
 	"fmt"
 	"github.com/uhppoted/uhppote-core/types"
 	api "github.com/uhppoted/uhppoted-api/acl"
-	"log"
-	"net/http"
 	"strconv"
 	"strings"
 )
@@ -18,25 +13,6 @@ type permission struct {
 	From       *types.Date `json:"start-date"`
 	To         *types.Date `json:"end-date"`
 	Doors      []string    `json:"doors"`
-}
-
-func reply(ctx context.Context, w http.ResponseWriter, response interface{}) {
-	b, err := json.Marshal(response)
-	if err != nil {
-		http.Error(w, "Error generating response", http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-
-	if len(b) > 1024 && ctx.Value("compression") == "gzip" {
-		w.Header().Set("Content-Encoding", "gzip")
-		encoder := gzip.NewWriter(w)
-		encoder.Write(b)
-		encoder.Flush()
-	} else {
-		w.Write(b)
-	}
 }
 
 func PermissionsToTable(p []permission) (*api.Table, error) {
@@ -169,8 +145,4 @@ func PermissionsFromTable(table *api.Table) ([]permission, error) {
 
 func clean(s string) string {
 	return strings.ReplaceAll(strings.ToLower(s), " ", "")
-}
-
-func warn(ctx context.Context, operation string, err error) {
-	ctx.Value("log").(*log.Logger).Printf("WARN  %-20s %v\n", operation, err)
 }
