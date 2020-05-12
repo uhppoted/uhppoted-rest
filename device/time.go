@@ -11,7 +11,7 @@ import (
 	"net/http"
 )
 
-func GetTime(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
+func GetTime(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	rq := uhppoted.GetTimeRequest{
@@ -20,26 +20,28 @@ func GetTime(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter
 
 	response, err := impl.GetTime(rq)
 	if err != nil {
-		return nil, errors.Errorf(err, deviceID, "get-time", fmt.Sprintf("Error retrieving device time for %v", deviceID))
+		return http.StatusInternalServerError,
+			errors.NewRESTError("get-time", fmt.Sprintf("Error retrieving device time for %v", deviceID)),
+			err
+	} else if response == nil {
+		return http.StatusOK, nil, nil
 	}
 
-	if response == nil {
-		return nil, nil
-	}
-
-	return struct {
+	return http.StatusOK, struct {
 		DateTime types.DateTime `json:"datetime"`
 	}{
 		DateTime: response.DateTime,
 	}, nil
 }
 
-func SetTime(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (interface{}, *errors.IError) {
+func SetTime(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	blob, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return nil, errors.Errorf(fmt.Errorf("Error reading request (%w)", err), deviceID, "set-time", "Error reading request")
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-time", "Error reading request"),
+			err
 	}
 
 	body := struct {
@@ -48,11 +50,15 @@ func SetTime(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter
 
 	err = json.Unmarshal(blob, &body)
 	if err != nil {
-		return nil, errors.Errorf(fmt.Errorf("%w: %v", uhppoted.BadRequest, err), deviceID, "set-time", "Error parsing request")
+		return http.StatusBadRequest,
+			errors.NewRESTError("set-time", "Error parsing request"),
+			err
 	}
 
 	if body.DateTime == nil {
-		return nil, errors.Errorf(errors.InvalidDateTime, deviceID, "set-time", "Missing/invalid date/time")
+		return http.StatusBadRequest,
+			errors.NewRESTError("set-time", "Missing/invalid date/time"),
+			fmt.Errorf("Missing/invalid date-time in  request body (%s)", string(blob))
 	}
 
 	rq := uhppoted.SetTimeRequest{
@@ -62,14 +68,14 @@ func SetTime(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter
 
 	response, err := impl.SetTime(rq)
 	if err != nil {
-		return nil, errors.Errorf(err, deviceID, "set-time", "Error setting device date/time")
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-time", "Error setting device date/time"),
+			err
+	} else if response == nil {
+		return http.StatusOK, nil, nil
 	}
 
-	if response == nil {
-		return nil, nil
-	}
-
-	return &struct {
+	return http.StatusOK, &struct {
 		DateTime types.DateTime `json:"datetime"`
 	}{
 		DateTime: response.DateTime,
