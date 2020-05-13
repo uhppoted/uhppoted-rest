@@ -75,7 +75,7 @@ undaemonize: build
 	sudo ./bin/uhppoted-rest undaemonize
 
 run: build
-	./bin/uhppoted-rest run --console
+	./bin/uhppoted-rest --console
 
 swagger: 
 	docker run --detach --publish 80:8080 --rm swaggerapi/swagger-editor 
