@@ -19,7 +19,7 @@
 - [x] Migrate current 'REST' functions to uhppoted-api
 - [x] Use uhppoted-api event logging
 - [x] Future proof API
-- [ ] Command documentation
+- [x] Command documentation
 - [ ] Add from/to/doors validity check for parsing JSON cards
 - [ ] Return original column name in uhppoted-api::parseHeader error
 

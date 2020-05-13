@@ -24,8 +24,8 @@ Supported operating systems:
 
 Executables for all the supported operating systems are packaged in the [releases](https://github.com/uhppoted/uhppoted-rest/releases):
 
-- [v0.6.2 tar.gz](https://github.com/uhppoted/uhppoted-rest/releases/download/v0.6.2/uhppoted-rest_v0.6.2.tar.gz)
-- [v0.6.2 zip](https://github.com/uhppoted/uhppoted-rest/releases/download/v0.6.2/uhppoted-rest_v0.6.2.zip)
+- [v0.6.1 tar.gz](https://github.com/uhppoted/uhppoted-rest/releases/download/v0.6.1/uhppoted-rest_v0.6.1.tar.gz)
+- [v0.6.1 zip](https://github.com/uhppoted/uhppoted-rest/releases/download/v0.6.1/uhppoted-rest_v0.6.1.zip)
 
 The above archives contain the executables for all the operating systems - OS specific tarballs with all the _uhppoted_ components can be found in [uhpppoted](https://github.com/uhppoted/uhppoted/releases) releases.
 
@@ -81,15 +81,49 @@ The above commands build the `'uhppoted-rest` executable to the `bin` directory.
 
 ## uhppoted-rest
 
-Usage: *uhppoted-rest \<command\> \<options\>*
+Usage: ```uhppoted-rest <command> <options>```
 
-Defaults to `run` unless one of the commands below is specified: 
+Supported commands:
 
-- `daemonize`
-- `undaemonize`
 - `help`
 - `version`
+- `run`
+- `daemonize`
+- `undaemonize`
 
-Supported `run` options:
-- `--console`
-- `--debug`
+Defaults to `run` if the command it not provided i.e. ```uhppoted-rest <options>``` is equivalent to ```uhppoted-rest run <options>```.
+
+### `run`
+
+Runs the `uhppoted-rest` REST API server. Intended for use as a system service that runs in the background to handle REST requests. 
+
+Command line:
+
+` uhppoted-rest [--debug] [--console] [--config <file>] `
+
+```
+  --config      Sets the uhppoted.conf file to use for controller configurations. 
+                Defaults to the communal uhppoted.conf file shared by all the uhppoted 
+                modules.
+  --console     Runs the REST API server as an application, logging events to the
+                console.
+  --debug       Displays verbose debugging information, in particular the communications with the UHPPOTE controllers
+```
+
+### `daemonize`
+
+Registers the `uhppoted-rest` REST API server as a system service that will be started on system boot. The command creates the necessary system specific service configuration files and service manager entries.
+
+Command line:
+
+`uhppoted-rest daemonize `
+
+### `undaemonize`
+
+Unregisters the `uhppoted-rest` REST API server as a system service, but does not delete any created log or configuration files. 
+
+Command line:
+
+`uhppoted-rest undaemonize `
+
+
