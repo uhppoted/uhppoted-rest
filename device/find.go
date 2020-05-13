@@ -59,7 +59,7 @@ func GetDevice(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrit
 		return http.StatusOK, nil, nil
 	}
 
-	reply := struct {
+	device := struct {
 		DeviceType string           `json:"device-type"`
 		IPAddress  net.IP           `json:"ip-address"`
 		SubnetMask net.IP           `json:"subnet-mask"`
@@ -77,5 +77,9 @@ func GetDevice(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrit
 		Date:       response.Date,
 	}
 
-	return http.StatusOK, reply, nil
+	return http.StatusOK, struct {
+		Device interface{} `json:"device"`
+	}{
+		Device: device,
+	}, nil
 }

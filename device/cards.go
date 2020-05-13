@@ -83,7 +83,11 @@ func GetCard(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter
 			fmt.Errorf("No response returned to request for card %v from device %v", cardNumber, deviceID)
 	}
 
-	return http.StatusOK, response.Card, nil
+	return http.StatusOK, struct {
+		Card interface{} `json:"card"`
+	}{
+		Card: response.Card,
+	}, nil
 }
 
 func PutCard(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {

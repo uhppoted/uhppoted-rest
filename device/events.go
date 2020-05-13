@@ -76,5 +76,9 @@ func GetEvent(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrite
 			fmt.Errorf("No response returned to request for event %v from device %v", eventID, deviceID)
 	}
 
-	return http.StatusOK, response.Event, nil
+	return http.StatusOK, struct {
+		Event interface{} `json:"event"`
+	}{
+		Event: response.Event,
+	}, nil
 }
