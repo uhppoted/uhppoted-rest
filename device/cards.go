@@ -101,37 +101,20 @@ func PutCard(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter
 			err
 	}
 
-	body := struct {
-		From  *types.Date `json:"start-date"`
-		To    *types.Date `json:"end-date"`
-		Doors []bool      `json:"doors"`
-	}{}
-
-	if err = json.Unmarshal(blob, &body); err != nil {
+	card := types.Card{}
+	if err = json.Unmarshal(blob, &card); err != nil {
 		return http.StatusBadRequest,
-			errors.NewRESTError("put-card", "Error parsing request"),
+			errors.NewRESTError("put-card", fmt.Sprintf("Error parsing request (%v)", err)),
 			err
-	}
-
-	if body.From == nil {
-		return http.StatusBadRequest,
-			errors.NewRESTError("put-card", "Missing 'start-date'"),
-			fmt.Errorf("Missing/invalid start date in request body (%s)", string(blob))
-	}
-
-	if body.To == nil {
-		return http.StatusBadRequest,
-			errors.NewRESTError("put-card", "Missing 'end-date'"),
-			fmt.Errorf("Missing/invalid end date in request body (%s)", string(blob))
 	}
 
 	rq := uhppoted.PutCardRequest{
 		DeviceID: uhppoted.DeviceID(deviceID),
 		Card: types.Card{
 			CardNumber: cardNumber,
-			From:       *body.From,
-			To:         *body.To,
-			Doors:      body.Doors,
+			From:       card.From,
+			To:         card.To,
+			Doors:      card.Doors,
 		},
 	}
 

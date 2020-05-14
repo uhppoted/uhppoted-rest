@@ -20,7 +20,7 @@
 - [x] Use uhppoted-api event logging
 - [x] Future proof API
 - [x] Command documentation
-- [ ] Add from/to/doors validity check for parsing JSON cards
+- [x] Add from/to/doors validity check for parsing JSON cards
 - [ ] Return original column name in uhppoted-api::parseHeader error
 
 ## TODO
