@@ -34,21 +34,23 @@ func GetEvents(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrit
 		return http.StatusInternalServerError,
 			errors.NewRESTError("get-events", fmt.Sprintf("Error retrieving event indices from %v", deviceID)),
 			err
-	} else if response == nil {
-		return http.StatusInternalServerError,
-			errors.NewRESTError("get-events", fmt.Sprintf("Error retrieving event indices from %v", deviceID)),
-			fmt.Errorf("No response returned to request for events from device %v", deviceID)
+	}
+
+	if response == nil {
+		return http.StatusNotFound,
+			errors.NewRESTError("get-events", fmt.Sprintf("No events on device %v", deviceID)),
+			fmt.Errorf("No events on device %v", deviceID)
 	}
 
 	return http.StatusOK, &struct {
 		Events struct {
-			First uint32 `json:"first"`
-			Last  uint32 `json:"last"`
+			First *uint32 `json:"first,omitempty"`
+			Last  *uint32 `json:"last,omitempty"`
 		} `json:"events"`
 	}{
 		Events: struct {
-			First uint32 `json:"first"`
-			Last  uint32 `json:"last"`
+			First *uint32 `json:"first,omitempty"`
+			Last  *uint32 `json:"last,omitempty"`
 		}{
 			First: response.Events.First,
 			Last:  response.Events.Last,
