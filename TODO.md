@@ -21,7 +21,7 @@
 - [x] Future proof API
 - [x] Command documentation
 - [x] Add from/to/doors validity check for parsing JSON cards
-- [ ] Return original column name in uhppoted-api::parseHeader error
+- [x] Return original column name in uhppoted-api::parseHeader error
 
 ## TODO
 

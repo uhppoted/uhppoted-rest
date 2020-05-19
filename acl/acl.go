@@ -32,13 +32,10 @@ func PermissionsToTable(p []permission) (*api.Table, error) {
 		for _, door := range r.Doors {
 			d := clean(door)
 			if _, ok := index[d]; !ok {
-				index[d] = len(index) + len(header)
+				index[d] = 3 + len(index)
+				header = append(header, door)
 			}
 		}
-	}
-
-	for h, _ := range index {
-		header = append(header, h)
 	}
 
 	for _, r := range p {
