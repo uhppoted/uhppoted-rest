@@ -16,6 +16,7 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.6.2    | Implements access control list API                                                        |
 | v0.6.1    | Maintenance release to update module dependencies                                         |
 | v0.6.0    | Maintenance release to update module dependencies                                         |
 | v0.5.1    | Initial release following restructuring into standalone Go *modules* and *git submodules* |
@@ -24,8 +25,8 @@ Supported operating systems:
 
 Executables for all the supported operating systems are packaged in the [releases](https://github.com/uhppoted/uhppoted-rest/releases):
 
-- [v0.6.1 tar.gz](https://github.com/uhppoted/uhppoted-rest/releases/download/v0.6.1/uhppoted-rest_v0.6.1.tar.gz)
-- [v0.6.1 zip](https://github.com/uhppoted/uhppoted-rest/releases/download/v0.6.1/uhppoted-rest_v0.6.1.zip)
+- [v0.6.2 tar.gz](https://github.com/uhppoted/uhppoted-rest/releases/download/v0.6.2/uhppoted-rest_v0.6.2.tar.gz)
+- [v0.6.2 zip](https://github.com/uhppoted/uhppoted-rest/releases/download/v0.6.2/uhppoted-rest_v0.6.2.zip)
 
 The above archives contain the executables for all the operating systems - OS specific tarballs with all the _uhppoted_ components can be found in [uhpppoted](https://github.com/uhppoted/uhppoted/releases) releases.
 
