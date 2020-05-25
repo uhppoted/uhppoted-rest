@@ -1,28 +1,5 @@
 ## v0.6.x
 
-** IN PROGRESS **
-
-- [x] PUT card
-- [x] DELETE card
-- [x] grant
-- [x] revoke
-- [x] show
-- [x] load-acl
-- [x] get-acl
-- [x] Update OpenAPI 'show' returned object to be array
-- [x] Rethink dates on grant if current record has no permissions
-- [x] Rethink dates on grant ALL
-- [x] Rework to use uhppoted-api::Config
-- [x] Move current 'REST' functions to 'device' package
-- [x] build documentation
-- [x] install documentation
-- [x] Migrate current 'REST' functions to uhppoted-api
-- [x] Use uhppoted-api event logging
-- [x] Future proof API
-- [x] Command documentation
-- [x] Add from/to/doors validity check for parsing JSON cards
-- [x] Return original column name in uhppoted-api::parseHeader error
-
 ## TODO
 
 - [ ] Trace/log requests/responses
