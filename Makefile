@@ -1,4 +1,4 @@
-VERSION = v0.5.1
+VERSION = v0.6.3
 LDFLAGS = -ldflags "-X uhppote.VERSION=$(VERSION)" 
 DIST   ?= development
 CLI     = ./bin/uhppote-cli
