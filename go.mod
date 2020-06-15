@@ -8,3 +8,7 @@ require (
 	golang.org/x/sys v0.0.0-20200302150141-5c8b2ff67527
 )
 
+replace (
+    github.com/uhppoted/uhppote-core => ../uhppote-core
+    github.com/uhppoted/uhppoted-api => ../uhppoted-api
+)

@@ -39,7 +39,7 @@ func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
 	devices := ctx.Value("devices").([]*uhppote.Device)
 
-	acl, err := api.ParseTable(*table, devices)
+	acl, err := api.ParseTable(table, devices)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("put-acl", "Error processing access control list"),
