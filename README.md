@@ -1,3 +1,5 @@
+![build](https://github.com/uhppoted/uhppote-core/workflows/build/badge.svg)
+
 # uhppoted-rest
 
 Implements a REST API for use with access control systems based on the *UHPPOTE UT0311-L0x* TCP/IP Wiegand access control boards.
