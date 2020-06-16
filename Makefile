@@ -1,15 +1,8 @@
-VERSION = v0.6.3
+VERSION = v0.6.x
 LDFLAGS = -ldflags "-X uhppote.VERSION=$(VERSION)" 
 DIST   ?= development
-CLI     = ./bin/uhppote-cli
-
-SERIALNO ?= 405419896
-CARD     ?= 65538
-DOOR     ?= 3
-DEVICEIP ?= 192.168.1.125
-DATETIME  = $(shell date "+%Y-%m-%d %H:%M:%S")
-LISTEN   ?= 192.168.1.100:60001
-DEBUG    ?= --debug
+DEBUG  ?= --debug
+CMD     = ./bin/uhppoted-rest
 
 all: test      \
 	 benchmark \
@@ -60,22 +53,22 @@ debug: build
 	go test ./...
 
 version: build
-	./bin/uhppoted-rest version
+	$(CMD) version
 
 help: build
-	./bin/uhppoted-rest help
-	./bin/uhppoted-rest help commands
-	./bin/uhppoted-rest help version
-	./bin/uhppoted-rest help help
+	$(CMD) help
+	$(CMD) help commands
+	$(CMD) help version
+	$(CMD) help help
 
 daemonize: build
-	sudo ./bin/uhppoted-rest daemonize
+	sudo $(CMD) daemonize
 
 undaemonize: build
-	sudo ./bin/uhppoted-rest undaemonize
+	sudo $(CMD) undaemonize
 
 run: build
-	./bin/uhppoted-rest --console
+	$(CMD) --console
 
 swagger: 
 	docker run --detach --publish 80:8080 --rm swaggerapi/swagger-editor 
