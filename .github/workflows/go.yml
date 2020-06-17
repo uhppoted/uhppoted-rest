@@ -19,6 +19,12 @@ jobs:
         go-version: ^1.14
       id: go
 
+    - name: Checkout uhppote-core
+      run: git clone https://github.com/uhppoted/uhppote-core.git ../uhppote-core
+  
+    - name: Checkout uhppoted-api
+      run: git clone https://github.com/uhppoted/uhppoted-api.git ../uhppoted-api
+      
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
 
