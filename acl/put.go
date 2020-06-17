@@ -46,7 +46,7 @@ func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 			err
 	}
 
-	rpt, err := api.PutACL(u, *acl)
+	rpt, err := api.PutACL(u, *acl, false)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("put-table", "Error storing access control list"),
