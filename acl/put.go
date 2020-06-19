@@ -60,6 +60,7 @@ func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 		Added     int    `json:"added"`
 		Deleted   int    `json:"deleted"`
 		Failed    int    `json:"failed"`
+		Errors    int    `json:"errors"`
 	}{}
 
 	for k, v := range rpt {
@@ -70,13 +71,15 @@ func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 			Added     int    `json:"added"`
 			Deleted   int    `json:"deleted"`
 			Failed    int    `json:"failed"`
+			Errors    int    `json:"errors"`
 		}{
 			DeviceID:  k,
-			Unchanged: v.Unchanged,
-			Updated:   v.Updated,
-			Added:     v.Added,
-			Deleted:   v.Deleted,
-			Failed:    v.Failed,
+			Unchanged: len(v.Unchanged),
+			Updated:   len(v.Updated),
+			Added:     len(v.Added),
+			Deleted:   len(v.Deleted),
+			Failed:    len(v.Failed),
+			Errors:    len(v.Errors),
 		})
 	}
 
@@ -88,6 +91,7 @@ func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 			Added     int    `json:"added"`
 			Deleted   int    `json:"deleted"`
 			Failed    int    `json:"failed"`
+			Errors    int    `json:"errors"`
 		} `json:"report"`
 	}{
 		Report: report,
