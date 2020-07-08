@@ -56,7 +56,7 @@ func (r *Run) FlagSet() *flag.FlagSet {
 	flagset.StringVar(&r.logFile, "logfile", r.logFile, "Sets the log file path")
 	flagset.IntVar(&r.logFileSize, "logfilesize", r.logFileSize, "Sets the log file size before forcing a log rotate")
 	flagset.BoolVar(&r.console, "console", r.console, "Run as command-line application")
-	flagset.BoolVar(&r.debug, "debug", r.debug, "Displays vaguely useful internal information")
+	flagset.BoolVar(&r.debug, "debug", r.debug, "Displays internal information for diagnosing errors")
 
 	return flagset
 }
