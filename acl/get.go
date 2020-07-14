@@ -20,7 +20,7 @@ func GetACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 			err
 	}
 
-	table, err := api.MakeTable(&acl, devices)
+	table, err := api.MakeTable(acl, devices)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("get-acl", "Error processing access control list"),
