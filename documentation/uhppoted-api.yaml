@@ -344,20 +344,20 @@ paths:
               $ref: '#/components/schemas/Authorization'
       responses:
         '200':
-          description: "Door delay (in seconds)"
+          description: "Door opened"
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   door:
-                    $ref: "#/components/schemas/Door"        
+                    $ref: "#/components/schemas/DoorOpened"        
         '401':
           description: "User does not have permssions to open door"
           content:
             application/json:
               schema:
-                  $ref: "#/components/schemas/Error"        
+                  $ref: "#/components/schemas/Error"     
         '404':
           description: "No device with ID matching device-id"
           content:
@@ -1292,6 +1292,14 @@ components:
           format: "'normally open', 'normally closed' or 'controlled'"
           description: "Door control state"
           example: 'normally closed'
+
+    DoorOpened:
+      properties:
+        opened:
+          type: boolean
+          format: true/false
+          description: "Door opened/not opened"
+          example: true
 
     DoorDelay:
       properties:
