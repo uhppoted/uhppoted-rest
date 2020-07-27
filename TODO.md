@@ -1,5 +1,9 @@
 ## v0.6.x
 
+- [ ] OpenDoor API
+      - POST
+      - authorization
+      
 ## TODO
 
 - [ ] Trace/log requests/responses

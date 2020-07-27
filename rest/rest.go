@@ -97,7 +97,7 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time$"), http.MethodGet, device.GetTime},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time$"), http.MethodPut, device.SetTime},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]$"), http.MethodGet, device.GetDoor},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]$"), http.MethodPost, device.OpenDoor},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/swipes$"), http.MethodPost, device.OpenDoor},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/delay$"), http.MethodPut, device.SetDoorDelay},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/control$"), http.MethodPut, device.SetDoorControl},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/cards$"), http.MethodGet, device.GetCards},
