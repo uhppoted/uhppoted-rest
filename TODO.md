@@ -1,9 +1,10 @@
 ## v0.6.x
 
 - [ ] OpenDoor API
-      - check that user/card match
       - load permissions, groups, users from files
-      
+      - reload permissions, groups, users on file changed
+      - check that user/card match
+
 ## TODO
 
 - [ ] Trace/log requests/responses
