@@ -1,8 +1,8 @@
 ## v0.6.x
 
 - [ ] OpenDoor API
-      - POST
-      - authorization
+      - check that user/card match
+      - load permissions, groups, users from files
       
 ## TODO
 

@@ -8,19 +8,8 @@ import (
 	"strings"
 )
 
-var permissions = map[*regexp.Regexp][]string{
-	regexp.MustCompile("/uhppote/device/[0-9]+/door/[0-9]+/swipes::POST"): []string{"admin"},
-}
-
-var users = map[string]string{
-	"him": "ghjkl",
-	"her": "uiop",
-	"it":  "asdf",
-	"me":  "qwerty",
-}
-
-var groups = map[string][]string{
-	"admin": []string{"me"},
+var restricted = []*regexp.Regexp{
+	regexp.MustCompile("/uhppote/device/[0-9]+/door/[0-9]+/swipes::POST"),
 }
 
 func (d *dispatcher) authorized(r *http.Request) error {
@@ -45,13 +34,16 @@ func (d *dispatcher) authorized(r *http.Request) error {
 
 		resource := strings.TrimSpace(r.URL.Path) + "::" + strings.ToUpper(r.Method)
 
-		for re, groups := range permissions {
+		for _, re := range restricted {
 			if re.Match([]byte(resource)) {
 				switch scheme {
 				case "Basic":
-					if err := basic(resource, credentials, groups); err != nil {
+					if err := d.basic(resource, credentials); err != nil {
 						return err
 					}
+
+				default:
+					return fmt.Errorf("Unsupported authorization scheme: '%s'", scheme)
 				}
 			}
 		}
@@ -60,7 +52,7 @@ func (d *dispatcher) authorized(r *http.Request) error {
 	return nil
 }
 
-func basic(resource, credentials string, allowed []string) error {
+func (d *dispatcher) basic(resource, credentials string) error {
 	var uid string
 	var pwd string
 
@@ -78,19 +70,5 @@ func basic(resource, credentials string, allowed []string) error {
 		pwd = tokens[1]
 	}
 
-	for _, g := range allowed {
-		l, _ := groups[g]
-		for _, u := range l {
-			if uid == u {
-				for k, v := range users {
-					if k == uid && v == pwd {
-						return nil
-					}
-				}
-			}
-		}
-
-	}
-
-	return fmt.Errorf("Invalid credentials %v, %v", uid, pwd)
+	return d.auth.Authorize(resource, uid, pwd)
 }

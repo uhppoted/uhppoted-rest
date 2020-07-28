@@ -7,10 +7,6 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"fmt"
-	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted-api/uhppoted"
-	"github.com/uhppoted/uhppoted-rest/acl"
-	"github.com/uhppoted/uhppoted-rest/device"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -18,6 +14,12 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/uhppoted/uhppote-core/uhppote"
+	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-rest/acl"
+	"github.com/uhppoted/uhppoted-rest/auth"
+	"github.com/uhppoted/uhppoted-rest/device"
 )
 
 // OpenAPI is a container for the runtime flags for the Open API user interface
@@ -79,6 +81,7 @@ type dispatcher struct {
 	devices     []*uhppote.Device
 	log         *log.Logger
 	handlers    []handler
+	auth        auth.IAuth
 	openapi     http.Handler
 }
 
@@ -122,6 +125,7 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 		log:         l,
 		corsEnabled: r.CORSEnabled,
 		authEnabled: r.AuthEnabled,
+		auth:        auth.NewLocalAuth(),
 		openapi:     http.NotFoundHandler(),
 	}
 
