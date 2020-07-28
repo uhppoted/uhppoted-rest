@@ -172,6 +172,7 @@ func (r *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.Sig
 		TLSCertificateFile: c.REST.TLSCertificateFile,
 		CACertificateFile:  c.REST.CACertificateFile,
 		CORSEnabled:        c.REST.CORSEnabled,
+		AuthEnabled:        c.REST.AuthEnabled,
 		OpenAPI: rest.OpenAPI{
 			Enabled:   c.OpenAPI.Enabled,
 			Directory: c.OpenAPI.Directory,

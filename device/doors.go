@@ -75,8 +75,7 @@ func OpenDoor(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrite
 	}
 
 	body := struct {
-		CardNumber *uint32 `json:"user-id"`
-		OTP        *uint32 `json:"otp"`
+		CardNumber *uint32 `json:"card-number"`
 	}{}
 
 	err = json.Unmarshal(blob, &body)
@@ -100,12 +99,12 @@ func OpenDoor(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrite
 	response, err := impl.GetCard(rq)
 	if err != nil {
 		return http.StatusInternalServerError,
-			errors.NewRESTError("open-door", fmt.Sprintf("Error retrieving card %v from device %v", *body.CardNumber, deviceID)),
+			errors.NewRESTError("open-door", fmt.Sprintf("Card %v not valid for device %v", *body.CardNumber, deviceID)),
 			err
 	} else if response == nil {
 		return http.StatusInternalServerError,
-			errors.NewRESTError("open-door", fmt.Sprintf("Error retrieving card %v from device %v", *body.CardNumber, deviceID)),
-			fmt.Errorf("No response returned to request for card %v from device %v", *body.CardNumber, deviceID)
+			errors.NewRESTError("open-door", fmt.Sprintf("Card %v not valid for device %v", *body.CardNumber, deviceID)),
+			fmt.Errorf("GetCard returned <nil> for card %v, device %v", *body.CardNumber, deviceID)
 	} else {
 		card := response.Card
 
