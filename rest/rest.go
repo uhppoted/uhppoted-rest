@@ -61,6 +61,12 @@ type RESTD struct {
 	//AuthEnabled enables validation of the Authorization header.
 	AuthEnabled bool
 
+	//AuthUsers is the filepath for the 'users' file that stores the authorized users
+	AuthUsers string
+
+	//AuthGroups is the filepath for the 'groups' file that stores the group permissions
+	AuthGroups string
+
 	//OpenAPI runtime flags.
 	OpenAPI
 }
@@ -87,7 +93,7 @@ type dispatcher struct {
 // Run configures and starts the REST daemon HTTP and HTTPS request listeners. It returns once the listen
 // connections have been closed.
 func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger) {
-	auth, err := auth.NewAuthProvider(r.AuthEnabled, "/usr/local/etc/com.github.twystd.uhppoted/rest/users", "/usr/local/etc/com.github.twystd.uhppoted/rest/groups", l)
+	auth, err := auth.NewAuthProvider(r.AuthEnabled, r.AuthUsers, r.AuthGroups, l)
 	if err != nil {
 		log.Fatalf("Error initialising AuthProvider (%v)", err)
 	}

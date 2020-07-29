@@ -1,7 +1,6 @@
 ## v0.6.x
 
 - [ ] OpenDoor API
-      - get user/group files from config
       - check that user/card match
 
 ## TODO
