@@ -4,16 +4,11 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net/http"
-	"regexp"
 	"strings"
 )
 
-var restricted = []*regexp.Regexp{
-	regexp.MustCompile("/uhppote/device/[0-9]+/door/[0-9]+/swipes::POST"),
-}
-
 func (d *dispatcher) authorized(r *http.Request) error {
-	if d.authEnabled {
+	if d.auth.Enabled() {
 		var scheme string
 		var credentials string
 
@@ -32,27 +27,24 @@ func (d *dispatcher) authorized(r *http.Request) error {
 			}
 		}
 
-		resource := strings.TrimSpace(r.URL.Path) + "::" + strings.ToUpper(r.Method)
+		resource := strings.TrimSpace(r.URL.Path)
+		action := strings.ToLower(r.Method)
 
-		for _, re := range restricted {
-			if re.Match([]byte(resource)) {
-				switch scheme {
-				case "Basic":
-					if err := d.basic(resource, credentials); err != nil {
-						return err
-					}
-
-				default:
-					return fmt.Errorf("Unsupported authorization scheme: '%s'", scheme)
-				}
+		switch scheme {
+		case "Basic":
+			if err := d.basic(resource, action, credentials); err != nil {
+				return err
 			}
+
+		default:
+			return fmt.Errorf("Unsupported authorization scheme: '%s'", scheme)
 		}
 	}
 
 	return nil
 }
 
-func (d *dispatcher) basic(resource, credentials string) error {
+func (d *dispatcher) basic(resource, action, credentials string) error {
 	var uid string
 	var pwd string
 
@@ -70,5 +62,5 @@ func (d *dispatcher) basic(resource, credentials string) error {
 		pwd = tokens[1]
 	}
 
-	return d.auth.Authorize(resource, uid, pwd)
+	return d.auth.Authorize(resource, action, uid, pwd)
 }

@@ -75,7 +75,6 @@ type handler struct {
 
 type dispatcher struct {
 	corsEnabled bool
-	authEnabled bool
 	uhppote     *uhppote.UHPPOTE
 	uhppoted    *uhppoted.UHPPOTED
 	devices     []*uhppote.Device
@@ -88,6 +87,11 @@ type dispatcher struct {
 // Run configures and starts the REST daemon HTTP and HTTPS request listeners. It returns once the listen
 // connections have been closed.
 func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger) {
+	auth, err := auth.NewAuthProvider(r.AuthEnabled, "/usr/local/etc/com.github.twystd.uhppoted/rest/users", "/usr/local/etc/com.github.twystd.uhppoted/rest/groups", l)
+	if err != nil {
+		log.Fatalf("Error initialising AuthProvider (%v)", err)
+	}
+
 	d := dispatcher{
 		uhppote: u,
 		uhppoted: &uhppoted.UHPPOTED{
@@ -124,8 +128,7 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 
 		log:         l,
 		corsEnabled: r.CORSEnabled,
-		authEnabled: r.AuthEnabled,
-		auth:        auth.NewLocalAuth(),
+		auth:        auth,
 		openapi:     http.NotFoundHandler(),
 	}
 
