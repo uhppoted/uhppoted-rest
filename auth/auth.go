@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -116,7 +118,9 @@ func (a *AuthProvider) Authorize(resource, action, uid, pwd string) error {
 		return fmt.Errorf("%s: Not a member of any permissions groups", uid)
 	}
 
-	if pwd != u.(*user).Password {
+	hash := sha256.Sum256([]byte(pwd))
+	hashx := hex.EncodeToString(hash[:])
+	if hashx != u.(*user).Password {
 		return fmt.Errorf("Invalid credentials %v, %v", uid, pwd)
 	}
 

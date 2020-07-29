@@ -1,7 +1,7 @@
 ## v0.6.x
 
 - [ ] OpenDoor API
-      - store hash of password
+      - get user/group files from config
       - check that user/card match
 
 ## TODO
