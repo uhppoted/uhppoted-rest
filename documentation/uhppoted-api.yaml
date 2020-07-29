@@ -18,6 +18,9 @@ tags:
   - name: "acl"
     description: "Access control list API"
 
+security:
+  - basic: []
+
 paths:
   /device:
     get:
@@ -328,8 +331,6 @@ paths:
       summary: "Opens a door"
       description: "Issues the 'open door' command to an access controller"
       operationId: openDoor
-      security:
-        - basic: []
       parameters:
         - name: device-id
           in: path
