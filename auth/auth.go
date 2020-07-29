@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"regexp"
@@ -25,6 +26,11 @@ type permission struct {
 	action   *regexp.Regexp
 }
 
+type user struct {
+	Password string   `json:"password"`
+	Groups   []string `json:"groups"`
+}
+
 func (p permission) String() string {
 	return fmt.Sprintf("resource:`%s` action:`%s`", p.resource, p.action)
 }
@@ -32,8 +38,14 @@ func (p permission) String() string {
 func NewAuthProvider(enabled bool, users, groups string, logger *log.Logger) (*AuthProvider, error) {
 	separator := regexp.MustCompile(`\s*,\s*`)
 
-	u := func(value string) (interface{}, error) {
-		return separator.Split(value, -1), nil
+	f := func(value string) (interface{}, error) {
+		u := user{}
+		err := json.Unmarshal([]byte(value), &u)
+		if err != nil {
+			return nil, err
+		}
+
+		return &u, nil
 	}
 
 	g := func(value string) (interface{}, error) {
@@ -64,7 +76,7 @@ func NewAuthProvider(enabled bool, users, groups string, logger *log.Logger) (*A
 
 	provider := AuthProvider{
 		enabled: enabled,
-		users:   kvs.NewKeyValueStore("permissions:users", u),
+		users:   kvs.NewKeyValueStore("permissions:users", f),
 		groups:  kvs.NewKeyValueStore("permissions:groups", g),
 	}
 
@@ -94,19 +106,21 @@ func (a *AuthProvider) Enabled() bool {
 	return a.enabled
 }
 
-func (a *AuthProvider) Authorize(resource, action, user, password string) error {
+func (a *AuthProvider) Authorize(resource, action, uid, pwd string) error {
 	if !a.Enabled() {
 		return nil
 	}
 
-	//	return fmt.Errorf("Invalid credentials %v, %v", user, password)
-
-	groups, ok := a.users.Get(user)
+	u, ok := a.users.Get(uid)
 	if !ok {
-		return fmt.Errorf("%s: Not a member of any permissions groups", user)
+		return fmt.Errorf("%s: Not a member of any permissions groups", uid)
 	}
 
-	for _, g := range groups.([]string) {
+	if pwd != u.(*user).Password {
+		return fmt.Errorf("Invalid credentials %v, %v", uid, pwd)
+	}
+
+	for _, g := range u.(*user).Groups {
 		if permissions, ok := a.groups.Get(g); ok {
 			for _, q := range permissions.([]permission) {
 				if q.resource.MatchString(resource) && q.action.MatchString(action) {
@@ -116,5 +130,5 @@ func (a *AuthProvider) Authorize(resource, action, user, password string) error 
 		}
 	}
 
-	return fmt.Errorf("%s: Not authorised for %s:%s", user, resource, action)
+	return fmt.Errorf("%s: Not authorised for %s:%s", uid, resource, action)
 }

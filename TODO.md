@@ -1,8 +1,7 @@
 ## v0.6.x
 
 - [ ] OpenDoor API
-      - load permissions, groups, users from files
-      - reload permissions, groups, users on file changed
+      - store hash of password
       - check that user/card match
 
 ## TODO
