@@ -15,6 +15,7 @@ import (
 type IAuth interface {
 	Enabled() bool
 	Authorize(resource, action, user, password string) error
+	Cards(user string) []string
 }
 
 type AuthProvider struct {
@@ -31,6 +32,7 @@ type permission struct {
 type user struct {
 	Password string   `json:"password"`
 	Groups   []string `json:"groups"`
+	Cards    []string `json:"cards"`
 }
 
 func (p permission) String() string {
@@ -115,7 +117,7 @@ func (a *AuthProvider) Authorize(resource, action, uid, pwd string) error {
 
 	u, ok := a.users.Get(uid)
 	if !ok {
-		return fmt.Errorf("%s: Not a member of any permissions groups", uid)
+		return fmt.Errorf("%s: Invalid user ID", uid)
 	}
 
 	hash := sha256.Sum256([]byte(pwd))
@@ -135,4 +137,16 @@ func (a *AuthProvider) Authorize(resource, action, uid, pwd string) error {
 	}
 
 	return fmt.Errorf("%s: Not authorised for %s:%s", uid, resource, action)
+}
+
+func (a *AuthProvider) Cards(uid string) []string {
+	if !a.Enabled() {
+		return []string{".*"}
+	}
+
+	if u, ok := a.users.Get(uid); ok {
+		return u.(*user).Cards
+	}
+
+	return []string{}
 }

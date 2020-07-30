@@ -91,6 +91,12 @@ func OpenDoor(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrite
 			fmt.Errorf("Missing/invalid user ID in request body (%s)", string(blob))
 	}
 
+	if !authorized(ctx, *body.CardNumber) {
+		return http.StatusUnauthorized,
+			errors.NewRESTError("open-door", fmt.Sprintf("Not authorized for card %v", *body.CardNumber)),
+			fmt.Errorf("Not authorized for card %v", *body.CardNumber)
+	}
+
 	rq := uhppoted.GetCardRequest{
 		DeviceID:   uhppoted.DeviceID(deviceID),
 		CardNumber: *body.CardNumber,

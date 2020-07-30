@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func (d *dispatcher) authorized(r *http.Request) error {
+func (d *dispatcher) authorized(r *http.Request) ([]string, error) {
 	if d.auth.Enabled() {
 		var scheme string
 		var credentials string
@@ -32,25 +32,23 @@ func (d *dispatcher) authorized(r *http.Request) error {
 
 		switch scheme {
 		case "Basic":
-			if err := d.basic(resource, action, credentials); err != nil {
-				return err
-			}
+			return d.basic(resource, action, credentials)
 
 		default:
-			return fmt.Errorf("Unsupported authorization scheme: '%s'", scheme)
+			return []string{}, fmt.Errorf("Unsupported authorization scheme: '%s'", scheme)
 		}
 	}
 
-	return nil
+	return []string{".*"}, nil
 }
 
-func (d *dispatcher) basic(resource, action, credentials string) error {
+func (d *dispatcher) basic(resource, action, credentials string) ([]string, error) {
 	var uid string
 	var pwd string
 
 	plaintext, err := base64.StdEncoding.DecodeString(credentials)
 	if err != nil {
-		return err
+		return []string{}, err
 	}
 
 	tokens := strings.Split(string(plaintext), ":")
@@ -62,5 +60,9 @@ func (d *dispatcher) basic(resource, action, credentials string) error {
 		pwd = tokens[1]
 	}
 
-	return d.auth.Authorize(resource, action, uid, pwd)
+	if err := d.auth.Authorize(resource, action, uid, pwd); err != nil {
+		return []string{}, err
+	}
+
+	return d.auth.Cards(uid), nil
 }

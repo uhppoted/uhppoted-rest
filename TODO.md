@@ -1,7 +1,7 @@
 ## v0.6.x
 
 - [ ] OpenDoor API
-      - check that user/card match
+      - HOTP auth scheme
 
 ## TODO
 
