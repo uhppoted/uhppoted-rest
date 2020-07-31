@@ -175,6 +175,8 @@ func (r *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.Sig
 		AuthEnabled:        c.REST.AuthEnabled,
 		AuthUsers:          c.REST.Users,
 		AuthGroups:         c.REST.Groups,
+		HOTPWindow:         c.REST.HOTP.Range,
+		HOTPCounters:       c.REST.HOTP.Counters,
 		OpenAPI: rest.OpenAPI{
 			Enabled:   c.OpenAPI.Enabled,
 			Directory: c.OpenAPI.Directory,

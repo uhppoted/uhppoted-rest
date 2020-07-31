@@ -67,6 +67,12 @@ type RESTD struct {
 	//AuthGroups is the filepath for the 'groups' file that stores the group permissions
 	AuthGroups string
 
+	//HOTPWindow is the allowable 'window' for HOTP counter values
+	HOTPWindow uint64
+
+	//HOTPCounters is the filepath for the 'counters' file that stores the HOTP counters
+	HOTPCounters string
+
 	//OpenAPI runtime flags.
 	OpenAPI
 }
@@ -93,7 +99,7 @@ type dispatcher struct {
 // Run configures and starts the REST daemon HTTP and HTTPS request listeners. It returns once the listen
 // connections have been closed.
 func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger) {
-	auth, err := auth.NewAuthProvider(r.AuthEnabled, r.AuthUsers, r.AuthGroups, l)
+	auth, err := auth.NewAuthProvider(r.AuthEnabled, r.AuthUsers, r.AuthGroups, r.HOTPCounters, r.HOTPWindow, l)
 	if err != nil {
 		log.Fatalf("Error initialising AuthProvider (%v)", err)
 	}

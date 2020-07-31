@@ -1,7 +1,7 @@
 ## v0.6.x
 
 - [ ] OpenDoor API
-      - HOTP auth scheme
+      - Document API authorization
 
 ## TODO
 

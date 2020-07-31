@@ -14,7 +14,9 @@ import (
 
 type IAuth interface {
 	Enabled() bool
-	Authorize(resource, action, user, password string) error
+	VerifyPassword(user, pwd string) error
+	VerifyHOTP(user, otp string) error
+	Authorize(resource, action, user string) error
 	Cards(user string) []string
 }
 
@@ -22,6 +24,7 @@ type AuthProvider struct {
 	enabled bool
 	users   *kvs.KeyValueStore
 	groups  *kvs.KeyValueStore
+	hotp    *HOTP
 }
 
 type permission struct {
@@ -31,6 +34,7 @@ type permission struct {
 
 type user struct {
 	Password string   `json:"password"`
+	HOTP     string   `json:"hotp"`
 	Groups   []string `json:"groups"`
 	Cards    []string `json:"cards"`
 }
@@ -39,7 +43,7 @@ func (p permission) String() string {
 	return fmt.Sprintf("resource:`%s` action:`%s`", p.resource, p.action)
 }
 
-func NewAuthProvider(enabled bool, users, groups string, logger *log.Logger) (*AuthProvider, error) {
+func NewAuthProvider(enabled bool, users, groups, counters string, window uint64, logger *log.Logger) (*AuthProvider, error) {
 	separator := regexp.MustCompile(`\s*,\s*`)
 
 	f := func(value string) (interface{}, error) {
@@ -95,8 +99,14 @@ func NewAuthProvider(enabled bool, users, groups string, logger *log.Logger) (*A
 			return nil, err
 		}
 
+		hotp, err := NewHOTP(8, counters, logger)
+		if err != nil {
+			return nil, err
+		}
+
 		provider.users.Watch(users, logger)
 		provider.groups.Watch(groups, logger)
+		provider.hotp = hotp
 	}
 
 	return &provider, nil
@@ -110,7 +120,7 @@ func (a *AuthProvider) Enabled() bool {
 	return a.enabled
 }
 
-func (a *AuthProvider) Authorize(resource, action, uid, pwd string) error {
+func (a *AuthProvider) VerifyPassword(uid, pwd string) error {
 	if !a.Enabled() {
 		return nil
 	}
@@ -124,6 +134,32 @@ func (a *AuthProvider) Authorize(resource, action, uid, pwd string) error {
 	hashx := hex.EncodeToString(hash[:])
 	if hashx != u.(*user).Password {
 		return fmt.Errorf("Invalid credentials %v, %v", uid, pwd)
+	}
+
+	return nil
+}
+
+func (a *AuthProvider) VerifyHOTP(uid, otp string) error {
+	if !a.Enabled() {
+		return nil
+	}
+
+	u, ok := a.users.Get(uid)
+	if !ok {
+		return fmt.Errorf("%s: Invalid user ID", uid)
+	}
+
+	return a.hotp.Validate(uid, u.(*user).HOTP, otp)
+}
+
+func (a *AuthProvider) Authorize(resource, action, uid string) error {
+	if !a.Enabled() {
+		return nil
+	}
+
+	u, ok := a.users.Get(uid)
+	if !ok {
+		return fmt.Errorf("%s: Invalid user ID", uid)
 	}
 
 	for _, g := range u.(*user).Groups {
