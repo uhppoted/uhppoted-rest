@@ -55,6 +55,10 @@ type RESTD struct {
 	//CACertificateFile is the path the the HTTPS CA certificate PEM file used to verify client certificates.
 	CACertificateFile string
 
+	// RequireClientCertificates makes client TLS certificates mandatory. Otherwise the client certificate is validated
+	// if presented.
+	RequireClientCertificates bool
+
 	//CORSEnabled allows CORS requests if true. Should be false in production.
 	CORSEnabled bool
 
@@ -186,6 +190,12 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 				},
 				PreferServerCipherSuites: true,
 				MinVersion:               tls.VersionTLS12,
+			}
+
+			if r.RequireClientCertificates {
+				tlsConfig.ClientAuth = tls.RequireAndVerifyClientCert
+			} else {
+				tlsConfig.ClientAuth = tls.VerifyClientCertIfGiven
 			}
 
 			tlsConfig.BuildNameToCertificate()

@@ -1,7 +1,6 @@
 ## v0.6.x
 
-- [ ] OpenDoor API
-      - Document API authorization
+- [x] OpenDoor API
 
 ## TODO
 
