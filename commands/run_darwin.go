@@ -23,10 +23,10 @@ type Run struct {
 }
 
 var RUN = Run{
-	configuration: "/usr/local/etc/com.github.twystd.uhppoted/uhppoted.conf",
-	dir:           "/usr/local/var/com.github.twystd.uhppoted",
-	pidFile:       "/usr/local/var/com.github.twystd.uhppoted/uhppoted-rest.pid",
-	logFile:       "/usr/local/var/com.github.twystd.uhppoted/logs/uhppoted-rest.log",
+	configuration: "/usr/local/etc/com.github.uhppoted/uhppoted.conf",
+	dir:           "/usr/local/var/com.github.uhppoted",
+	pidFile:       "/usr/local/var/com.github.uhppoted/uhppoted-rest.pid",
+	logFile:       "/usr/local/var/com.github.uhppoted/logs/uhppoted-rest.log",
 	logFileSize:   10,
 	console:       false,
 	debug:         false,

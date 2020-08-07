@@ -45,7 +45,7 @@ func (c *Undaemonize) Help() {
 func (c *Undaemonize) Execute(ctx context.Context) error {
 	fmt.Println("   ... undaemonizing")
 
-	path := filepath.Join("/Library/LaunchDaemons", "com.github.twystd.uhppoted-rest.plist")
+	path := filepath.Join("/Library/LaunchDaemons", "com.github.uhppoted-rest.plist")
 	_, err := os.Stat(path)
 	if err != nil && !os.IsNotExist(err) {
 		return err
@@ -77,7 +77,7 @@ func (c *Undaemonize) Execute(ctx context.Context) error {
 		return err
 	}
 
-	fmt.Println("   ... com.github.twystd.uhppoted-rest unregistered as a LaunchDaemon")
+	fmt.Println("   ... com.github.uhppoted.uhppoted-rest unregistered as a LaunchDaemon")
 	fmt.Println()
 	fmt.Println("   Any uhppoted-rest log files can still be found in directory /usr/local/var/log and should be removed manually")
 	fmt.Println()

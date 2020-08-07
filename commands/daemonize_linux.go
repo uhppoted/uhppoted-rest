@@ -145,7 +145,7 @@ func (c *Daemonize) Execute(ctx context.Context) error {
 
 	d := info{
 		Description:      "UHPPOTE UTO311-L0x access card controllers service/daemon ",
-		Documentation:    "https://github.com/twystd/uhppote-go",
+		Documentation:    "https://github.com/uhppoted/uhppoted-rest",
 		Executable:       executable,
 		PID:              "/var/uhppoted/uhppoted-rest.pid",
 		User:             "uhppoted",

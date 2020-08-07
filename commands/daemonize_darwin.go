@@ -105,10 +105,10 @@ func (c *Daemonize) Execute(ctx context.Context) error {
 	bind, broadcast, _ := config.DefaultIpAddresses()
 
 	d := info{
-		Label:            "com.github.twystd.uhppoted-rest",
+		Label:            "com.github.uhppoted-rest",
 		Executable:       executable,
-		ConfigDirectory:  "/usr/local/etc/com.github.twystd.uhppoted",
-		WorkingDirectory: "/usr/local/var/com.github.twystd.uhppoted",
+		ConfigDirectory:  "/usr/local/etc/com.github.uhppoted",
+		WorkingDirectory: "/usr/local/var/com.github.uhppoted",
 		BindAddress:      &bind,
 		BroadcastAddress: &broadcast,
 	}
@@ -133,18 +133,18 @@ func (c *Daemonize) Execute(ctx context.Context) error {
 		return err
 	}
 
-	fmt.Println("   ... com.github.twystd.uhppoted-rest registered as a LaunchDaemon")
+	fmt.Println("   ... com.github.uhppoted-rest registered as a LaunchDaemon")
 	fmt.Println()
 	fmt.Println("   The daemon will start automatically on the next system restart - to start it manually, execute the following command:")
 	fmt.Println()
-	fmt.Println("   sudo launchctl load /Library/LaunchDaemons/com.github.twystd.uhppoted-rest.plist")
+	fmt.Println("   sudo launchctl load /Library/LaunchDaemons/com.github.uhppoted-rest.plist")
 	fmt.Println()
 
 	return nil
 }
 
 func (c *Daemonize) launchd(d *info) error {
-	path := filepath.Join("/Library/LaunchDaemons", "com.github.twystd.uhppoted-rest.plist")
+	path := filepath.Join("/Library/LaunchDaemons", "com.github.uhppoted-rest.plist")
 	_, err := os.Stat(path)
 	if err != nil && !os.IsNotExist(err) {
 		return err
@@ -153,12 +153,12 @@ func (c *Daemonize) launchd(d *info) error {
 	pl := plist{
 		Label:             d.Label,
 		Program:           d.Executable,
-		WorkingDirectory:  "/usr/local/var/com.github.twystd.uhppoted",
+		WorkingDirectory:  "/usr/local/var/com.github.uhppoted",
 		ProgramArguments:  []string{},
 		KeepAlive:         true,
 		RunAtLoad:         true,
-		StandardOutPath:   "/usr/local/var/log/com.github.twystd.uhppoted-rest.log",
-		StandardErrorPath: "/usr/local/var/log/com.github.twystd.uhppoted-rest.err",
+		StandardOutPath:   "/usr/local/var/log/com.github.uhppoted-rest.log",
+		StandardErrorPath: "/usr/local/var/log/com.github.uhppoted-rest.err",
 	}
 
 	if !os.IsNotExist(err) {
@@ -214,7 +214,7 @@ func (c *Daemonize) daemonize(path string, p interface{}) error {
 }
 
 func (c *Daemonize) mkdirs() error {
-	dir := "/usr/local/var/com.github.twystd.uhppoted"
+	dir := "/usr/local/var/com.github.uhppoted"
 
 	fmt.Printf("   ... creating '%s'\n", dir)
 
@@ -238,17 +238,17 @@ func (c *Daemonize) conf(d *info) error {
 
 func (c *Daemonize) logrotate() error {
 	dir := "/usr/local/var/log"
-	pid := "/usr/local/var/com.github.twystd.uhppoted/uhppoted-rest.pid"
+	pid := "/usr/local/var/com.github.uhppoted/uhppoted-rest.pid"
 	logfiles := []struct {
 		LogFile string
 		PID     string
 	}{
 		{
-			LogFile: filepath.Join(dir, "com.github.twystd.uhppoted-rest.log"),
+			LogFile: filepath.Join(dir, "com.github.uhppoted-rest.log"),
 			PID:     pid,
 		},
 		{
-			LogFile: filepath.Join(dir, "com.github.twystd.uhppoted-rest.err"),
+			LogFile: filepath.Join(dir, "com.github.uhppoted-rest.err"),
 			PID:     pid,
 		},
 	}
