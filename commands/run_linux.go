@@ -1,15 +1,15 @@
 package commands
 
 import (
-	"context"
 	"flag"
-	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted-api/config"
-	"github.com/uhppoted/uhppoted-api/eventlog"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/uhppoted/uhppote-core/uhppote"
+	"github.com/uhppoted/uhppoted-api/config"
+	"github.com/uhppoted/uhppoted-api/eventlog"
 )
 
 type Run struct {
@@ -33,7 +33,7 @@ var RUN = Run{
 }
 
 func (r *Run) FlagSet() *flag.FlagSet {
-	flagset := flag.NewFlagSet("", flag.ExitOnError)
+	flagset := flag.NewFlagSet("run", flag.ExitOnError)
 
 	flagset.StringVar(&r.configuration, "config", r.configuration, "Sets the configuration file path")
 	flagset.StringVar(&r.dir, "dir", r.dir, "Work directory")
@@ -46,14 +46,14 @@ func (r *Run) FlagSet() *flag.FlagSet {
 	return flagset
 }
 
-func (r *Run) Execute(ctx context.Context) error {
+func (r *Run) Execute(args ...interface{}) error {
 	log.Printf("uhppoted-rest daemon %s - %s (PID %d)\n", uhppote.VERSION, "Linux", os.Getpid())
 
 	f := func(c *config.Config) error {
 		return r.exec(c)
 	}
 
-	return r.execute(ctx, f)
+	return r.execute(f)
 }
 
 func (r *Run) exec(c *config.Config) error {

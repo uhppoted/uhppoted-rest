@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"golang.org/x/sys/windows/svc/eventlog"
@@ -20,19 +19,19 @@ func NewUndaemonize() *Undaemonize {
 	}
 }
 
-func (c *Undaemonize) Name() string {
+func (cmd *Undaemonize) Name() string {
 	return "undaemonize"
 }
 
-func (c *Undaemonize) FlagSet() *flag.FlagSet {
+func (cmd *Undaemonize) FlagSet() *flag.FlagSet {
 	return flag.NewFlagSet("undaemonize", flag.ExitOnError)
 }
 
-func (c *Undaemonize) Execute(ctx context.Context) error {
+func (cmd *Undaemonize) Execute(args ...interface{}) error {
 	fmt.Println("   ... undaemonizing")
 
 	dir := workdir()
-	if err := c.unregister(); err != nil {
+	if err := cmd.unregister(); err != nil {
 		return err
 	}
 
@@ -44,7 +43,7 @@ func (c *Undaemonize) Execute(ctx context.Context) error {
 	return nil
 }
 
-func (c *Undaemonize) unregister() error {
+func (cmd *Undaemonize) unregister() error {
 	m, err := mgr.Connect()
 	if err != nil {
 		return err
@@ -52,9 +51,9 @@ func (c *Undaemonize) unregister() error {
 
 	defer m.Disconnect()
 
-	s, err := m.OpenService(c.name)
+	s, err := m.OpenService(cmd.name)
 	if err != nil {
-		return fmt.Errorf("service %s is not installed", c.name)
+		return fmt.Errorf("service %s is not installed", cmd.name)
 	}
 
 	defer s.Close()
@@ -64,7 +63,7 @@ func (c *Undaemonize) unregister() error {
 		return err
 	}
 
-	err = eventlog.Remove(c.name)
+	err = eventlog.Remove(cmd.name)
 	if err != nil {
 		return fmt.Errorf("RemoveEventLogSource() failed: %s", err)
 	}
@@ -72,18 +71,20 @@ func (c *Undaemonize) unregister() error {
 	return nil
 }
 
-func (c *Undaemonize) Description() string {
-	return "Deregisters the uhppoted-rest service"
+func (cmd *Undaemonize) Description() string {
+	return fmt.Sprintf("Deregisters the %s service", SERVICE)
 }
 
-func (c *Undaemonize) Usage() string {
+func (cmd *Undaemonize) Usage() string {
 	return ""
 }
 
-func (c *Undaemonize) Help() {
+func (cmd *Undaemonize) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: uhppoted-rest undaemonize")
+	fmt.Printf("  Usage: %s undaemonize\n", SERVICE)
 	fmt.Println()
-	fmt.Println("    Deregisters uhppoted-rest as a Windows service")
+	fmt.Printf("    Deregisters %s as a Windows service\n", SERVICE)
 	fmt.Println()
+
+	helpOptions(cmd.FlagSet())
 }

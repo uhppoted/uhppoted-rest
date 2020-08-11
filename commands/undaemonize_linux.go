@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"os"
@@ -17,31 +16,33 @@ func NewUndaemonize() *Undaemonize {
 	return &Undaemonize{}
 }
 
-func (c *Undaemonize) Name() string {
+func (cmd *Undaemonize) Name() string {
 	return "undaemonize"
 }
 
-func (c *Undaemonize) FlagSet() *flag.FlagSet {
+func (cmd *Undaemonize) FlagSet() *flag.FlagSet {
 	return flag.NewFlagSet("undaemonize", flag.ExitOnError)
 }
 
-func (c *Undaemonize) Description() string {
-	return "Undaemonizes uhppoted-rest as a service/daemon"
+func (cmd *Undaemonize) Description() string {
+	return fmt.Sprintf("Deregisters %s as a service/daemon", SERVICE)
 }
 
-func (c *Undaemonize) Usage() string {
+func (cmd *Undaemonize) Usage() string {
 	return ""
 }
 
-func (c *Undaemonize) Help() {
+func (cmd *Undaemonize) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: uhppoted-rest daemonize")
+	fmt.Printf("  Usage: %s undaemonize\n", SERVICE)
 	fmt.Println()
-	fmt.Println("    Deregisters uhppoted-rest as a systed service/daemon")
+	fmt.Printf("    Deregisters %s as a systed service/daemon\n", SERVICE)
 	fmt.Println()
+
+	helpOptions(cmd.FlagSet())
 }
 
-func (c *Undaemonize) Execute(ctx context.Context) error {
+func (cmd *Undaemonize) Execute(args ...interface{}) error {
 	fmt.Println("   ... undaemonizing")
 
 	path := filepath.Join("/etc/systemd/system", "uhppoted-rest.service")
@@ -55,15 +56,15 @@ func (c *Undaemonize) Execute(ctx context.Context) error {
 		return nil
 	}
 
-	if err := c.systemd(path); err != nil {
+	if err := cmd.systemd(path); err != nil {
 		return err
 	}
 
-	if err := c.logrotate(); err != nil {
+	if err := cmd.logrotate(); err != nil {
 		return err
 	}
 
-	if err := c.rmdirs(); err != nil {
+	if err := cmd.rmdirs(); err != nil {
 		return err
 	}
 
@@ -75,10 +76,10 @@ func (c *Undaemonize) Execute(ctx context.Context) error {
 	return nil
 }
 
-func (c *Undaemonize) systemd(path string) error {
+func (cmd *Undaemonize) systemd(path string) error {
 	fmt.Printf("   ... stopping uhppoted-rest service\n")
-	cmd := exec.Command("systemctl", "stop", "uhppoted-rest")
-	out, err := cmd.CombinedOutput()
+	command := exec.Command("systemctl", "stop", "uhppoted-rest")
+	out, err := command.CombinedOutput()
 	if strings.TrimSpace(string(out)) != "" {
 		fmt.Printf("   > %s\n", out)
 	}
@@ -95,7 +96,7 @@ func (c *Undaemonize) systemd(path string) error {
 	return nil
 }
 
-func (c *Undaemonize) logrotate() error {
+func (cmd *Undaemonize) logrotate() error {
 	path := filepath.Join("/etc/logrotate.d", "uhppoted-rest")
 
 	fmt.Printf("   ... removing '%s'\n", path)
@@ -108,7 +109,7 @@ func (c *Undaemonize) logrotate() error {
 	return nil
 }
 
-func (c *Undaemonize) rmdirs() error {
+func (cmd *Undaemonize) rmdirs() error {
 	dir := "/var/uhppoted/rest"
 
 	fmt.Printf("   ... removing '%s'\n", dir)

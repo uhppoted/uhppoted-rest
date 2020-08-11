@@ -1,10 +1,8 @@
 package commands
 
 import (
-	"context"
 	"flag"
 	"fmt"
-	"github.com/uhppoted/uhppoted-api/config"
 	"net"
 	"os"
 	"os/user"
@@ -13,6 +11,8 @@ import (
 	"strconv"
 	"strings"
 	"text/template"
+
+	"github.com/uhppoted/uhppoted-api/config"
 )
 
 type usergroup string
@@ -99,26 +99,26 @@ func NewDaemonize() *Daemonize {
 	}
 }
 
-func (c *Daemonize) Name() string {
+func (cmd *Daemonize) Name() string {
 	return "daemonize"
 }
 
-func (c *Daemonize) FlagSet() *flag.FlagSet {
+func (cmd *Daemonize) FlagSet() *flag.FlagSet {
 	flagset := flag.NewFlagSet("daemonize", flag.ExitOnError)
-	flagset.Var(&c.usergroup, "user", "user:group for uhppoted service")
+	flagset.Var(&cmd.usergroup, "user", "user:group for uhppoted service")
 
 	return flagset
 }
 
-func (c *Daemonize) Description() string {
+func (cmd *Daemonize) Description() string {
 	return "Registers uhppoted-rest as a service/daemon"
 }
 
-func (c *Daemonize) Usage() string {
+func (cmd *Daemonize) Usage() string {
 	return "daemonize [--user <user:group>]"
 }
 
-func (c *Daemonize) Help() {
+func (cmd *Daemonize) Help() {
 	fmt.Println()
 	fmt.Println("  Usage: uhppoted daemonize [--user <user:group>]")
 	fmt.Println()
@@ -126,9 +126,11 @@ func (c *Daemonize) Help() {
 	fmt.Println("      Defaults to the user:group uhppoted:uhppoted unless otherwise specified")
 	fmt.Println("      with the --user option")
 	fmt.Println()
+
+	helpOptions(cmd.FlagSet())
 }
 
-func (c *Daemonize) Execute(ctx context.Context) error {
+func (cmd *Daemonize) Execute(args ...interface{}) error {
 	fmt.Println("   ... daemonizing")
 
 	executable, err := os.Executable()
@@ -136,7 +138,7 @@ func (c *Daemonize) Execute(ctx context.Context) error {
 		return err
 	}
 
-	uid, gid, err := getUserGroup(string(c.usergroup))
+	uid, gid, err := getUserGroup(string(cmd.usergroup))
 	if err != nil {
 		return err
 	}
@@ -157,19 +159,19 @@ func (c *Daemonize) Execute(ctx context.Context) error {
 		BroadcastAddress: &broadcast,
 	}
 
-	if err := c.systemd(&d); err != nil {
+	if err := cmd.systemd(&d); err != nil {
 		return err
 	}
 
-	if err := c.logrotate(&d); err != nil {
+	if err := cmd.logrotate(&d); err != nil {
 		return err
 	}
 
-	if err := c.mkdirs(&d); err != nil {
+	if err := cmd.mkdirs(&d); err != nil {
 		return err
 	}
 
-	if err := c.conf(&d); err != nil {
+	if err := cmd.conf(&d); err != nil {
 		return err
 	}
 
@@ -188,7 +190,7 @@ func (c *Daemonize) Execute(ctx context.Context) error {
 	return nil
 }
 
-func (c *Daemonize) systemd(d *info) error {
+func (cmd *Daemonize) systemd(d *info) error {
 	path := filepath.Join("/etc/systemd/system", "uhppoted-rest.service")
 	t := template.Must(template.New("uhppoted-rest.service").Parse(serviceTemplate))
 
@@ -203,7 +205,7 @@ func (c *Daemonize) systemd(d *info) error {
 	return t.Execute(f, d)
 }
 
-func (c *Daemonize) logrotate(d *info) error {
+func (cmd *Daemonize) logrotate(d *info) error {
 	path := filepath.Join("/etc/logrotate.d", "uhppoted-rest")
 	t := template.Must(template.New("uhppoted-rest.logrotate").Parse(logRotateTemplate))
 
@@ -218,7 +220,7 @@ func (c *Daemonize) logrotate(d *info) error {
 	return t.Execute(f, d)
 }
 
-func (c *Daemonize) conf(d *info) error {
+func (cmd *Daemonize) conf(d *info) error {
 	path := filepath.Join("/etc/uhppoted", "uhppoted.conf")
 	t := template.Must(template.New("uhppoted.conf").Parse(confTemplate))
 
@@ -238,7 +240,7 @@ func (c *Daemonize) conf(d *info) error {
 	return os.Chown(path, d.Uid, d.Gid)
 }
 
-func (c *Daemonize) mkdirs(d *info) error {
+func (cmd *Daemonize) mkdirs(d *info) error {
 	directories := []string{
 		"/var/uhppoted",
 		"/var/log/uhppoted",

@@ -1,19 +1,20 @@
 package commands
 
 import (
-	"context"
 	"flag"
 	"fmt"
-	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted-api/config"
-	filelogger "github.com/uhppoted/uhppoted-api/eventlog"
-	"golang.org/x/sys/windows/svc"
-	"golang.org/x/sys/windows/svc/eventlog"
 	"log"
 	"os"
 	"path/filepath"
 	"sync"
 	"syscall"
+
+	"golang.org/x/sys/windows/svc"
+	"golang.org/x/sys/windows/svc/eventlog"
+
+	"github.com/uhppoted/uhppote-core/uhppote"
+	"github.com/uhppoted/uhppoted-api/config"
+	filelogger "github.com/uhppoted/uhppoted-api/eventlog"
 )
 
 type Run struct {
@@ -61,14 +62,14 @@ func (r *Run) FlagSet() *flag.FlagSet {
 	return flagset
 }
 
-func (r *Run) Execute(ctx context.Context) error {
+func (r *Run) Execute(args ...interface{}) error {
 	log.Printf("uhppoted-rest daemon %s - %s (PID %d)\n", uhppote.VERSION, "Microsoft Windows", os.Getpid())
 
 	f := func(c *config.Config) error {
 		return r.start(c)
 	}
 
-	return r.execute(ctx, f)
+	return r.execute(f)
 }
 
 func (r *Run) start(c *config.Config) error {

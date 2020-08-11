@@ -1,14 +1,8 @@
 package commands
 
 import (
-	"context"
 	"errors"
-	"flag"
 	"fmt"
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted-api/config"
-	"github.com/uhppoted/uhppoted-rest/rest"
 	"io/ioutil"
 	"log"
 	"math"
@@ -17,6 +11,11 @@ import (
 	"sync"
 	"syscall"
 	"time"
+
+	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppote-core/uhppote"
+	"github.com/uhppoted/uhppoted-api/config"
+	"github.com/uhppoted/uhppoted-rest/rest"
 )
 
 type status struct {
@@ -46,61 +45,56 @@ type state struct {
 }
 
 const (
-	SERVICE = `uhppoted-rest`
-	IDLE    = time.Duration(60 * time.Second)
-	IGNORE  = time.Duration(5 * time.Minute)
-	DELTA   = 60
-	DELAY   = 30
+	IDLE   = time.Duration(60 * time.Second)
+	IGNORE = time.Duration(5 * time.Minute)
+	DELTA  = 60
+	DELAY  = 30
 )
 
-func (c *Run) Name() string {
+func (cmd *Run) Name() string {
 	return "run"
 }
 
-func (c *Run) Description() string {
+func (cmd *Run) Description() string {
 	return "Runs the uhppoted-rest daemon/service until terminated by the system service manager"
 }
 
-func (c *Run) Usage() string {
-	return "uhppoted-rest [--debug] [--config <file>] [--logfile <file>] [--logfilesize <bytes>] [--pid <file>]"
+func (cmd *Run) Usage() string {
+	return "uhppoted-rest [run] [--console] [--config <file>] [--dir <workdir>] [--pid <file>] [--logfile <file>] [--logfilesize <bytes>] [--debug]"
 }
 
-func (c *Run) Help() {
+func (cmd *Run) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: uhppoted-rest <options>")
+	fmt.Println("  Usage: uhppoted-rest [run] [--console] [--config <file>] [--dir <workdir>] [--pid <file>] [--logfile <file>] [--logfilesize <bytes>] [--debug]")
 	fmt.Println()
-	fmt.Println("  Options:")
-	fmt.Println()
-	c.FlagSet().VisitAll(func(f *flag.Flag) {
-		fmt.Printf("    --%-12s %s\n", f.Name, f.Usage)
-	})
-	fmt.Println()
+
+	helpOptions(cmd.FlagSet())
 }
 
-func (r *Run) execute(ctx context.Context, f func(*config.Config) error) error {
+func (cmd *Run) execute(f func(*config.Config) error) error {
 	conf := config.NewConfig()
-	if err := conf.Load(r.configuration); err != nil {
+	if err := conf.Load(cmd.configuration); err != nil {
 		log.Printf("\n   WARN:  Could not load configuration (%v)\n\n", err)
 	}
 
-	if err := os.MkdirAll(r.dir, os.ModeDir|os.ModePerm); err != nil {
-		return fmt.Errorf("Unable to create working directory '%v': %v", r.dir, err)
+	if err := os.MkdirAll(cmd.dir, os.ModeDir|os.ModePerm); err != nil {
+		return fmt.Errorf("Unable to create working directory '%v': %v", cmd.dir, err)
 	}
 
 	pid := fmt.Sprintf("%d\n", os.Getpid())
 
-	if err := ioutil.WriteFile(r.pidFile, []byte(pid), 0644); err != nil {
+	if err := ioutil.WriteFile(cmd.pidFile, []byte(pid), 0644); err != nil {
 		return fmt.Errorf("Unable to create pid file: %v\n", err)
 	}
 
 	defer func() {
-		os.Remove(r.pidFile)
+		os.Remove(cmd.pidFile)
 	}()
 
 	return f(conf)
 }
 
-func (r *Run) run(c *config.Config, logger *log.Logger) {
+func (cmd *Run) run(c *config.Config, logger *log.Logger) {
 	logger.Printf("START")
 
 	// ... syscall SIG handlers
@@ -112,7 +106,7 @@ func (r *Run) run(c *config.Config, logger *log.Logger) {
 	// ... listen forever
 
 	for {
-		err := r.listen(c, logger, interrupt)
+		err := cmd.listen(c, logger, interrupt)
 		if err != nil {
 			log.Printf("ERROR: %v", err)
 			continue
@@ -125,7 +119,7 @@ func (r *Run) run(c *config.Config, logger *log.Logger) {
 	logger.Printf("STOP")
 }
 
-func (r *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.Signal) error {
+func (cmd *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.Signal) error {
 	s := state{
 		started: time.Now(),
 
@@ -154,7 +148,7 @@ func (r *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.Sig
 		BindAddress:      c.BindAddress,
 		BroadcastAddress: c.BroadcastAddress,
 		Devices:          make(map[uint32]*uhppote.Device),
-		Debug:            r.debug,
+		Debug:            cmd.debug,
 	}
 
 	for _, d := range devices {

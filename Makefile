@@ -50,7 +50,7 @@ release: build-all
 	cd dist; zip --recurse-paths $(DIST).zip $(DIST)
 
 debug: build
-	go test ./...
+	$(CMD) run --console
 
 version: build
 	$(CMD) version
@@ -60,6 +60,9 @@ help: build
 	$(CMD) help commands
 	$(CMD) help version
 	$(CMD) help help
+	$(CMD) help run
+	$(CMD) help daemonize
+	$(CMD) help undaemonize
 
 daemonize: build
 	sudo $(CMD) daemonize

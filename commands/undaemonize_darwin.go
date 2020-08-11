@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	xml "github.com/uhppoted/uhppoted-api/encoding/plist"
@@ -18,31 +17,33 @@ func NewUndaemonize() *Undaemonize {
 	return &Undaemonize{}
 }
 
-func (c *Undaemonize) Name() string {
+func (cmd *Undaemonize) Name() string {
 	return "undaemonize"
 }
 
-func (c *Undaemonize) FlagSet() *flag.FlagSet {
+func (cmd *Undaemonize) FlagSet() *flag.FlagSet {
 	return flag.NewFlagSet("undaemonize", flag.ExitOnError)
 }
 
-func (c *Undaemonize) Description() string {
-	return "Deregisters uhppoted-rest as a service/daemon"
+func (cmd *Undaemonize) Description() string {
+	return fmt.Sprintf("Deregisters %s as a service/daemon", SERVICE)
 }
 
-func (c *Undaemonize) Usage() string {
+func (cmd *Undaemonize) Usage() string {
 	return ""
 }
 
-func (c *Undaemonize) Help() {
+func (cmd *Undaemonize) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: uhppoted-rest undaemonize")
+	fmt.Printf("  Usage: %s undaemonize\n", SERVICE)
 	fmt.Println()
-	fmt.Println("    Deregisters uhppoted-rest from launchd as a service/daemon")
+	fmt.Printf("    Deregisters %s from launchd as a service/daemon\n", SERVICE)
 	fmt.Println()
+
+	helpOptions(cmd.FlagSet())
 }
 
-func (c *Undaemonize) Execute(ctx context.Context) error {
+func (cmd *Undaemonize) Execute(args ...interface{}) error {
 	fmt.Println("   ... undaemonizing")
 
 	path := filepath.Join("/Library/LaunchDaemons", "com.github.uhppoted-rest.plist")
@@ -56,24 +57,24 @@ func (c *Undaemonize) Execute(ctx context.Context) error {
 		return nil
 	}
 
-	p, err := c.parse(path)
+	p, err := cmd.parse(path)
 	if err != nil {
 		return err
 	}
 
-	if err := c.launchd(path, *p); err != nil {
+	if err := cmd.launchd(path, *p); err != nil {
 		return err
 	}
 
-	if err := c.logrotate(); err != nil {
+	if err := cmd.logrotate(); err != nil {
 		return err
 	}
 
-	if err := c.rmdirs(*p); err != nil {
+	if err := cmd.rmdirs(*p); err != nil {
 		return err
 	}
 
-	if err := c.firewall(*p); err != nil {
+	if err := cmd.firewall(*p); err != nil {
 		return err
 	}
 
@@ -85,7 +86,7 @@ func (c *Undaemonize) Execute(ctx context.Context) error {
 	return nil
 }
 
-func (c *Undaemonize) parse(path string) (*info, error) {
+func (cmd *Undaemonize) parse(path string) (*info, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -103,10 +104,10 @@ func (c *Undaemonize) parse(path string) (*info, error) {
 	return &p, nil
 }
 
-func (c *Undaemonize) launchd(path string, d info) error {
+func (cmd *Undaemonize) launchd(path string, d info) error {
 	fmt.Printf("   ... unloading LaunchDaemon\n")
-	cmd := exec.Command("launchctl", "unload", path)
-	out, err := cmd.CombinedOutput()
+	command := exec.Command("launchctl", "unload", path)
+	out, err := command.CombinedOutput()
 	fmt.Printf("   > %s", out)
 	if err != nil {
 		return fmt.Errorf("Failed to unload '%s' (%v)\n", d.Label, err)
@@ -121,7 +122,7 @@ func (c *Undaemonize) launchd(path string, d info) error {
 	return nil
 }
 
-func (c *Undaemonize) logrotate() error {
+func (cmd *Undaemonize) logrotate() error {
 	path := filepath.Join("/etc/newsyslog.d", "uhppoted-rest.conf")
 
 	fmt.Printf("   ... removing '%s'\n", path)
@@ -129,7 +130,7 @@ func (c *Undaemonize) logrotate() error {
 	return os.Remove(path)
 }
 
-func (c *Undaemonize) rmdirs(d info) error {
+func (cmd *Undaemonize) rmdirs(d info) error {
 	dir := d.WorkingDirectory
 
 	fmt.Printf("   ... removing '%s'\n", dir)
@@ -137,38 +138,38 @@ func (c *Undaemonize) rmdirs(d info) error {
 	return os.RemoveAll(dir)
 }
 
-func (c *Undaemonize) firewall(d info) error {
+func (cmd *Undaemonize) firewall(d info) error {
 	fmt.Println()
 	fmt.Println("   ***")
-	fmt.Println("   *** WARNING: removing 'uhppoted-rest' from the application firewall")
+	fmt.Printf("   *** WARNING: removing '%s' from the application firewall", SERVICE)
 	fmt.Println("   ***")
 	fmt.Println()
 
 	path := d.Executable
-	cmd := exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--getglobalstate")
-	out, err := cmd.CombinedOutput()
+	command := exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--getglobalstate")
+	out, err := command.CombinedOutput()
 	fmt.Printf("   > %s", out)
 	if err != nil {
 		return fmt.Errorf("Failed to retrieve application firewall global state (%v)\n", err)
 	}
 
 	if strings.Contains(string(out), "State = 1") {
-		cmd = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--setglobalstate", "off")
-		out, err = cmd.CombinedOutput()
+		command = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--setglobalstate", "off")
+		out, err = command.CombinedOutput()
 		fmt.Printf("   > %s", out)
 		if err != nil {
 			return fmt.Errorf("Failed to disable the application firewall (%v)\n", err)
 		}
 
-		cmd = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--remove", path)
-		out, err = cmd.CombinedOutput()
+		command = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--remove", path)
+		out, err = command.CombinedOutput()
 		fmt.Printf("   > %s", out)
 		if err != nil {
 			return fmt.Errorf("Failed to remove 'uhppoted-rest' from the application firewall (%v)\n", err)
 		}
 
-		cmd = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--setglobalstate", "on")
-		out, err = cmd.CombinedOutput()
+		command = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--setglobalstate", "on")
+		out, err = command.CombinedOutput()
 		fmt.Printf("   > %s", out)
 		if err != nil {
 			return fmt.Errorf("Failed to re-enable the application firewall (%v)\n", err)

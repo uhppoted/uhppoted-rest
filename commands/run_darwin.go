@@ -1,15 +1,15 @@
 package commands
 
 import (
-	"context"
 	"flag"
-	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted-api/config"
-	"github.com/uhppoted/uhppoted-api/eventlog"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/uhppoted/uhppote-core/uhppote"
+	"github.com/uhppoted/uhppoted-api/config"
+	"github.com/uhppoted/uhppoted-api/eventlog"
 )
 
 type Run struct {
@@ -23,7 +23,7 @@ type Run struct {
 }
 
 var RUN = Run{
-	configuration: "/usr/local/etc/com.github.uhppoted/uhppoted.conf",
+	configuration: config.DefaultConfig,
 	dir:           "/usr/local/var/com.github.uhppoted",
 	pidFile:       "/usr/local/var/com.github.uhppoted/uhppoted-rest.pid",
 	logFile:       "/usr/local/var/com.github.uhppoted/logs/uhppoted-rest.log",
@@ -32,35 +32,35 @@ var RUN = Run{
 	debug:         false,
 }
 
-func (r *Run) FlagSet() *flag.FlagSet {
-	flagset := flag.NewFlagSet("", flag.ExitOnError)
+func (cmd *Run) FlagSet() *flag.FlagSet {
+	flagset := flag.NewFlagSet("run", flag.ExitOnError)
 
-	flagset.StringVar(&r.configuration, "config", r.configuration, "Sets the configuration file path")
-	flagset.StringVar(&r.dir, "dir", r.dir, "Work directory")
-	flagset.StringVar(&r.pidFile, "pid", r.pidFile, "Sets the service PID file path")
-	flagset.StringVar(&r.logFile, "logfile", r.logFile, "Sets the log file path")
-	flagset.IntVar(&r.logFileSize, "logfilesize", r.logFileSize, "Sets the log file size before forcing a log rotate")
-	flagset.BoolVar(&r.console, "console", r.console, "Writes log entries to stdout")
-	flagset.BoolVar(&r.debug, "debug", r.debug, "Displays internal information for diagnosing errors")
+	flagset.StringVar(&cmd.configuration, "config", cmd.configuration, "Sets the configuration file path")
+	flagset.StringVar(&cmd.dir, "dir", cmd.dir, "Work directory")
+	flagset.StringVar(&cmd.pidFile, "pid", cmd.pidFile, "Sets the service PID file path")
+	flagset.StringVar(&cmd.logFile, "logfile", cmd.logFile, "Sets the log file path")
+	flagset.IntVar(&cmd.logFileSize, "logfilesize", cmd.logFileSize, "Sets the log file size before forcing a log rotate")
+	flagset.BoolVar(&cmd.console, "console", cmd.console, "Writes log entries to stdout")
+	flagset.BoolVar(&cmd.debug, "debug", cmd.debug, "Displays internal information for diagnosing errors")
 
 	return flagset
 }
 
-func (r *Run) Execute(ctx context.Context) error {
+func (cmd *Run) Execute(args ...interface{}) error {
 	log.Printf("uhppoted-rest daemon %s - %s (PID %d)\n", uhppote.VERSION, "MacOS", os.Getpid())
 
 	f := func(c *config.Config) error {
-		return r.exec(c)
+		return cmd.exec(c)
 	}
 
-	return r.execute(ctx, f)
+	return cmd.execute(f)
 }
 
-func (r *Run) exec(c *config.Config) error {
+func (cmd *Run) exec(c *config.Config) error {
 	logger := log.New(os.Stdout, "", log.LstdFlags)
 
-	if !r.console {
-		events := eventlog.Ticker{Filename: r.logFile, MaxSize: r.logFileSize}
+	if !cmd.console {
+		events := eventlog.Ticker{Filename: cmd.logFile, MaxSize: cmd.logFileSize}
 		logger = log.New(&events, "", log.Ldate|log.Ltime|log.LUTC)
 		rotate := make(chan os.Signal, 1)
 
@@ -69,13 +69,13 @@ func (r *Run) exec(c *config.Config) error {
 		go func() {
 			for {
 				<-rotate
-				log.Printf("Rotating uhppoted-rest log file '%s'\n", r.logFile)
+				log.Printf("Rotating uhppoted-rest log file '%s'\n", cmd.logFile)
 				events.Rotate()
 			}
 		}()
 	}
 
-	r.run(c, logger)
+	cmd.run(c, logger)
 
 	return nil
 }

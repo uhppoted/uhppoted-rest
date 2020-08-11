@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"github.com/uhppoted/uhppoted-api/config"
@@ -71,31 +70,33 @@ func NewDaemonize() *Daemonize {
 	return &Daemonize{}
 }
 
-func (c *Daemonize) Name() string {
+func (cmd *Daemonize) Name() string {
 	return "daemonize"
 }
 
-func (c *Daemonize) FlagSet() *flag.FlagSet {
+func (cmd *Daemonize) FlagSet() *flag.FlagSet {
 	return flag.NewFlagSet("daemonize", flag.ExitOnError)
 }
 
-func (c *Daemonize) Description() string {
+func (cmd *Daemonize) Description() string {
 	return "Daemonizes uhppoted as a service/daemon"
 }
 
-func (c *Daemonize) Usage() string {
+func (cmd *Daemonize) Usage() string {
 	return ""
 }
 
-func (c *Daemonize) Help() {
+func (cmd *Daemonize) Help() {
 	fmt.Println()
 	fmt.Println("  Usage: uhppoted daemonize")
 	fmt.Println()
 	fmt.Println("    Daemonizes uhppoted as a service/daemon that runs on startup")
 	fmt.Println()
+
+	helpOptions(cmd.FlagSet())
 }
 
-func (c *Daemonize) Execute(ctx context.Context) error {
+func (cmd *Daemonize) Execute(args ...interface{}) error {
 	fmt.Println("   ... daemonizing")
 	executable, err := os.Executable()
 	if err != nil {
@@ -113,23 +114,23 @@ func (c *Daemonize) Execute(ctx context.Context) error {
 		BroadcastAddress: &broadcast,
 	}
 
-	if err := c.launchd(&d); err != nil {
+	if err := cmd.launchd(&d); err != nil {
 		return err
 	}
 
-	if err := c.mkdirs(); err != nil {
+	if err := cmd.mkdirs(); err != nil {
 		return err
 	}
 
-	if err := c.logrotate(); err != nil {
+	if err := cmd.logrotate(); err != nil {
 		return err
 	}
 
-	if err := c.firewall(); err != nil {
+	if err := cmd.firewall(); err != nil {
 		return err
 	}
 
-	if err := c.conf(&d); err != nil {
+	if err := cmd.conf(&d); err != nil {
 		return err
 	}
 
@@ -143,7 +144,7 @@ func (c *Daemonize) Execute(ctx context.Context) error {
 	return nil
 }
 
-func (c *Daemonize) launchd(d *info) error {
+func (cmd *Daemonize) launchd(d *info) error {
 	path := filepath.Join("/Library/LaunchDaemons", "com.github.uhppoted-rest.plist")
 	_, err := os.Stat(path)
 	if err != nil && !os.IsNotExist(err) {
@@ -162,7 +163,7 @@ func (c *Daemonize) launchd(d *info) error {
 	}
 
 	if !os.IsNotExist(err) {
-		current, err := c.parse(path)
+		current, err := cmd.parse(path)
 		if err != nil {
 			return err
 		}
@@ -175,10 +176,10 @@ func (c *Daemonize) launchd(d *info) error {
 		pl.StandardErrorPath = current.StandardErrorPath
 	}
 
-	return c.daemonize(path, pl)
+	return cmd.daemonize(path, pl)
 }
 
-func (c *Daemonize) parse(path string) (*plist, error) {
+func (cmd *Daemonize) parse(path string) (*plist, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -196,7 +197,7 @@ func (c *Daemonize) parse(path string) (*plist, error) {
 	return &p, nil
 }
 
-func (c *Daemonize) daemonize(path string, p interface{}) error {
+func (cmd *Daemonize) daemonize(path string, p interface{}) error {
 	fmt.Printf("   ... creating '%s'\n", path)
 	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
@@ -213,7 +214,7 @@ func (c *Daemonize) daemonize(path string, p interface{}) error {
 	return nil
 }
 
-func (c *Daemonize) mkdirs() error {
+func (cmd *Daemonize) mkdirs() error {
 	dir := "/usr/local/var/com.github.uhppoted"
 
 	fmt.Printf("   ... creating '%s'\n", dir)
@@ -221,7 +222,7 @@ func (c *Daemonize) mkdirs() error {
 	return os.MkdirAll(dir, 0644)
 }
 
-func (c *Daemonize) conf(d *info) error {
+func (cmd *Daemonize) conf(d *info) error {
 	path := filepath.Join(d.ConfigDirectory, "uhppoted.conf")
 	t := template.Must(template.New("uhppoted.conf").Parse(confTemplate))
 
@@ -236,7 +237,7 @@ func (c *Daemonize) conf(d *info) error {
 	return t.Execute(f, d)
 }
 
-func (c *Daemonize) logrotate() error {
+func (cmd *Daemonize) logrotate() error {
 	dir := "/usr/local/var/log"
 	pid := "/usr/local/var/com.github.uhppoted/uhppoted-rest.pid"
 	logfiles := []struct {
@@ -268,7 +269,7 @@ func (c *Daemonize) logrotate() error {
 	return t.Execute(f, logfiles)
 }
 
-func (c *Daemonize) firewall() error {
+func (cmd *Daemonize) firewall() error {
 	fmt.Println()
 	fmt.Println("   ***")
 	fmt.Println("   *** WARNING: adding 'uhppoted-rest' to the application firewall and unblocking incoming connections")
@@ -280,37 +281,37 @@ func (c *Daemonize) firewall() error {
 		return fmt.Errorf("Failed to get path to executable: %v", err)
 	}
 
-	cmd := exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--getglobalstate")
-	out, err := cmd.CombinedOutput()
+	command := exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--getglobalstate")
+	out, err := command.CombinedOutput()
 	fmt.Printf("   > %s", out)
 	if err != nil {
 		return fmt.Errorf("Failed to retrieve application firewall global state (%v)", err)
 	}
 
 	if strings.Contains(string(out), "State = 1") {
-		cmd = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--setglobalstate", "off")
-		out, err = cmd.CombinedOutput()
+		command = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--setglobalstate", "off")
+		out, err = command.CombinedOutput()
 		fmt.Printf("   > %s", out)
 		if err != nil {
 			return fmt.Errorf("Failed to disable the application firewall (%v)", err)
 		}
 
-		cmd = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--add", path)
-		out, err = cmd.CombinedOutput()
+		command = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--add", path)
+		out, err = command.CombinedOutput()
 		fmt.Printf("   > %s", out)
 		if err != nil {
 			return fmt.Errorf("Failed to add 'uhppoted-rest' to the application firewall (%v)", err)
 		}
 
-		cmd = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--unblockapp", path)
-		out, err = cmd.CombinedOutput()
+		command = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--unblockapp", path)
+		out, err = command.CombinedOutput()
 		fmt.Printf("   > %s", out)
 		if err != nil {
 			return fmt.Errorf("Failed to unblock 'uhppoted-rest' on the application firewall (%v)", err)
 		}
 
-		cmd = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--setglobalstate", "on")
-		out, err = cmd.CombinedOutput()
+		command = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--setglobalstate", "on")
+		out, err = command.CombinedOutput()
 		fmt.Printf("   > %s", out)
 		if err != nil {
 			return fmt.Errorf("Failed to re-enable the application firewall (%v)", err)

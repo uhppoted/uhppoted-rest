@@ -1,17 +1,18 @@
 package commands
 
 import (
-	"context"
 	"flag"
 	"fmt"
-	"github.com/uhppoted/uhppoted-api/config"
-	"golang.org/x/sys/windows/svc/eventlog"
-	"golang.org/x/sys/windows/svc/mgr"
 	"net"
 	"os"
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	"golang.org/x/sys/windows/svc/eventlog"
+	"golang.org/x/sys/windows/svc/mgr"
+
+	"github.com/uhppoted/uhppoted-api/config"
 )
 
 type Daemonize struct {
@@ -61,30 +62,33 @@ func NewDaemonize() *Daemonize {
 	}
 }
 
-func (c *Daemonize) Name() string {
+func (cmd *Daemonize) Name() string {
 	return "daemonize"
 }
 
-func (c *Daemonize) FlagSet() *flag.FlagSet {
+func (cmd *Daemonize) FlagSet() *flag.FlagSet {
 	return flag.NewFlagSet("daemonize", flag.ExitOnError)
 }
 
-func (c *Daemonize) Description() string {
+func (cmd *Daemonize) Description() string {
 	return "Registers uhppoted-rest as a Windows service"
 }
 
-func (c *Daemonize) Usage() string {
+func (cmd *Daemonize) Usage() string {
 	return ""
 }
 
-func (c *Daemonize) Help() {
+func (cmd *Daemonize) Help() {
 	fmt.Println()
 	fmt.Println("  Usage: uhppoted-rest daemonize")
 	fmt.Println()
 	fmt.Println("    Registers uhppoted-rest as a windows Service that runs on startup")
 	fmt.Println()
+
+	helpOptions(cmd.FlagSet())
 }
-func (c *Daemonize) Execute(ctx context.Context) error {
+
+func (cmd *Daemonize) Execute(args ...interface{}) error {
 	executable, err := os.Executable()
 	if err != nil {
 		return err
@@ -93,23 +97,23 @@ func (c *Daemonize) Execute(ctx context.Context) error {
 	bind, broadcast, _ := config.DefaultIpAddresses()
 
 	d := info{
-		Name:             c.name,
-		Description:      c.description,
+		Name:             cmd.name,
+		Description:      cmd.description,
 		Executable:       executable,
 		WorkDir:          workdir(),
 		BindAddress:      &bind,
 		BroadcastAddress: &broadcast,
 	}
 
-	if err := c.register(&d); err != nil {
+	if err := cmd.register(&d); err != nil {
 		return err
 	}
 
-	if err := c.mkdirs(&d); err != nil {
+	if err := cmd.mkdirs(&d); err != nil {
 		return err
 	}
 
-	if err := c.conf(&d); err != nil {
+	if err := cmd.conf(&d); err != nil {
 		return err
 	}
 
@@ -124,7 +128,7 @@ func (c *Daemonize) Execute(ctx context.Context) error {
 	return nil
 }
 
-func (c *Daemonize) register(d *info) error {
+func (cmd *Daemonize) register(d *info) error {
 	config := mgr.Config{
 		DisplayName:      d.Name,
 		Description:      d.Description,
@@ -161,7 +165,7 @@ func (c *Daemonize) register(d *info) error {
 	return nil
 }
 
-func (c *Daemonize) mkdirs(d *info) error {
+func (cmd *Daemonize) mkdirs(d *info) error {
 	directories := []string{
 		d.WorkDir,
 		filepath.Join(d.WorkDir, "rest"),
@@ -178,7 +182,7 @@ func (c *Daemonize) mkdirs(d *info) error {
 	return nil
 }
 
-func (c *Daemonize) conf(d *info) error {
+func (cmd *Daemonize) conf(d *info) error {
 	path := filepath.Join(d.WorkDir, "uhppoted.conf")
 	t := template.Must(template.New("uhppoted.conf").Parse(confTemplate))
 	var b strings.Builder
