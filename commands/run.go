@@ -56,16 +56,16 @@ func (cmd *Run) Name() string {
 }
 
 func (cmd *Run) Description() string {
-	return "Runs the uhppoted-rest daemon/service until terminated by the system service manager"
+	return fmt.Sprintf("Runs the %s daemon/service until terminated by the system service manager", SERVICE)
 }
 
 func (cmd *Run) Usage() string {
-	return "uhppoted-rest [run] [--console] [--config <file>] [--dir <workdir>] [--pid <file>] [--logfile <file>] [--logfilesize <bytes>] [--debug]"
+	return fmt.Sprintf("%s [run] [--console] [--config <file>] [--dir <workdir>] [--pid <file>] [--logfile <file>] [--logfilesize <bytes>] [--debug]", SERVICE)
 }
 
 func (cmd *Run) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: uhppoted-rest [run] [--console] [--config <file>] [--dir <workdir>] [--pid <file>] [--logfile <file>] [--logfilesize <bytes>] [--debug]")
+	fmt.Printf("  Usage: %s [run] [--console] [--config <file>] [--dir <workdir>] [--pid <file>] [--logfile <file>] [--logfilesize <bytes>] [--debug]", SERVICE)
 	fmt.Println()
 
 	helpOptions(cmd.FlagSet())

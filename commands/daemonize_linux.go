@@ -111,7 +111,7 @@ func (cmd *Daemonize) FlagSet() *flag.FlagSet {
 }
 
 func (cmd *Daemonize) Description() string {
-	return "Registers uhppoted-rest as a service/daemon"
+	return fmt.Sprintf("Registers %s as a service/daemon", SERVICE)
 }
 
 func (cmd *Daemonize) Usage() string {
@@ -120,9 +120,9 @@ func (cmd *Daemonize) Usage() string {
 
 func (cmd *Daemonize) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: uhppoted daemonize [--user <user:group>]")
+	fmt.Printf("  Usage: %s daemonize [--user <user:group>]\n", SERVICE)
 	fmt.Println()
-	fmt.Println("    Registers uhppoted-rest as a systemd service/daemon that runs on startup.")
+	fmt.Printf("    Registers %s as a systemd service/daemon that runs on startup.", SERVICE)
 	fmt.Println("      Defaults to the user:group uhppoted:uhppoted unless otherwise specified")
 	fmt.Println("      with the --user option")
 	fmt.Println()
@@ -175,12 +175,12 @@ func (cmd *Daemonize) Execute(args ...interface{}) error {
 		return err
 	}
 
-	fmt.Println("   ... uhppoted-rest registered as a systemd service")
+	fmt.Printf("   ... %s registered as a systemd service\n", SERVICE)
 	fmt.Println()
 	fmt.Println("   The daemon will start automatically on the next system restart - to start it manually, execute the following command:")
 	fmt.Println()
-	fmt.Println("     > sudo systemctl start  uhppoted-rest")
-	fmt.Println("     > sudo systemctl status uhppoted-rest")
+	fmt.Printf("     > sudo systemctl start  %s", SERVICE)
+	fmt.Printf("     > sudo systemctl status %s", SERVICE)
 	fmt.Println()
 	fmt.Println("   The firewall may need additional rules to allow UDP broadcast e.g. for UFW:")
 	fmt.Println()

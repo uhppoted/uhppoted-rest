@@ -71,7 +71,7 @@ func (cmd *Daemonize) FlagSet() *flag.FlagSet {
 }
 
 func (cmd *Daemonize) Description() string {
-	return "Registers uhppoted-rest as a Windows service"
+	return fmt.Sprintf("Registers %s as a Windows service", SERVICE)
 }
 
 func (cmd *Daemonize) Usage() string {
@@ -80,9 +80,9 @@ func (cmd *Daemonize) Usage() string {
 
 func (cmd *Daemonize) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: uhppoted-rest daemonize")
+	fmt.Printf("  Usage: %s daemonize\n", SERVICE)
 	fmt.Println()
-	fmt.Println("    Registers uhppoted-rest as a windows Service that runs on startup")
+	fmt.Printf("    Registers %s as a windows Service that runs on startup\n", SERVICE)
 	fmt.Println()
 
 	helpOptions(cmd.FlagSet())
@@ -117,12 +117,12 @@ func (cmd *Daemonize) Execute(args ...interface{}) error {
 		return err
 	}
 
-	fmt.Println("   ... uhppoted-rest registered as a Windows system service")
+	fmt.Printf("   ... %s registered as a Windows system service\n", SERVICE)
 	fmt.Println()
 	fmt.Println("   The service will start automatically on the next system restart. Start it manually from the")
 	fmt.Println("   'Services' application or from the command line by executing the following command:")
 	fmt.Println()
-	fmt.Println("     > net start uhppoted-rest")
+	fmt.Printf("     > net start %s", SERVICE)
 	fmt.Println()
 
 	return nil

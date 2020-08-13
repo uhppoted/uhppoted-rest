@@ -88,9 +88,9 @@ func (cmd *Daemonize) Usage() string {
 
 func (cmd *Daemonize) Help() {
 	fmt.Println()
-	fmt.Println("  Usage: uhppoted daemonize")
+	fmt.Printf("  Usage: %s daemonize\n", SERVICE)
 	fmt.Println()
-	fmt.Println("    Daemonizes uhppoted as a service/daemon that runs on startup")
+	fmt.Printf("    Daemonizes %s as a service/daemon that runs on startup\n", SERVICE)
 	fmt.Println()
 
 	helpOptions(cmd.FlagSet())
