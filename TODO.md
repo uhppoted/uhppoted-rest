@@ -1,6 +1,6 @@
 ## v0.6.x
 
-- [x] OpenDoor API
+### IN PROGRESS
 
 ## TODO
 
