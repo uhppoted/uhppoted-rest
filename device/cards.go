@@ -101,7 +101,7 @@ func PutCard(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter
 			err
 	}
 
-	card := types.Card{}
+	card := types.CardX{}
 	if err = json.Unmarshal(blob, &card); err != nil {
 		return http.StatusBadRequest,
 			errors.NewRESTError("put-card", fmt.Sprintf("Error parsing request (%v)", err)),
@@ -110,7 +110,7 @@ func PutCard(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter
 
 	rq := uhppoted.PutCardRequest{
 		DeviceID: uhppoted.DeviceID(deviceID),
-		Card: types.Card{
+		Card: types.CardX{
 			CardNumber: cardNumber,
 			From:       card.From,
 			To:         card.To,
