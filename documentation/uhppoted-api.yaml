@@ -1245,15 +1245,15 @@ components:
           description: "Event result code"
           example: 6
         door-state:  
-          type: array
-          format: array of 4 boolean values
-          description: "Door open state array"
-          example: [true, false, false, true]
+          type: object
+          format: map[uint8]boolean
+          description: "maps door number 1..4 to the corresponding door open/closed state"
+          example: { 1:true, 2:false, 3:false, 4:true }
         door-buttons:  
-          type: array
-          format: array of 4 boolean values
-          description: "Door button state array"
-          example: [false, false, false, true]
+          type: object
+          format: map[uint8]boolean
+          description: "maps door number 1..4 to the corresponding door button pressed/released state"
+          example: { 1:true, 2:true, 3:false, 4:true }
         system-state:  
           type: integer
           format: uint8
