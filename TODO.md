@@ -4,6 +4,7 @@
 
 ## TODO
 
+- [ ] Revisit POST/PUT semantics (https://restfulapi.net/rest-put-vs-post)
 - [ ] Trace/log requests/responses
 - [ ] Request ID's
 - [ ] Skeleton integration test
