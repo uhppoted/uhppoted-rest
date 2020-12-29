@@ -58,7 +58,7 @@ func SetTime(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter
 	if body.DateTime == nil {
 		return http.StatusBadRequest,
 			errors.NewRESTError("set-time", "Missing/invalid date/time"),
-			fmt.Errorf("Missing/invalid date-time in  request body (%s)", string(blob))
+			fmt.Errorf("Missing/invalid date-time in request body (%s)", string(blob))
 	}
 
 	rq := uhppoted.SetTimeRequest{

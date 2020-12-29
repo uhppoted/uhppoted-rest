@@ -1,9 +1,13 @@
-## v0.7.x
+## v0.6.x
 
 ### IN PROGRESS
 
+- [x] Implement record-special-events
+
 ## TODO
 
+- [ ] Apply API actions to multiple devices
+- [ ] Redesign API around d
 - [ ] Revisit POST/PUT semantics (https://restfulapi.net/rest-put-vs-post)
 - [ ] Trace/log requests/responses
 - [ ] Request ID's
