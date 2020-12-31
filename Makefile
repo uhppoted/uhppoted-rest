@@ -59,6 +59,9 @@ bump:
 debug: build
 	$(CMD) run --console
 
+godoc:
+	godoc -http=:80	-index_interval=60s
+
 version: build
 	$(CMD) version
 
