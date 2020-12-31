@@ -11,7 +11,7 @@ import (
 	"github.com/uhppoted/uhppoted-rest/errors"
 )
 
-// Implements record-special-events REST API. Extracts the 'enabled' value from the
+// Implements the record-special-events REST API. Extracts the 'enabled' value from the
 // request body and invokes the uhppoted-api.RecordSpecialEvents API function to update
 // the controller 'record special events' flag.
 func SpecialEvents(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
