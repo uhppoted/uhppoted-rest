@@ -2,8 +2,6 @@
 
 ### IN PROGRESS
 
-- [x] Implement record-special-events
-
 ## TODO
 
 - [ ] Apply API actions to multiple devices

@@ -18,6 +18,7 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.6.8    | Maintenance release for version compatibility with `uhppoted-core` `v0.6.8`               |
 | v0.6.7    | Implements `special-events` API to enable/disable door events                             |
 | v0.6.5    | Maintenance release for version compatibility with `node-red-contrib-uhppoted`            |
 | v0.6.4    | Maintenance release for version compatibility with `uhppoted-app-sheets`                  |
@@ -31,10 +32,7 @@ Supported operating systems:
 
 Executables for all the supported operating systems are packaged in the [releases](https://github.com/uhppoted/uhppoted-rest/releases):
 
-- [tar.gz](https://github.com/uhppoted/uhppoted-rest/releases/download/v0.6.3/uhppoted-rest_v0.6.3.tar.gz)
-- [zip](https://github.com/uhppoted/uhppoted-rest/releases/download/v0.6.3/uhppoted-rest_v0.6.3.zip)
-
-The above archives contain the executables for all the operating systems - OS specific tarballs with all the _uhppoted_ components can be found in [uhpppoted](https://github.com/uhppoted/uhppoted/releases) releases.
+The release tarballs contain the executables for all the operating systems - OS specific tarballs with all the _uhppoted_ components can be found in [uhpppoted](https://github.com/uhppoted/uhppoted/releases) releases.
 
 Installation is straightforward - download the archive and extract it to a directory of your choice. To install `uhppoted-rest` as a system service:
 ```
