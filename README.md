@@ -18,6 +18,7 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.6.10   | Maintenance release for version compatibility with `uhppoted-app-wild-apricot`            |
 | v0.6.8    | Maintenance release for version compatibility with `uhppoted-core` `v0.6.8`               |
 | v0.6.7    | Implements `special-events` API to enable/disable door events                             |
 | v0.6.5    | Maintenance release for version compatibility with `node-red-contrib-uhppoted`            |
