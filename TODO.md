@@ -1,9 +1,13 @@
-## v0.6.10
+## v0.6.x
 
 ### IN PROGRESS
 
+- [ ] Implement `config` command
+- [x] Update to use reworked get-acl/put-acl implementation
+
 ## TODO
 
+- [ ] [retool](https://retool.com)
 - [ ] Apply API actions to multiple devices
 - [ ] Redesign API around d
 - [ ] Revisit POST/PUT semantics (https://restfulapi.net/rest-put-vs-post)

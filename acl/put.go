@@ -3,12 +3,14 @@ package acl
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+
 	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-api/acl"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 	"github.com/uhppoted/uhppoted-rest/errors"
-	"io/ioutil"
-	"net/http"
 )
 
 func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
@@ -46,11 +48,11 @@ func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 			err
 	}
 
-	rpt, err := api.PutACL(u, *acl, false)
-	if err != nil {
+	rpt, errs := api.PutACL(u, *acl, false)
+	if len(errs) > 0 {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("put-table", "Error storing access control list"),
-			err
+			fmt.Errorf("Error(s) storing access control list (%v)", errs)
 	}
 
 	report := []struct {
