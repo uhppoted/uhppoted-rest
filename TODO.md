@@ -2,7 +2,7 @@
 
 ### IN PROGRESS
 
-- [ ] Implement `config` command
+- [x] Implement `config` command
 - [x] Update to use reworked get-acl/put-acl implementation
 
 ## TODO

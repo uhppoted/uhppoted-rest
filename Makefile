@@ -69,10 +69,14 @@ help: build
 	$(CMD) help
 	$(CMD) help commands
 	$(CMD) help version
+	$(CMD) help config
 	$(CMD) help help
 	$(CMD) help run
 	$(CMD) help daemonize
 	$(CMD) help undaemonize
+
+config: build
+	$(CMD) config
 
 daemonize: build
 	sudo $(CMD) daemonize

@@ -11,6 +11,7 @@ import (
 
 var cli = []uhppoted.Command{
 	&commands.RUN,
+	&commands.CONFIG,
 	commands.NewDaemonize(),
 	commands.NewUndaemonize(),
 	&uhppoted.Version{
