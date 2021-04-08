@@ -121,7 +121,7 @@ func OpenDoor(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrite
 				fmt.Errorf("Card %v is not valid for %v", card, deviceID)
 		}
 
-		if door < 1 || door > 4 || !card.Doors[door-1] {
+		if door < 1 || door > 4 || !card.Doors[door] {
 			return http.StatusUnauthorized,
 				errors.NewRESTError("open-door", fmt.Sprintf("Card %v is does not have permission for %v, door %v", card.CardNumber, deviceID, door)),
 				fmt.Errorf("Card %v is not valid for %v, door %v", card, deviceID, door)
