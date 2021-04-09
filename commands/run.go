@@ -276,7 +276,7 @@ func watchdog(u *uhppote.UHPPOTE, st *state, l *log.Logger) error {
 	if int64(math.Abs(dt.Seconds())) > DELAY {
 		errors += 1
 		if !st.healthcheck.alerted {
-			l.Printf("ERROR 'health-check' subsystem has not run since %s (%s)", types.DateTime(st.started), dt)
+			l.Printf("ERROR 'health-check' subsystem has not run since %v (%v)", types.DateTime(st.started), dt)
 			st.healthcheck.alerted = true
 		}
 	} else {
@@ -341,12 +341,12 @@ func watchdog(u *uhppote.UHPPOTE, st *state, l *log.Logger) error {
 					if int64(math.Abs(dt.Seconds())) > DELTA {
 						errors += 1
 						if !alerted.synchronized {
-							l.Printf("ERROR UTC0311-L0x %s system time not synchronized: %s (%s)", types.SerialNumber(id), types.DateTime(t), dt)
+							l.Printf("ERROR UTC0311-L0x %v system time not synchronized: %v (%v)", types.SerialNumber(id), types.DateTime(t), dt)
 							alerted.synchronized = true
 						}
 					} else {
 						if alerted.synchronized {
-							l.Printf("INFO   UTC0311-L0x %s system time synchronized: %s (%s)", types.SerialNumber(id), types.DateTime(t), dt)
+							l.Printf("INFO   UTC0311-L0x %v system time synchronized: %v (%v)", types.SerialNumber(id), types.DateTime(t), dt)
 							alerted.synchronized = false
 						}
 					}
@@ -423,12 +423,12 @@ func watchdog(u *uhppote.UHPPOTE, st *state, l *log.Logger) error {
 				if int64(math.Abs(dt.Seconds())) > DELTA {
 					warnings += 1
 					if !alerted.synchronized {
-						l.Printf("WARN  UTC0311-L0x %s system time not synchronized: %s (%s)", types.SerialNumber(key.(uint32)), types.DateTime(t), dt)
+						l.Printf("WARN  UTC0311-L0x %v system time not synchronized: %v (%v)", types.SerialNumber(key.(uint32)), types.DateTime(t), dt)
 						alerted.synchronized = true
 					}
 				} else {
 					if alerted.synchronized {
-						l.Printf("INFO   UTC0311-L0x %s system time synchronized: %s (%s)", types.SerialNumber(key.(uint32)), types.DateTime(t), dt)
+						l.Printf("INFO   UTC0311-L0x %v system time synchronized: %v (%v)", types.SerialNumber(key.(uint32)), types.DateTime(t), dt)
 						alerted.synchronized = false
 					}
 				}
