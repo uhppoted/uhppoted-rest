@@ -228,7 +228,7 @@ func healthcheck(u *uhppote.UHPPOTE, st *state, l *log.Logger) {
 	now := time.Now()
 	devices := make(map[uint32]bool)
 
-	found, err := u.FindDevices()
+	found, err := u.GetDevices()
 	if err != nil {
 		l.Printf("WARN  'keep-alive' error: %v", err)
 	}
