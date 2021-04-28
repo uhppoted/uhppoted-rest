@@ -1,4 +1,4 @@
-VERSION = v0.6.x
+VERSION = v0.6.12
 LDFLAGS = -ldflags "-X uhppote.VERSION=$(VERSION)" 
 DIST   ?= development
 DEBUG  ?= --debug

@@ -1,9 +1,10 @@
-## v0.6.x
+## v0.6.2
 
 ### IN PROGRESS
 
 - [x] Implement `config` command
 - [x] Update to use reworked get-acl/put-acl implementation
+- [x] Handle `nil` events in `get-status` response
 
 ## TODO
 
