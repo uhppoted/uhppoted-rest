@@ -91,9 +91,9 @@ type handler struct {
 
 type dispatcher struct {
 	corsEnabled bool
-	uhppote     *uhppote.UHPPOTE
+	uhppote     uhppote.IUHPPOTE
 	uhppoted    *uhppoted.UHPPOTED
-	devices     []*uhppote.Device
+	devices     []uhppote.Device
 	log         *log.Logger
 	handlers    []handler
 	auth        auth.IAuth
@@ -102,7 +102,7 @@ type dispatcher struct {
 
 // Run configures and starts the REST daemon HTTP and HTTPS request listeners. It returns once the listen
 // connections have been closed.
-func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger) {
+func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *log.Logger) {
 	auth, err := auth.NewAuthProvider(r.AuthEnabled, r.AuthUsers, r.AuthGroups, r.HOTPCounters, r.HOTPWindow, l)
 	if err != nil {
 		log.Fatalf("Error initialising AuthProvider (%v)", err)
@@ -111,7 +111,7 @@ func (r *RESTD) Run(u *uhppote.UHPPOTE, devices []*uhppote.Device, l *log.Logger
 	d := dispatcher{
 		uhppote: u,
 		uhppoted: &uhppoted.UHPPOTED{
-			Uhppote:         u,
+			UHPPOTE:         u,
 			ListenBatchSize: 32,
 			Log:             l,
 		},

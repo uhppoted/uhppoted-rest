@@ -139,21 +139,28 @@ func (cmd *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.S
 		},
 	}
 
-	devices := []*uhppote.Device{}
+	bind, broadcast, listen := config.DefaultIpAddresses()
+
+	if c.BindAddress != nil {
+		bind = *c.BindAddress
+	}
+
+	if c.BroadcastAddress != nil {
+		broadcast = *c.BroadcastAddress
+	}
+
+	if c.ListenAddress != nil {
+		listen = *c.ListenAddress
+	}
+
+	devices := []uhppote.Device{}
 	for id, d := range c.Devices {
-		devices = append(devices, uhppote.NewDevice(id, d.Address, d.Rollover, d.Doors))
+		if device := uhppote.NewDevice(d.Name, id, d.Address, d.Rollover, d.Doors); device != nil {
+			devices = append(devices, *device)
+		}
 	}
 
-	u := uhppote.UHPPOTE{
-		BindAddress:      c.BindAddress,
-		BroadcastAddress: c.BroadcastAddress,
-		Devices:          make(map[uint32]*uhppote.Device),
-		Debug:            cmd.debug,
-	}
-
-	for _, d := range devices {
-		u.Devices[d.DeviceID] = d
-	}
+	u := uhppote.NewUHPPOTE(bind, broadcast, listen, devices, cmd.debug)
 
 	// ... REST task
 
@@ -179,7 +186,7 @@ func (cmd *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.S
 	}
 
 	go func() {
-		restd.Run(&u, devices, logger)
+		restd.Run(u, devices, logger)
 	}()
 
 	defer rest.Close()
@@ -193,7 +200,7 @@ func (cmd *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.S
 	go func() {
 		for {
 			<-k.C
-			healthcheck(&u, &s, logger)
+			healthcheck(u, &s, logger)
 		}
 	}()
 
@@ -207,7 +214,7 @@ func (cmd *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.S
 	for {
 		select {
 		case <-w.C:
-			if err := watchdog(&u, &s, logger); err != nil {
+			if err := watchdog(u, &s, logger); err != nil {
 				return err
 			}
 
@@ -222,7 +229,7 @@ func (cmd *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.S
 	}
 }
 
-func healthcheck(u *uhppote.UHPPOTE, st *state, l *log.Logger) {
+func healthcheck(u uhppote.IUHPPOTE, st *state, l *log.Logger) {
 	l.Printf("health-check")
 
 	now := time.Now()
@@ -239,7 +246,7 @@ func healthcheck(u *uhppote.UHPPOTE, st *state, l *log.Logger) {
 		}
 	}
 
-	for id, _ := range u.Devices {
+	for id, _ := range u.DeviceList() {
 		devices[id] = true
 	}
 
@@ -256,7 +263,7 @@ func healthcheck(u *uhppote.UHPPOTE, st *state, l *log.Logger) {
 	st.healthcheck.touched = &now
 }
 
-func watchdog(u *uhppote.UHPPOTE, st *state, l *log.Logger) error {
+func watchdog(u uhppote.IUHPPOTE, st *state, l *log.Logger) error {
 	warnings := 0
 	errors := 0
 	healthCheckRunning := false
@@ -289,7 +296,7 @@ func watchdog(u *uhppote.UHPPOTE, st *state, l *log.Logger) error {
 	// Verify configured devices
 
 	if healthCheckRunning {
-		for id, _ := range u.Devices {
+		for id, _ := range u.DeviceList() {
 			alerted := alerts{
 				missing:      false,
 				unexpected:   false,
@@ -374,7 +381,7 @@ func watchdog(u *uhppote.UHPPOTE, st *state, l *log.Logger) error {
 			alerted.synchronized = v.(alerts).synchronized
 		}
 
-		for id, _ := range u.Devices {
+		for id, _ := range u.DeviceList() {
 			if id == key {
 				if alerted.unexpected {
 					l.Printf("ERROR UTC0311-L0x %s added to configuration", types.SerialNumber(key.(uint32)))

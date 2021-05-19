@@ -1,10 +1,16 @@
-## v0.6.2
+## v0.7.x
 
 ### IN PROGRESS
 
-- [x] Implement `config` command
-- [x] Update to use reworked get-acl/put-acl implementation
-- [x] Handle `nil` events in `get-status` response
+- [ ] Make compatible with updated `uhppoted-api` and `uhppote-core`
+- [ ] Implement `get-time-profile`
+- [ ] Implement `set-time-profile`
+- [ ] Implement `clear-time-profiles`
+- [ ] Implement `get-time-profiles`
+- [ ] Implement `set-time-profiles`
+- [ ] Implement time profiles for ACL API
+- [ ] Check against time profile for open-door API
+- [ ] Replace internal healthcheck with implementation from `uhppoted-api`
 
 ## TODO
 

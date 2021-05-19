@@ -38,8 +38,8 @@ func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 			err
 	}
 
-	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
-	devices := ctx.Value("devices").([]*uhppote.Device)
+	u := ctx.Value("uhppote").(uhppote.IUHPPOTE)
+	devices := ctx.Value("devices").([]uhppote.Device)
 
 	acl, _, err := api.ParseTable(table, devices, true)
 	if err != nil {

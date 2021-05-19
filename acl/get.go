@@ -12,8 +12,8 @@ import (
 )
 
 func GetACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
-	devices := ctx.Value("devices").([]*uhppote.Device)
+	u := ctx.Value("uhppote").(uhppote.IUHPPOTE)
+	devices := ctx.Value("devices").([]uhppote.Device)
 
 	acl, errs := api.GetACL(u, devices)
 	if len(errs) > 0 {

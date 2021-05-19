@@ -30,8 +30,8 @@ func Show(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r
 			err
 	}
 
-	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
-	devices := ctx.Value("devices").([]*uhppote.Device)
+	u := ctx.Value("uhppote").(uhppote.IUHPPOTE)
+	devices := ctx.Value("devices").([]uhppote.Device)
 
 	acl, err := api.GetCard(u, devices, uint32(cardID))
 	if err != nil {

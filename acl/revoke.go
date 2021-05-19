@@ -37,8 +37,8 @@ func Revoke(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 			fmt.Errorf("Invalid door (%s) in request URL", matches[1])
 	}
 
-	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
-	devices := ctx.Value("devices").([]*uhppote.Device)
+	u := ctx.Value("uhppote").(uhppote.IUHPPOTE)
+	devices := ctx.Value("devices").([]uhppote.Device)
 
 	err = api.Revoke(u, devices, uint32(cardID), []string{door})
 	if err != nil {

@@ -70,8 +70,8 @@ func Grant(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, 
 			fmt.Errorf("Missing/invalid end date in request body")
 	}
 
-	u := ctx.Value("uhppote").(*uhppote.UHPPOTE)
-	devices := ctx.Value("devices").([]*uhppote.Device)
+	u := ctx.Value("uhppote").(uhppote.IUHPPOTE)
+	devices := ctx.Value("devices").([]uhppote.Device)
 
 	err = api.Grant(u, devices, uint32(cardID), *body.From, *body.To, []string{door})
 	if err != nil {
