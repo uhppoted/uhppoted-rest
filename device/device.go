@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
+	"strconv"
 )
 
 func reply(ctx context.Context, w http.ResponseWriter, response interface{}) {
@@ -38,4 +39,32 @@ func authorized(ctx context.Context, cardNumber uint32) bool {
 	}
 
 	return false
+}
+
+func getDeviceID(r *http.Request) (uint32, error) {
+	matches := regexp.MustCompile("^/uhppote/device/([0-9]+)(?:$|/.*$)").FindStringSubmatch(r.URL.Path)
+	if matches == nil {
+		return 0, fmt.Errorf("missing device-id")
+	}
+
+	deviceID, err := strconv.ParseUint(matches[1], 10, 32)
+	if err != nil {
+		return 0, err
+	}
+
+	return uint32(deviceID), nil
+}
+
+func getTimeProfileID(r *http.Request) (uint8, error) {
+	matches := regexp.MustCompile("^/uhppote/device/[0-9]+/time-profile/([0-9]+)$").FindStringSubmatch(r.URL.Path)
+	if matches == nil {
+		return 0, fmt.Errorf("missing time-profile-id")
+	}
+
+	profileID, err := strconv.ParseUint(matches[1], 10, 8)
+	if err != nil {
+		return 0, err
+	}
+
+	return uint8(profileID), nil
 }

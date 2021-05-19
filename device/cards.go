@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 	"github.com/uhppoted/uhppoted-rest/errors"
-	"io/ioutil"
-	"net/http"
 )
 
 func GetCards(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {

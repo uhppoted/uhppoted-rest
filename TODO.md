@@ -2,8 +2,7 @@
 
 ### IN PROGRESS
 
-- [ ] Make compatible with updated `uhppoted-api` and `uhppote-core`
-- [ ] Implement `get-time-profile`
+- [ ] Rework JSON segments marshalling/unmarshalling to be array (?) 
 - [ ] Implement `set-time-profile`
 - [ ] Implement `clear-time-profiles`
 - [ ] Implement `get-time-profiles`
@@ -11,6 +10,10 @@
 - [ ] Implement time profiles for ACL API
 - [ ] Check against time profile for open-door API
 - [ ] Replace internal healthcheck with implementation from `uhppoted-api`
+- [ ] Break up OpenAPI into sections
+
+- [x] Implement `get-time-profile`
+- [x] Make compatible with updated `uhppoted-api` and `uhppote-core`
 
 ## TODO
 
