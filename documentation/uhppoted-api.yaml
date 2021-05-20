@@ -776,7 +776,7 @@ paths:
     get:
       tags:
         - device
-      summary: "Retrieves a time profile from a controller"
+      summary: "Retrieves a time profile"
       description: "Retrieves a time profile from a controller"
       operationId: getDeviceTimeProfile
       parameters:
@@ -808,7 +808,11 @@ paths:
           content:
             application/json:
               schema:
-                  $ref: "#/components/schemas/Error"        
+                  $ref: "#/components/schemas/Error"    
+              example: {
+                  tag: "get-time-profile",
+                  message: "Time profile 29 not found"
+              }
         '405':
           description: "Invalid request"
           content:
@@ -821,6 +825,60 @@ paths:
             application/json:
               schema:
                   $ref: "#/components/schemas/Error"        
+        default:
+          description: "Request failed"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Error"        
+    
+    put:
+      tags:
+        - device
+      summary: "Adds or updates a time profile"
+      description: "Adds or updates a controller time profile"
+      operationId: putTimeProfile
+      parameters:
+        - name: device-id
+          in: path
+          description: "Device serial number"
+          required: true
+          schema:
+            type: integer
+            format: uint32
+            example: 405419896
+        - name: time-profile-id
+          in: path
+          description: "Time profile ID in the interval [2..254]"
+          required: true
+          schema:
+            type: integer
+            format: uint8 
+            example: 29
+      requestBody:
+        description: "Time profile definition"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TimeProfileBody"        
+      responses:
+        '200':
+          description: "Time profile added/updated"
+        '404':
+          description: "No matching device"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Error"        
+        '405':
+          description: "Invalid request"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Error"        
+        '500':
+          description: "Internal system error"
         default:
           description: "Request failed"
           content:
@@ -1331,14 +1389,30 @@ components:
       properties:
         door-state:  
           type: object
+          # properties:
+          #   1: bool
+          #   2: bool
+          #   3: bool
+          #   4: bool
+          additionalProperties: false 
           format: map[uint8]boolean
           description: "maps door number 1..4 to the corresponding door open/closed state"
-          example: { 1:true, 2:false, 3:false, 4:true }
+          example: { 
+            1: true, 
+            2: false, 
+            3: false, 
+            4: true 
+          }
         door-buttons:  
           type: object
           format: map[uint8]boolean
           description: "maps door number 1..4 to the corresponding door button pressed/released state"
-          example: { 1:true, 2:true, 3:false, 4:true }
+          example: { 
+            1: true, 
+            2: true, 
+            3: false, 
+            4: true 
+          }
         system-state:  
           type: integer
           format: uint8
@@ -1379,7 +1453,15 @@ components:
           $ref: "#/components/schemas/DeviceStatus" 
           format: json
           description: "Last event (if present)"
-          example: { index:37, type:3, access-granted:true, door:2, user-id:762424255,  timestamp: "2021-04-14 12:34:56", reason: 6 }
+          example:  { 
+              index: 37, 
+              type: 3, 
+              access-granted: true, 
+              door: 2, 
+              user-id: 762424255,  
+              timestamp: "2021-04-14 12:34:56", 
+              reason: 6 
+            }
 
     StatusEvent:
       required: 
@@ -1582,47 +1664,96 @@ components:
 
     TimeProfile:
       required: 
-        - profile-id
-        - from-date
-        - to-date
+        - id
+        - start-date
+        - end-date
         - weekdays
         - segments
       properties:
-        profile-id:  
+        id:  
           type: number
           format: uint8
           description: "Time profile ID in the range [2..254]"
           example: 29
-        from-date:  
+        start-date:  
           type: string
           format: yyyy-MM-dd
           description: "Date from which time profile is active"
           example: "2021-01-01"
-        to-date:  
+        end-date:  
           type: string
           format: yyyy-MM-dd
           description: "Date after which time profile is no longer active"
           example: "2021-12-31"
         weekdays:  
-          type: array
+          type: string
           items:
              type: string
-             format: "weekday"
-             description: "Weekday name (case-insensitive and 3 letter abbreviations are valid)"
-          example: [ "Monday", "Wednesday", "Friday" ]
+             format: "comma seperated list of weekdays"
+             description: "List of weekdays for which the time profile is active. Weekday name are case-insensitive and 3 letter abbreviations are valid."
+          example: "Monday,Wednesday,Friday"
           description: "List of weekdays for which the time profile is active"
         segments:  
-          type: array
-          items:
-            $ref: "#/components/schemas/TimeSegment"                
-          example: [ { "start":"08:30", "end":"11:15" }, { "start":"12:00", "end":"16:45" } ]
+          type: object
+          # properties:
+          #   1: "#/components/schemas/TimeSegment"
+          #   2: "#/components/schemas/TimeSegment"
+          #   3: "#/components/schemas/TimeSegment"
+          additionalProperties: false 
+          example:  { 
+                      1: { "start":"08:30", "end":"11:15" }, 
+                      2: { "start":"12:00", "end":"16:45" } 
+                    }
           description: "List of up to 3 time intervals during which the time profile is active"
-        linked-profile-id:  
+        linked-profile:  
           type: number
           format: uint8
           description: "ID of time profile linked to this time profile."
           example: 71
-          
+
+    TimeProfileBody:
+      required: 
+        - start-date
+        - end-date
+        - weekdays
+        - segments
+      properties:
+        start-date:  
+          type: string
+          format: yyyy-MM-dd
+          description: "Date from which time profile is active"
+          example: "2021-01-01"
+        end-date:  
+          type: string
+          format: yyyy-MM-dd
+          description: "Date after which time profile is no longer active"
+          example: "2021-12-31"
+        weekdays:  
+          type: string
+          items:
+             type: string
+             format: "comma seperated list of weekdays"
+             description: "List of weekdays for which the time profile is active. Weekday name are case-insensitive and 3 letter abbreviations are valid."
+          example: "Monday,Wednesday,Friday"
+          description: "List of weekdays for which the time profile is active"
+        segments:  
+          type: object
+          # properties:
+          #   1: "#/components/schemas/TimeSegment"
+          #   2: "#/components/schemas/TimeSegment"
+          #   3: "#/components/schemas/TimeSegment"
+          additionalProperties: false 
+          example:  { 
+                      1: { "start":"08:30", "end":"11:15" }, 
+                      2: { "start":"12:00", "end":"16:45" } 
+                    }
+          description: "List of up to 3 time intervals during which the time profile is active"
+        linked-profile:  
+          type: number
+          format: uint8
+          description: "ID of time profile linked to this time profile."
+          example: 71
+                    
     TimeSegment:
       required: 
         - start
@@ -1637,8 +1768,8 @@ components:
           type: string
           format: HH:mm
           description: "Time until after which segment is no longer active"
-          example: "2021-12-31"
-        example: { "start":"08:30", "end":"11:15" }
+          example: "11:15"
+      example: { "start":"08:30", "end":"11:15" }
 
     SpecialEvents:
       properties:

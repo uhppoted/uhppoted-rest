@@ -61,9 +61,13 @@ func getTimeProfileID(r *http.Request) (uint8, error) {
 		return 0, fmt.Errorf("missing time-profile-id")
 	}
 
-	profileID, err := strconv.ParseUint(matches[1], 10, 8)
+	profileID, err := strconv.ParseUint(matches[1], 10, 32)
 	if err != nil {
 		return 0, err
+	}
+
+	if profileID < 2 || profileID > 254 {
+		return 0, fmt.Errorf("invalid time profile ID (%v) - valid range is [2..254]", profileID)
 	}
 
 	return uint8(profileID), nil
