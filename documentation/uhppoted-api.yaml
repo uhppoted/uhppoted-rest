@@ -1,4 +1,4 @@
-openapi: "3.0.2"
+openapi: "3.0.3"
 
 info:
   version: 0.7.x
@@ -749,6 +749,50 @@ paths:
           description: "Card deleted"
         '404':
           description: "No matching device and/or card"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Error"        
+        '405':
+          description: "Invalid request"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Error"        
+        '500':
+          description: "Internal system error"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Error"        
+        default:
+          description: "Request failed"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Error"        
+
+  /device/{device-id}/time-profiles:
+    delete:
+      tags:
+        - device
+      summary: "Deletes all time profiles"
+      description: "Deletes all time profiles from a controller"
+      operationId: clearTimeProfiles
+      parameters:
+        - name: device-id
+          in: path
+          description: "Device serial number"
+          required: true
+          schema:
+            type: integer
+            format: uint32
+            example: 405419896
+      responses:
+        '200':
+          description: "Time profiles cleared"
+        '404':
+          description: "No device with ID matching device-id"
           content:
             application/json:
               schema:

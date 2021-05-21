@@ -2,18 +2,18 @@
 
 ### IN PROGRESS
 
-- [ ] Rework JSON segments marshalling/unmarshalling to be array (?) 
-- [ ] uhppote-core::unit test for unmarshalling missing time profile segments
-- [ ] Implement `clear-time-profiles`
 - [ ] Implement `get-time-profiles`
 - [ ] Implement `set-time-profiles`
 - [ ] Implement time profiles for ACL API
-- [ ] Check against time profile for open-door API
+- [ ] OpenDoor API: check against time profile for 
+- [ ] Clean up REST error handling (complete 'mare, what was I thinking :-()
 - [ ] Replace internal healthcheck with implementation from `uhppoted-api`
+- [ ] OpenAPI: update to 3.0.3
 - [ ] OpenAPI: break up spec into sections
 - [ ] OpenAPI: use fixed map keys for doors, segments
-- [ ] REST error handling is a mare's nest
+- [ ] OpenAPI: fix all the new semantic/syntax errors
 
+- [x] Implement `clear-time-profiles`
 - [x] Implement `set-time-profile`
 - [x] Implement `get-time-profile`
 - [x] Make compatible with updated `uhppoted-api` and `uhppote-core`

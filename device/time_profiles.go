@@ -14,7 +14,13 @@ import (
 )
 
 func GetTimeProfile(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	deviceID, _ := getDeviceID(r)
+	deviceID, err := getDeviceID(r)
+	if err != nil {
+		return http.StatusBadRequest,
+			rerrors.NewRESTError("set-time-profile", fmt.Sprintf("Error:  %v", err)),
+			err
+	}
+
 	profileID, err := getTimeProfileID(r)
 	if err != nil {
 		return http.StatusBadRequest,
@@ -46,7 +52,13 @@ func GetTimeProfile(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respons
 }
 
 func PutTimeProfile(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	deviceID, _ := getDeviceID(r)
+	deviceID, err := getDeviceID(r)
+	if err != nil {
+		return http.StatusBadRequest,
+			rerrors.NewRESTError("set-time-profile", fmt.Sprintf("Error:  %v", err)),
+			err
+	}
+
 	profileID, err := getTimeProfileID(r)
 	if err != nil {
 		return http.StatusBadRequest,
@@ -85,6 +97,38 @@ func PutTimeProfile(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respons
 				rerrors.NewRESTError("set-time-profile", fmt.Sprintf("Error creating/updating time profile %v on controller %v", profileID, deviceID)),
 				err
 		}
+	}
+
+	return http.StatusOK, nil, nil
+}
+
+func ClearTimeProfiles(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	deviceID, err := getDeviceID(r)
+	if err != nil {
+		return http.StatusBadRequest,
+			rerrors.NewRESTError("clear-time-profiles", fmt.Sprintf("Error:  %v", err)),
+			err
+	}
+
+	rq := uhppoted.ClearTimeProfilesRequest{
+		DeviceID: deviceID,
+	}
+
+	response, err := impl.ClearTimeProfiles(rq)
+	if err != nil {
+		return http.StatusInternalServerError,
+			rerrors.NewRESTError("clear-time-profiles", fmt.Sprintf("Error clearing all time profiles from controller %v", deviceID)),
+			err
+	} else if response == nil {
+		return http.StatusInternalServerError,
+			rerrors.NewRESTError("clear-time-profiles", fmt.Sprintf("Error clearing all time profiles from %v", deviceID)),
+			fmt.Errorf("No response for clear-time-profiles request from controller %v", deviceID)
+	}
+
+	if !response.Cleared {
+		return http.StatusInternalServerError,
+			rerrors.NewRESTError("clear-time-profiles", fmt.Sprintf("Failed to clear all time profiles from controller %v", deviceID)),
+			fmt.Errorf("clear-time-profiles from controler %v returned %v", deviceID, response.Cleared)
 	}
 
 	return http.StatusOK, nil, nil
