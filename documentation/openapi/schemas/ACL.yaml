@@ -1,0 +1,10 @@
+# schemas/ACL.yaml
+
+required:
+  - acl
+properties:
+  acl:
+    type: array
+    items:
+      $ref: "./AccessListRecord.yaml"                
+    description: "List of cards and doors to which the cards have been granted access, along with associated card access date ranges"      

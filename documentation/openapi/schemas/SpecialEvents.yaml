@@ -1,0 +1,8 @@
+# schemas/SpecialEvents.yaml
+
+properties:
+  enabled:
+    type: boolean
+    format: true/false
+    description: "Enables or disables events for door open, door closed or door button pressed"
+    example: true

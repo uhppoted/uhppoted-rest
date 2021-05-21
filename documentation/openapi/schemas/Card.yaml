@@ -1,0 +1,31 @@
+# schemas/Card.yaml
+
+required: 
+  - card-number
+  - start-date
+  - end-date
+  - doors
+properties:
+  card-number:  
+    type: number
+    format: uint32
+    description: "Card number"
+    example: 192837465
+  start-date:  
+    type: string
+    format: yyyy-MM-dd
+    description: "First date card is valid"
+    example: "2020-01-01"
+  end-date:  
+    type: string
+    format: yyyy-MM-dd
+    description: "Last date card is valid"
+    example: "2020-12-31"
+  doors:  
+    type: object
+    items:
+       type: boolean
+       format: true/false
+       description: "Door access permitted"
+    example: { "1":true, "2":false, "3":false, "4":true }
+    description: "List of doors and access"

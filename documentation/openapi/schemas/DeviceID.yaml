@@ -1,0 +1,16 @@
+# schemas/DeviceID.yaml
+
+required: 
+  - device-id
+  - device-type
+properties:
+  device-id:  
+    type: number
+    format: uint32
+    description: "UHPPOTE device serial number"
+    example: 405419896
+  device-type:  
+    type: string
+    format: string
+    description: "UHPPOTE device type"
+    example: "UT0311-L04"

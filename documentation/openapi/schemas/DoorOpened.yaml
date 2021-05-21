@@ -1,0 +1,8 @@
+# schemas/DoorOpened.yaml
+
+properties:
+  opened:
+    type: boolean
+    format: true/false
+    description: "Door opened/not opened"
+    example: true

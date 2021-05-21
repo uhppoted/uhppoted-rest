@@ -1,0 +1,96 @@
+# schemas/DeviceStatus.yaml
+
+required: 
+  - last-event-index
+  - event-type
+  - access-granted
+  - door
+  - door-opened
+  - user-id
+  - event-timestamp
+  - event-result
+  - door-state 
+  - door-buttons
+  - system-state
+  - system-datetime
+  - packet-number
+  - backup-state
+  - special-message
+  - battery-status
+  - fire-alarm-status
+properties:
+  door-state:  
+    type: object
+    # properties:
+    #   1: bool
+    #   2: bool
+    #   3: bool
+    #   4: bool
+    additionalProperties: false 
+    format: map[uint8]boolean
+    description: "maps door number 1..4 to the corresponding door open/closed state"
+    example: { 
+      1: true, 
+      2: false, 
+      3: false, 
+      4: true 
+    }
+  door-buttons:  
+    type: object
+    format: map[uint8]boolean
+    description: "maps door number 1..4 to the corresponding door button pressed/released state"
+    example: { 
+      1: true, 
+      2: true, 
+      3: false, 
+      4: true 
+    }
+  system-state:  
+    type: integer
+    format: uint8
+    description: "System state flag set"
+    example: 0
+  system-datetime:  
+    type: string
+    format: yyyy-mm-dd HH:mm:ss
+    description: "Current system date and time"
+    example: "2020-03-28 15:32:29"
+  packet-number:  
+    type: integer
+    format: uint8
+    description: "Packet number, whatever that entails"
+    example: 0
+  backup-state:  
+    type: integer
+    format: uint8
+    description: "Backup state code, whatever that entails"
+    example: 0
+  special-message:  
+    type: integer
+    format: uint8
+    description: "Special message code, whatever that entails"
+    example: 0
+  battery-status:  
+    type: integer
+    format: uint8
+    description: "Battery status flag set"
+    example: 0
+  fire-alarm-status:  
+    type: integer
+    format: uint8
+    description: "Fire alarm status flag set"
+    example: 0
+  event:
+    type: object
+    $ref: "./DeviceStatus.yaml" 
+    format: json
+    description: "Last event (if present)"
+    example:  { 
+        index: 37, 
+        type: 3, 
+        access-granted: true, 
+        door: 2, 
+        user-id: 762424255,  
+        timestamp: "2021-04-14 12:34:56", 
+        reason: 6 
+      }

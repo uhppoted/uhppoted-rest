@@ -1,0 +1,13 @@
+# schemas/CardList.yaml
+
+required: 
+  - cards
+properties:
+  cards:
+    type: array
+    items:
+       type: number
+       format: uint32
+       description: "Card number"
+    example: [ 192837465, 564738291 ]
+    description: "List of card numbers"

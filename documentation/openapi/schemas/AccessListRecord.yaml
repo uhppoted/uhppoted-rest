@@ -1,0 +1,31 @@
+# schemas/AccessListRecord.yaml
+
+required: 
+  - card-number
+  - door
+  - start-date
+  - end-date
+  - doors
+properties:
+  card-number:  
+    type: number
+    format: uint32
+    description: "Card number"
+    example: 192837465
+  start-date:  
+    type: string
+    format: yyyy-MM-dd
+    description: "First date card access is enabled (as from 00:00)"
+    example: "2020-01-01"
+  end-date:  
+    type: string
+    format: yyyy-MM-dd
+    description: "Last date card is enabled (until 23:59)"
+    example: "2020-12-31"
+  doors:
+    type: array
+    items:
+      type: string
+      format: door ID
+      description: "Door ID that matches entry in configuration"
+    example: ["Entrance", "Upstairs", "Downstairs"]

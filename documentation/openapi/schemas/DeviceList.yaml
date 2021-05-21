@@ -1,0 +1,10 @@
+# schemas/DeviceList.yaml
+
+required: 
+  - devices
+properties:
+  devices:
+    type: array
+    items:
+      $ref: "./DeviceID.yaml"        
+    description: "List of 'found' devices"

@@ -5,6 +5,7 @@ DEBUG  ?= --debug
 CMD     = ./bin/uhppoted-rest
 
 .PHONY: bump
+.PHONY: open-api
 
 all: test      \
 	 benchmark \
@@ -35,6 +36,9 @@ benchmark: build
 
 coverage: build
 	go test -cover ./...
+
+open-api:
+	swagger-cli bundle documentation/openapi/uhppoted-api.yaml --outfile generated.yaml --type yaml
 
 build-all: test vet
 	mkdir -p dist/$(DIST)/windows

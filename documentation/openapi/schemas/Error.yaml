@@ -1,0 +1,16 @@
+# schemas/error.yaml
+
+required: 
+  - tag
+  - message
+properties:
+  tag:  
+    type: string
+    format: string
+    description: "Operation identifier"
+    example: "get-acl"
+  message:  
+    type: string
+    format: string
+    description: "User level error message"
+    example: "Invalid card number"

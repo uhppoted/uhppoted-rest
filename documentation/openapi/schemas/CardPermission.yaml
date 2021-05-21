@@ -1,0 +1,22 @@
+# schemas/CardPermission.yaml          
+
+required: 
+  - door
+  - start-date
+  - end-date
+properties:
+  door:  
+    type: string
+    format: door ID
+    description: "Door ID corresponding to an entry in the controller configuration"
+    example: "Entrance"
+  start-date:  
+    type: string
+    format: yyyy-MM-dd
+    description: "First date card access is enabled (as from 00:00)"
+    example: "2020-01-01"
+  end-date:  
+    type: string
+    format: yyyy-MM-dd
+    description: "Last date card is enabled (until 23:59)"
+    example: "2020-12-31"

@@ -1,0 +1,10 @@
+# schemas/CardSwipe.yaml
+
+required: 
+  - card-number
+properties:
+  card-number:
+    type: number
+    format: uint32
+    description: "Card number"
+    example: 1928374646

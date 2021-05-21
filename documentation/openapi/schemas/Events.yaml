@@ -1,0 +1,7 @@
+# schemas/Events.yaml
+
+      required: 
+        - events
+      properties:
+        events:
+          $ref: "./EventRange.yaml"        

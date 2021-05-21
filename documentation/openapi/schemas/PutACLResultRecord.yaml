@@ -1,0 +1,42 @@
+# schemas/PutACLResultRecord.yaml       
+
+required: 
+  - device-id
+  - unchanged
+  - updated
+  - added
+  - deleted
+  - failed
+properties:
+  device-id:  
+    type: number
+    format: uint32
+    description: "UHPPOTE device serial number"
+    example: 405419896
+  unchanged:  
+    type: number
+    format: integer
+    description: "Number of records unaffected by ACL update"
+    example: 3
+  updated:  
+    type: number
+    format: integer
+    description: "Number of records updated by ACL update"
+    example: 5
+  added:  
+    type: number
+    format: integer
+    description: "Number of records added by ACL update"
+    example: 3
+  deleted:  
+    type: number
+    format: integer
+    description: "Number of records deleted by ACL update"
+    example: 1
+  failed:  
+    type: number
+    format: integer
+    description: "Number of records failed to updated by ACL update"
+    example: 0
+description: "Summary list of changes made to a controller card list"
+example: { "device-id":405419896, "unchanged":2, "updated":5, "added": 3, "deleted":1, "failed":0 }

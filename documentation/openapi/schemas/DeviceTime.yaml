@@ -1,0 +1,8 @@
+# schemas/DeviceTime.yaml
+
+properties:
+  datetime:
+    type: string
+    format: yyyy-mm-dd HH:mm:ss
+    description: "Current device date/time"
+    example: "2020-03-28 15:32:29"

@@ -1,0 +1,13 @@
+# schemas/EventRange.yaml
+
+properties:
+  first:
+    type: number
+    format: uint32
+    description: "Index of the first stored event. Not provided if device has no events."
+    example: 3
+  last:
+    type: number
+    format: uint32
+    description: "Index of the last stored event. Not provided if device has no events."
+    example: 78

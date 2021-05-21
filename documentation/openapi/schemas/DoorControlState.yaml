@@ -1,0 +1,8 @@
+# schemas/DoorControlState.yaml          
+
+properties:
+  control:
+    type: string
+    format: "'normally open', 'normally closed' or 'controlled'"
+    description: "Door control state"
+    example: 'normally closed'

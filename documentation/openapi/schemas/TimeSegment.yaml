@@ -1,0 +1,17 @@
+# schemas/time-segment.yaml
+
+required: 
+  - start
+  - end
+properties:
+  start:  
+    type: string
+    format: HH:mm
+    description: "Time from which segment is active"
+    example: "08:30"
+  end:  
+    type: string
+    format: HH:mm
+    description: "Time until after which segment is no longer active"
+    example: "11:15"
+example: { "start":"08:30", "end":"11:15" }

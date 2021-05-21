@@ -1,0 +1,13 @@
+# schemas/Door.yaml
+
+properties:
+  delay:
+    type: number
+    format: uint8
+    description: "Door delay in seconds"
+    example: 5
+  control:
+    type: string
+    format: "'normally open', 'normally closed' or 'controlled'"
+    description: "Door control state"
+    example: 'normally closed'

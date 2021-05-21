@@ -1,0 +1,86 @@
+Error:
+  $ref: "./Error.yaml"
+
+DeviceID:
+  $ref: "./DeviceID.yaml"
+
+DateRange:
+  $ref: "./DateRange.yaml"
+
+Device:
+  $ref: "./Device.yaml"
+
+DeviceList:
+  $ref: "./DeviceList.yaml"
+
+DeviceTime:
+  $ref: "./DeviceTime.yaml"
+
+DeviceStatus:
+  $ref: "./DeviceStatus.yaml"
+
+Door:
+  $ref: "./Door.yaml"
+
+DoorDelay:
+  $ref: "./DoorDelay.yaml"
+
+DoorControlState:
+  $ref: "./DoorControlState.yaml"
+
+DoorOpened:
+  $ref: "./DoorOpened.yaml"
+
+Card:
+  $ref: "./Card.yaml"
+
+CardList:
+  $ref: "./CardList.yaml"
+
+CardDetails:
+  $ref: "./CardDetails.yaml"
+
+CardPermission:
+  $ref: "./CardPermission.yaml"
+
+CardPermissions:
+  $ref: "./CardPermissions.yaml"
+
+CardSwipe:
+  $ref: "./CardSwipe.yaml"
+
+TimeProfile:
+  $ref: "./TimeProfile.yaml"
+
+TimeProfileBody:
+  $ref: "./TimeProfileBody.yaml"
+
+TimeSegment:
+  $ref: "./TimeSegment.yaml"
+          
+SpecialEvents:
+  $ref: "./SpecialEvents.yaml"
+
+Event:
+  $ref: "./Event.yaml"
+
+StatusEvent:
+  $ref: "./StatusEvent.yaml"
+
+Events:
+  $ref: "./Events.yaml"
+
+EventRange:
+  $ref: "./EventRange.yaml"
+
+ACL:
+  $ref: "./ACL.yaml"
+
+AccessListRecord:
+  $ref: "./AccessListRecord.yaml"
+
+PutACLResult:
+  $ref: "./PutACLResult.yaml"
+
+PutACLResultRecord:
+  $ref: "./PutACLResultRecord.yaml"
