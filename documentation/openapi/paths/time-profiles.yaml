@@ -1,0 +1,93 @@
+# paths/time-profiles.yaml
+
+get:
+  tags:
+    - device
+  summary: "Retrieves all time profiles"
+  description: "Retrieves all the time profiles defined on a controller"
+  operationId: getTimeProfiles
+  parameters:
+    - name: device-id
+      in: path
+      description: "Device serial number"
+      required: true
+      schema:
+        type: integer
+        format: uint32
+        example: 405419896
+  responses:
+    '200':
+      description: "List of time profiles"
+      content:
+        application/json:
+          schema:
+              $ref: "#/components/schemas/TimeProfileList"        
+    '404':
+      description: "No device with ID matching device-id"
+      content:
+        application/json:
+          schema:
+              $ref: "#/components/schemas/Error"        
+    '405':
+      description: "Invalid request"
+      content:
+        application/json:
+          schema:
+              $ref: "#/components/schemas/Error"        
+    '500':
+      description: "Internal system error"
+      content:
+        application/json:
+          schema:
+              $ref: "#/components/schemas/Error"        
+    default:
+      description: "Request failed"
+      content:
+        application/json:
+          schema:
+              $ref: "#/components/schemas/Error"        
+
+delete:
+  tags:
+    - device
+  summary: "Deletes all time profiles"
+  description: "Deletes all time profiles from a controller"
+  operationId: clearTimeProfiles
+  parameters:
+    - name: device-id
+      in: path
+      description: "Device serial number"
+      required: true
+      schema:
+        type: integer
+        format: uint32
+        example: 405419896
+  responses:
+    '200':
+      description: "Time profiles cleared"
+    '404':
+      description: "No device with ID matching device-id"
+      content:
+        application/json:
+          schema:
+              $ref: "#/components/schemas/Error"        
+    '405':
+      description: "Invalid request"
+      content:
+        application/json:
+          schema:
+              $ref: "#/components/schemas/Error"        
+    '500':
+      description: "Internal system error"
+      content:
+        application/json:
+          schema:
+              $ref: "#/components/schemas/Error"        
+    default:
+      description: "Request failed"
+      content:
+        application/json:
+          schema:
+              $ref: "#/components/schemas/Error"        
+
+

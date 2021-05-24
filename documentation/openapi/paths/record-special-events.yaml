@@ -1,0 +1,69 @@
+# paths/record-special-events.yaml
+
+put:
+  tags:
+    - device
+  summary: "Enable or disable special events"
+  description: "Enables or disables events on door open, door closed and door button pressed"
+  operationId: putRecordSpecialEvents
+  parameters:
+    - name: device-id
+      in: path
+      description: "Device serial number"
+      required: true
+      schema:
+        type: integer
+        format: uint32
+        example: 405419896
+  requestBody:
+    description: "Enable/disable special events"
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "./schemas/SpecialEvents.yaml"
+        examples:
+          enable: 
+            value:
+              enabled: true
+          disable: 
+            value:
+              enabled: false
+
+  responses:
+    '200':
+      description: "Device record special events"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/SpecialEvents.yaml"
+    '403':
+      description: "Access denied"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '404':
+      description: "No device with ID matching device-id"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '405':
+      description: "Invalid request"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '500':
+      description: "Internal system error"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    default:
+      description: "Request failed"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"

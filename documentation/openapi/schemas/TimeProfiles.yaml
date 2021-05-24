@@ -1,0 +1,11 @@
+# schemas/TimeProfiles.yaml
+
+required: 
+  - profiles
+properties:
+  cards:
+    type: array
+    items:
+      $ref: "#/components/schemas/TimeProfile"                
+    description: "List of time profiles"
+

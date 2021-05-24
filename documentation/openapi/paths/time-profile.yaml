@@ -1,0 +1,115 @@
+# paths/time-profile.yaml
+
+get:
+  tags:
+    - device
+  summary: "Retrieves a time profile"
+  description: "Retrieves a time profile from a controller"
+  operationId: getDeviceTimeProfile
+  parameters:
+    - name: device-id
+      in: path
+      description: "Device serial number"
+      required: true
+      schema:
+        type: integer
+        format: uint32
+        example: 405419896
+    - name: time-profile-id
+      in: path
+      description: "Time profile ID in the interval [2..254]"
+      required: true
+      schema:
+        type: integer
+        format: uint8 
+        example: 29
+  responses:
+    '200':
+      description: "Time profile defined for the time-profile-id"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/TimeProfile.yaml"
+    '404':
+      description: "No time profile defined for device-id + time-profile-id"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+          example: {
+              tag: "get-time-profile",
+              message: "Time profile 29 not found"
+          }
+    '405':
+      description: "Invalid request"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '500':
+      description: "Internal system error"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    default:
+      description: "Request failed"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+
+put:
+  tags:
+    - device
+  summary: "Adds or updates a time profile"
+  description: "Adds or updates a controller time profile"
+  operationId: putTimeProfile
+  parameters:
+    - name: device-id
+      in: path
+      description: "Device serial number"
+      required: true
+      schema:
+        type: integer
+        format: uint32
+        example: 405419896
+    - name: time-profile-id
+      in: path
+      description: "Time profile ID in the interval [2..254]"
+      required: true
+      schema:
+        type: integer
+        format: uint8 
+        example: 29
+  requestBody:
+    description: "Time profile definition"
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "./schemas/TimeProfile.yaml"
+  responses:
+    '200':
+      description: "Time profile added/updated"
+    '404':
+      description: "No matching device"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '405':
+      description: "Invalid request"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '500':
+      description: "Internal system error"
+    default:
+      description: "Request failed"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+

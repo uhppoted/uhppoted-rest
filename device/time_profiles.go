@@ -102,6 +102,36 @@ func PutTimeProfile(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respons
 	return http.StatusOK, nil, nil
 }
 
+func GetTimeProfiles(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	deviceID, err := getDeviceID(r)
+	if err != nil {
+		return http.StatusBadRequest,
+			rerrors.NewRESTError("get-time-profiles", fmt.Sprintf("Error:  %v", err)),
+			err
+	}
+
+	rq := uhppoted.GetTimeProfilesRequest{
+		DeviceID: deviceID,
+	}
+
+	response, err := impl.GetTimeProfiles(rq)
+	if err != nil {
+		return http.StatusInternalServerError,
+			rerrors.NewRESTError("get-time-profiles", fmt.Sprintf("Error retrieving time profiles from device %v", deviceID)),
+			err
+	} else if response == nil {
+		return http.StatusInternalServerError,
+			rerrors.NewRESTError("get-cards", fmt.Sprintf("Error retrieving time profiles from device %v", deviceID)),
+			fmt.Errorf("No response returned to request for time profiles from device %v", deviceID)
+	}
+
+	return http.StatusOK, &struct {
+		Profiles []types.TimeProfile `json:"profiles"`
+	}{
+		Profiles: response.Profiles,
+	}, nil
+}
+
 func ClearTimeProfiles(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID, err := getDeviceID(r)
 	if err != nil {

@@ -49,6 +49,9 @@ CardPermissions:
 CardSwipe:
   $ref: "./CardSwipe.yaml"
 
+TimeProfiles:
+  $ref: "./TimeProfiles.yaml"
+
 TimeProfile:
   $ref: "./TimeProfile.yaml"
 

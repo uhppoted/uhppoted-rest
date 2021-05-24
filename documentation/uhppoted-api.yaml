@@ -773,6 +773,53 @@ paths:
                   $ref: "#/components/schemas/Error"        
 
   /device/{device-id}/time-profiles:
+    get:
+      tags:
+        - device
+      summary: "Retrieves all time profiles"
+      description: "Retrieves all the time profiles defined on a controller"
+      operationId: getTimeProfiles
+      parameters:
+        - name: device-id
+          in: path
+          description: "Device serial number"
+          required: true
+          schema:
+            type: integer
+            format: uint32
+            example: 405419896
+      responses:
+        '200':
+          description: "List of time profiles"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/TimeProfileList"        
+        '404':
+          description: "No device with ID matching device-id"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Error"        
+        '405':
+          description: "Invalid request"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Error"        
+        '500':
+          description: "Internal system error"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Error"        
+        default:
+          description: "Request failed"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Error"        
+
     delete:
       tags:
         - device
@@ -1705,6 +1752,16 @@ components:
           format: yyyy-MM-dd
           description: "Last date card is enabled (until 23:59)"
           example: "2020-12-31"
+
+    TimeProfileList:
+      required: 
+        - profiles
+      properties:
+        cards:
+          type: array
+          items:
+            $ref: "#/components/schemas/TimeProfile"                
+          description: "List of time profiles"
 
     TimeProfile:
       required: 

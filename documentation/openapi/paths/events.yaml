@@ -1,0 +1,48 @@
+# paths/events.yaml
+
+get:
+  tags:
+    - device
+  summary: "Retrieves the device event list indices"
+  description: "Retrieves the indices of the first and last stored events"
+  operationId: getEvents
+  parameters:
+    - name: device-id
+      in: path
+      description: "Device serial number"
+      required: true
+      schema:
+        type: integer
+        format: uint32
+        example: 405419896
+  responses:
+    '200':
+      description: "Event list"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Events.yaml"
+    '404':
+      description: "No device with ID matching device-id"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '405':
+      description: "Invalid request"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '500':
+      description: "Internal system error"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    default:
+      description: "Request failed"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"

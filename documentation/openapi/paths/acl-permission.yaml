@@ -1,0 +1,97 @@
+# paths/acl-permission.yaml
+
+put:
+  tags:
+    - acl
+  summary: "Grants a card access to a door"
+  description: "Grants a card access to a single named door, using the configuration to resolve the door ID to the controller + door number. A granted access is added to the existing permissions for the card and access dates are widened to accommodate the earliest start date and the latest end date. The ALL door will grant access to all configured doors."
+  operationId: aclGrantDoor
+  parameters:
+    - name: card-number
+      in: path
+      description: "Card number"
+      required: true
+      schema:
+        type: integer
+        format: uint32åç
+        example: 192837465
+    - name: door
+      in: path
+      description: "Door ID ('ALL' will grant access to all doors)"
+      required: true
+      explode: true
+      schema:
+        type: string
+        format: Alphanumeric door name (space- and case-insensitive).
+        example: "Entrance"
+  requestBody:
+    description: "Card valid dates"
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "./schemas/DateRange.yaml"
+  responses:
+    '200':
+      description: "Access granted"
+    '405':
+      description: "Invalid request"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '500':
+      description: "Internal system error"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    default:
+      description: "Request failed"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+
+delete:
+  tags:
+    - acl
+  summary: "Revokes a card access to a door"
+  description: "Revokes a card's access to a door, using the configuration to resolve the door ID to the controller + door number. A revoked access is removed from the existing permissions for the card without modifying the card start/end dates or removing the card from the controllers' internal lists."
+  operationId: aclRevokeDoor
+  parameters:
+    - name: card-number
+      in: path
+      description: "Card number"
+      required: true
+      schema:
+        type: integer
+        format: uint32
+        example: 192837465
+    - name: door
+      in: path
+      description: "Door ID ('ALL' will revoke access to all doors)"
+      required: true
+      explode: true
+      schema:
+        type: string
+        format: Alphanumeric door name (space- and case-insensitive).
+        example: "Entrance"
+  responses:
+    '200':
+      description: "Access revoked"
+    '405':
+      description: "Invalid request"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '500':
+      description: "Internal system error"
+    default:
+      description: "Request failed"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+
