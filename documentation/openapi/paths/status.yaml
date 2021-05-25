@@ -1,0 +1,51 @@
+# paths/status.yaml
+
+get:
+  tags:
+    - device
+  summary: "Retrieves the device status"
+  description: "Retrieves the current status of a device"
+  operationId: getDeviceStatus
+  parameters:
+    - name: device-id
+      in: path
+      description: "Device serial number"
+      required: true
+      schema:
+        type: integer
+        format: uint32
+        example: 405419896
+  responses:
+    '200':
+      description: "Device current status"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: "./schemas/DeviceStatus.yaml"
+    '404':
+      description: "No device with ID matching device-id"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '405':
+      description: "Invalid request"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '500':
+      description: "Internal system error"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    default:
+      description: "Request failed"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"

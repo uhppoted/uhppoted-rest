@@ -1,0 +1,108 @@
+# paths/time.yaml
+
+get:
+  tags:
+    - device
+  summary: "Retrieves the device time"
+  description: "Retrieves the device current date/time"
+  operationId: getDeviceTime
+  parameters:
+    - name: device-id
+      in: path
+      description: "Device serial number"
+      required: true
+      schema:
+        type: integer
+        format: uint32
+        example: 405419896
+  responses:
+    '200':
+      description: "Device current date/time"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/DeviceTime.yaml"
+    '404':
+      description: "No device with ID matching device-id"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '405':
+      description: "Invalid request"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '500':
+      description: "Internal system error"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    default:
+      description: "Request failed"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+
+put:
+  tags:
+    - device
+  summary: "Sets the device time"
+  description: "Sets the device current date/time"
+  operationId: putDeviceTime
+  parameters:
+    - name: device-id
+      in: path
+      description: "Device serial number"
+      required: true
+      schema:
+        type: integer
+        format: uint32
+        example: 405419896
+  requestBody:
+    description: "Date time"
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "./schemas/DeviceTime.yaml"
+  responses:
+    '200':
+      description: "Device current date/time"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/DeviceTime.yaml"
+    '403':
+      description: "Access denied"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '404':
+      description: "No device with ID matching device-id"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '405':
+      description: "Invalid request"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '500':
+      description: "Internal system error"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    default:
+      description: "Request failed"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"

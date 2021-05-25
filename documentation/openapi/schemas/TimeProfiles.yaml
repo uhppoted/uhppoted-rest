@@ -3,7 +3,7 @@
 required: 
   - profiles
 properties:
-  cards:
+  profiles:
     type: array
     items:
       $ref: "#/components/schemas/TimeProfile"                

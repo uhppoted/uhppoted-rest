@@ -1,0 +1,51 @@
+# paths/device.yaml
+
+get:
+  tags:
+    - device
+  summary: "Retrieves a single device information"
+  description: "Retrieves the basic configuration for a UHPPOTE device"
+  operationId: getDevice
+  parameters:
+    - name: device-id
+      in: path
+      description: "Device serial number"
+      required: true
+      schema:
+        type: integer
+        format: uint32
+        example: 405419896
+  responses:
+    '200':
+      description: "Device configuration"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              device:
+                $ref: "./schemas/Device.yaml"
+    '404':
+      description: "No device with ID matching device-id"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '405':
+      description: "Invalid request"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    '500':
+      description: "Internal system error"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"
+    default:
+      description: "Request failed"
+      content:
+        application/json:
+          schema:
+              $ref: "./schemas/Error.yaml"

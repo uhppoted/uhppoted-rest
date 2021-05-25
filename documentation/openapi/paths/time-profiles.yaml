@@ -47,6 +47,60 @@ get:
           schema:
               $ref: "#/components/schemas/Error"        
 
+    put:
+      tags:
+        - device
+      summary: "Updates a list of time profiles"
+      description: "Creates/updates a set of time profiles on a controller"
+      operationId: setTimeProfiles
+      parameters:
+        - name: device-id
+          in: path
+          description: "Device serial number"
+          required: true
+          schema:
+            type: integer
+            format: uint32
+            example: 405419896
+      requestBody:
+        description: "List of time profiles"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TimeProfileList"        
+      responses:
+        '200':
+          description: "List of time profiles"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/TimeProfileList"        
+        '404':
+          description: "No device with ID matching device-id"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Error"        
+        '405':
+          description: "Invalid request"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Error"        
+        '500':
+          description: "Internal system error"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Error"        
+        default:
+          description: "Request failed"
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Error"        
+
 delete:
   tags:
     - device
