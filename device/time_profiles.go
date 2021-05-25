@@ -40,7 +40,7 @@ func GetTimeProfile(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respons
 			err
 	} else if response == nil {
 		return http.StatusInternalServerError,
-			rerrors.NewRESTError("get-card", fmt.Sprintf("Error retrieving time profile %v from controller %v", profileID, deviceID)),
+			rerrors.NewRESTError("get-time-profile", fmt.Sprintf("Error retrieving time profile %v from controller %v", profileID, deviceID)),
 			fmt.Errorf("No response returned to request for time profile %v from controller %v", profileID, deviceID)
 	}
 
@@ -117,18 +117,77 @@ func GetTimeProfiles(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respon
 	response, err := impl.GetTimeProfiles(rq)
 	if err != nil {
 		return http.StatusInternalServerError,
-			rerrors.NewRESTError("get-time-profiles", fmt.Sprintf("Error retrieving time profiles from device %v", deviceID)),
+			rerrors.NewRESTError("get-time-profiles", fmt.Sprintf("Error retrieving time profiles from controller %v", deviceID)),
 			err
 	} else if response == nil {
 		return http.StatusInternalServerError,
-			rerrors.NewRESTError("get-cards", fmt.Sprintf("Error retrieving time profiles from device %v", deviceID)),
-			fmt.Errorf("No response returned to request for time profiles from device %v", deviceID)
+			rerrors.NewRESTError("get-cards", fmt.Sprintf("Error retrieving time profiles from controller %v", deviceID)),
+			fmt.Errorf("No response returned to request for time profiles from controller %v", deviceID)
 	}
 
 	return http.StatusOK, &struct {
 		Profiles []types.TimeProfile `json:"profiles"`
 	}{
 		Profiles: response.Profiles,
+	}, nil
+}
+
+func PutTimeProfiles(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	deviceID, err := getDeviceID(r)
+	if err != nil {
+		return http.StatusBadRequest,
+			rerrors.NewRESTError("set-time-profiles", fmt.Sprintf("Error:  %v", err)),
+			err
+	}
+
+	blob, err := io.ReadAll(r.Body)
+	if err != nil {
+		return http.StatusInternalServerError,
+			rerrors.NewRESTError("set-time-profiles", "Error reading request"),
+			err
+	}
+
+	body := struct {
+		Profiles []types.TimeProfile `json:"profiles"`
+	}{}
+
+	if err = json.Unmarshal(blob, &body); err != nil {
+		return http.StatusBadRequest,
+			rerrors.NewRESTError("set-time-profiles", "Invalid request format"),
+			err
+	}
+
+	rq := uhppoted.SetTimeProfilesRequest{
+		DeviceID: deviceID,
+		Profiles: body.Profiles,
+	}
+
+	response, code, err := impl.SetTimeProfiles(rq)
+	if err != nil {
+		if code == http.StatusBadRequest {
+			return http.StatusBadRequest,
+				rerrors.NewRESTError("set-time-profiles", fmt.Sprintf("Error: %v", err)),
+				err
+		} else {
+			return http.StatusInternalServerError,
+				rerrors.NewRESTError("set-time-profiles", fmt.Sprintf("Error updating time profiles on controller %v", deviceID)),
+				err
+		}
+	} else if response == nil {
+		return http.StatusInternalServerError,
+			rerrors.NewRESTError("set-time-profiles", fmt.Sprintf("Error updating time profiles on controller %v", deviceID)),
+			fmt.Errorf("No response returned to time profile update on controller %v", deviceID)
+	}
+
+	warnings := []string{}
+	for _, warning := range response.Warnings {
+		warnings = append(warnings, fmt.Sprintf("%v", warning))
+	}
+
+	return http.StatusOK, struct {
+		Warnings []string
+	}{
+		Warnings: warnings,
 	}, nil
 }
 

@@ -2,17 +2,17 @@
 
 ### IN PROGRESS
 
-- [ ] Implement `get-time-profiles`
-- [ ] Implement `set-time-profiles`
 - [ ] Implement time profiles for ACL API
 - [ ] OpenDoor API: check against time profile for 
 - [ ] Clean up REST error handling (complete 'mare, what was I thinking :-()
 - [ ] Replace internal healthcheck with implementation from `uhppoted-api`
-- [ ] OpenAPI: update to 3.0.3
 - [ ] OpenAPI: break up spec into sections
 - [ ] OpenAPI: use fixed map keys for doors, segments
 - [ ] OpenAPI: fix all the new semantic/syntax errors
 
+- [x] OpenAPI: update to 3.0.3
+- [x] Implement `get-time-profiles`
+- [x] Implement `set-time-profiles`
 - [x] Implement `clear-time-profiles`
 - [x] Implement `set-time-profile`
 - [x] Implement `get-time-profile`
