@@ -2,10 +2,12 @@ package acl
 
 import (
 	"fmt"
-	"github.com/uhppoted/uhppote-core/types"
-	api "github.com/uhppoted/uhppoted-api/acl"
+	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/uhppoted/uhppote-core/types"
+	api "github.com/uhppoted/uhppoted-api/acl"
 )
 
 type permission struct {
@@ -124,8 +126,13 @@ func PermissionsFromTable(table *api.Table) ([]permission, error) {
 
 		doors := []string{}
 		for k, v := range index.doors {
-			if row[k-1] == "Y" {
+			switch {
+			case row[k-1] == "Y":
 				doors = append(doors, v)
+
+			case regexp.MustCompile("[0-9]+").MatchString(row[k-1]):
+				profile, _ := strconv.Atoi(row[k-1])
+				doors = append(doors, fmt.Sprintf("%v:%v", v, profile))
 			}
 		}
 
