@@ -33,9 +33,22 @@ func PermissionsToTable(p []permission) (*api.Table, error) {
 
 		for _, door := range r.Doors {
 			d := clean(door)
+			if match := regexp.MustCompile("(.*?)(:[0-9]+)").FindStringSubmatch(d); match != nil && len(match) == 3 {
+				d = match[1]
+				profile := match[2]
+
+				if _, ok := index[d]; !ok {
+					index[d] = 3 + len(index)
+					header = append(header, strings.TrimSuffix(door, profile))
+				}
+
+				continue
+			}
+
 			if _, ok := index[d]; !ok {
 				index[d] = 3 + len(index)
 				header = append(header, door)
+				continue
 			}
 		}
 	}
@@ -51,11 +64,23 @@ func PermissionsToTable(p []permission) (*api.Table, error) {
 
 		for _, door := range r.Doors {
 			d := clean(door)
-			if ix, ok := index[d]; !ok {
-				return nil, fmt.Errorf("Card %v: unindexed door '%s'", r.CardNumber, door)
-			} else {
-				record[ix] = "Y"
+
+			if match := regexp.MustCompile("(.*?):([0-9]+)").FindStringSubmatch(d); match != nil && len(match) == 3 {
+				if ix, ok := index[match[1]]; ok {
+					profile, _ := strconv.Atoi(match[2])
+					if profile >= 2 && profile <= 254 {
+						record[ix] = fmt.Sprintf("%v", profile)
+						continue
+					}
+				}
 			}
+
+			if ix, ok := index[d]; ok {
+				record[ix] = "Y"
+				continue
+			}
+
+			return nil, fmt.Errorf("Card %v: unindexed door '%s'", r.CardNumber, door)
 		}
 
 		records = append(records, record)

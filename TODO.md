@@ -3,6 +3,11 @@
 ### IN PROGRESS
 
 - [ ] Implement time profiles for ACL API
+      - load-acl
+      - show
+      - grant
+      - revoke
+
 - [ ] OpenDoor API: check against time profile for 
 - [ ] Clean up REST error handling (complete 'mare, what was I thinking :-()
 - [ ] Replace internal healthcheck with implementation from `uhppoted-api`

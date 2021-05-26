@@ -1973,7 +1973,7 @@ components:
             type: string
             format: door ID
             description: "Door ID that matches entry in configuration"
-          example: ["Entrance", "Upstairs", "Downstairs"]
+          example: ["Great Hall", "Dungeon", "Hogsmeade:55"]
 
     PutACLResult:
       required:
