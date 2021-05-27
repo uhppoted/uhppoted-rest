@@ -1806,7 +1806,12 @@ components:
           format: yyyy-MM-dd
           description: "Last date card is enabled (until 23:59)"
           example: "2020-12-31"
-
+        profile:  
+          type: number
+          format: integer in the range [2..254]
+          description: "Time profile ID for access to the door"
+          example: 29
+          
     TimeProfileList:
       required: 
         - profiles

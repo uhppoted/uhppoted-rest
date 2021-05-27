@@ -66,7 +66,7 @@ func PermissionsToTable(p []permission) (*api.Table, error) {
 				continue
 			}
 
-			return nil, fmt.Errorf("Card %v: unindexed door '%s'", r.CardNumber, door)
+			return nil, fmt.Errorf("Card %v: unindexed door '%v'", r.CardNumber, door.Door)
 		}
 
 		records = append(records, record)

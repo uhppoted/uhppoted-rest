@@ -20,13 +20,21 @@ func TestPermissionsToTable(t *testing.T) {
 			CardNumber: 192837465,
 			From:       date("2020-01-01"),
 			To:         date("2020-12-31"),
-			Doors:      []string{"Entrance", "Upstairs", "Downstairs"},
+			Doors: []door{
+				door{Door: "Entrance"},
+				door{Door: "Upstairs"},
+				door{Door: "Downstairs"},
+			},
 		},
 		permission{
 			CardNumber: 729364646,
 			From:       date("2020-02-01"),
 			To:         date("2020-11-30"),
-			Doors:      []string{"D1", "Upstairs", "D4"},
+			Doors: []door{
+				door{Door: "D1"},
+				door{Door: "Upstairs"},
+				door{Door: "D4"},
+			},
 		},
 	}
 

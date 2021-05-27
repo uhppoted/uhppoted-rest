@@ -57,6 +57,7 @@ func Show(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r
 			Door:      k,
 			StartDate: v.From,
 			EndDate:   v.To,
+			Profile:   v.Profile,
 		})
 	}
 
