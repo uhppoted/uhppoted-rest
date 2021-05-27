@@ -55,6 +55,13 @@ func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 			fmt.Errorf("Error(s) storing access control list (%v)", errs)
 	}
 
+	warnings := []string{}
+	for k, v := range rpt {
+		for _, err := range v.Errors {
+			warnings = append(warnings, fmt.Sprintf("%v: %v", k, err))
+		}
+	}
+
 	report := []struct {
 		DeviceID  uint32 `json:"device-id"`
 		Unchanged int    `json:"unchanged"`
@@ -95,7 +102,9 @@ func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 			Failed    int    `json:"failed"`
 			Errors    int    `json:"errors"`
 		} `json:"report"`
+		Warnings []string `json:"warnings,omitempty"`
 	}{
-		Report: report,
+		Report:   report,
+		Warnings: warnings,
 	}, nil
 }

@@ -25,7 +25,4 @@ properties:
   doors:
     type: array
     items:
-      type: string
-      format: door ID
-      description: "Door ID that matches entry in configuration"
-    example: ["Entrance", "Upstairs", "Downstairs"]
+      $ref: "#/components/schemas/Permission"                

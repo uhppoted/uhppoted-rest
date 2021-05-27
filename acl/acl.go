@@ -14,7 +14,12 @@ type permission struct {
 	CardNumber uint32      `json:"card-number"`
 	From       *types.Date `json:"start-date"`
 	To         *types.Date `json:"end-date"`
-	Doors      []string    `json:"doors"`
+	Doors      []door      `json:"doors,omitempty"`
+}
+
+type door struct {
+	Door    string `json:"door,omitempty"`
+	Profile int    `json:"profile,omitempty"`
 }
 
 func PermissionsToTable(p []permission) (*api.Table, error) {
@@ -32,23 +37,10 @@ func PermissionsToTable(p []permission) (*api.Table, error) {
 		}
 
 		for _, door := range r.Doors {
-			d := clean(door)
-			if match := regexp.MustCompile("(.*?)(:[0-9]+)").FindStringSubmatch(d); match != nil && len(match) == 3 {
-				d = match[1]
-				profile := match[2]
-
-				if _, ok := index[d]; !ok {
-					index[d] = 3 + len(index)
-					header = append(header, strings.TrimSuffix(door, profile))
-				}
-
-				continue
-			}
-
+			d := clean(door.Door)
 			if _, ok := index[d]; !ok {
 				index[d] = 3 + len(index)
-				header = append(header, door)
-				continue
+				header = append(header, door.Door)
 			}
 		}
 	}
@@ -63,20 +55,14 @@ func PermissionsToTable(p []permission) (*api.Table, error) {
 		}
 
 		for _, door := range r.Doors {
-			d := clean(door)
-
-			if match := regexp.MustCompile("(.*?):([0-9]+)").FindStringSubmatch(d); match != nil && len(match) == 3 {
-				if ix, ok := index[match[1]]; ok {
-					profile, _ := strconv.Atoi(match[2])
-					if profile >= 2 && profile <= 254 {
-						record[ix] = fmt.Sprintf("%v", profile)
-						continue
-					}
-				}
-			}
-
+			d := clean(door.Door)
 			if ix, ok := index[d]; ok {
-				record[ix] = "Y"
+				if door.Profile >= 2 && door.Profile <= 254 {
+					record[ix] = strconv.Itoa(door.Profile)
+				} else {
+					record[ix] = "Y"
+				}
+
 				continue
 			}
 
@@ -149,15 +135,20 @@ func PermissionsFromTable(table *api.Table) ([]permission, error) {
 			return nil, fmt.Errorf("Invalid ACL table - invalid 'to' date:%s (%w)", row[index.to-1], err)
 		}
 
-		doors := []string{}
+		doors := []door{}
 		for k, v := range index.doors {
 			switch {
 			case row[k-1] == "Y":
-				doors = append(doors, v)
+				doors = append(doors, door{
+					Door: v,
+				})
 
 			case regexp.MustCompile("[0-9]+").MatchString(row[k-1]):
 				profile, _ := strconv.Atoi(row[k-1])
-				doors = append(doors, fmt.Sprintf("%v:%v", v, profile))
+				doors = append(doors, door{
+					Door:    fmt.Sprintf("%v:%v", v, profile),
+					Profile: profile,
+				})
 			}
 		}
 

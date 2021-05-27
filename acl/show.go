@@ -42,6 +42,7 @@ func Show(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r
 
 	permissions := []struct {
 		Door      string     `json:"door"`
+		Profile   int        `json:"profile,omitempty"`
 		StartDate types.Date `json:"start-date"`
 		EndDate   types.Date `json:"end-date"`
 	}{}
@@ -49,6 +50,7 @@ func Show(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r
 	for k, v := range acl {
 		permissions = append(permissions, struct {
 			Door      string     `json:"door"`
+			Profile   int        `json:"profile,omitempty"`
 			StartDate types.Date `json:"start-date"`
 			EndDate   types.Date `json:"end-date"`
 		}{
@@ -61,6 +63,7 @@ func Show(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r
 	return http.StatusOK, &struct {
 		Permissions []struct {
 			Door      string     `json:"door"`
+			Profile   int        `json:"profile,omitempty"`
 			StartDate types.Date `json:"start-date"`
 			EndDate   types.Date `json:"end-date"`
 		} `json:"permissions"`

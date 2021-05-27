@@ -3,7 +3,6 @@
 ### IN PROGRESS
 
 - [ ] Implement time profiles for ACL API
-      - load-acl
       - show
       - grant
       - revoke

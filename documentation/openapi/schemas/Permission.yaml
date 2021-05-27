@@ -1,0 +1,16 @@
+# schemas/Permission.yaml
+
+required: 
+  - door
+properties:
+  door:  
+    type: string
+    format: string
+    description: "Door name"
+    example: "Dungeon"
+  profile:
+    type: number
+    format: integer
+    description: "Optional time profile ID (in the range [2..254]) for access to a door"
+    example: 29
+example: { "door":"Hogsmeade", "profile": 55 }

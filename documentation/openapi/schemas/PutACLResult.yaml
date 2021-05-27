@@ -6,6 +6,11 @@ properties:
   report:
     type: array
     items: 
-      $ref: "./PutACLResultRecord.yaml"        
+      $ref: "./PutACLResultRecord.yaml"     
+  warnings:
+    type: array
+    items: 
+      type: string
+    description: "List of warnings for time profiles that could not be created or updated"       
 description: "Summary list of changes made to controller card lists"
 example: { "report": [ { "device-id":405419896, "unchanged":1, "updated":3, "added": 2, "deleted":1, "failed":0 } ] }

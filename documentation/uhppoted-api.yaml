@@ -1970,10 +1970,23 @@ components:
         doors:
           type: array
           items:
-            type: string
-            format: door ID
-            description: "Door ID that matches entry in configuration"
-          example: ["Great Hall", "Dungeon", "Hogsmeade:55"]
+            $ref: "#/components/schemas/Permission"                
+
+    Permission:
+      required: 
+        - door
+      properties:
+        door:  
+          type: string
+          format: string
+          description: "Door name"
+          example: "Dungeon"
+        profile:
+          type: number
+          format: integer
+          description: "Optional time profile ID (in the range [2..254]) for access to a door"
+          example: 29
+      example: { "door":"Hogsmeade", "profile": 55 }
 
     PutACLResult:
       required:
@@ -1982,7 +1995,12 @@ components:
         report:
           type: array
           items: 
-            $ref: "#/components/schemas/PutACLResultRecord"        
+            $ref: "#/components/schemas/PutACLResultRecord"  
+        warnings:
+          type: array
+          items: 
+            type: string
+          description: "List of warnings for time profiles that could not be created or updated"
       description: "Summary list of changes made to controller card lists"
       example: { "report": [ { "device-id":405419896, "unchanged":1, "updated":3, "added": 2, "deleted":1, "failed":0 } ] }
         
