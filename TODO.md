@@ -3,8 +3,6 @@
 ### IN PROGRESS
 
 - [ ] Implement time profiles for ACL API
-      - show
-      - grant
       - revoke
 
 - [ ] OpenDoor API: check against time profile for 

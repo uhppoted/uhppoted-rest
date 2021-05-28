@@ -72,10 +72,10 @@ paths:
     $ref: "./paths/acl.yaml
         
   /acl/card/{card-number}:
-    $ref: "./paths/acl-card.yaml
+    $ref: "./paths/acl-show.yaml
 
   /acl/card/{card-number}/door/{door}:
-    $ref: "./paths/acl-permission.yaml
+    $ref: "./paths/acl-grant.yaml
 
 components:
   securitySchemes:

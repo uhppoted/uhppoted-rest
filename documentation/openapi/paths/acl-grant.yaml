@@ -30,7 +30,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: "./schemas/DateRange.yaml"
+          $ref: "./schemas/DateRangeAndProfile.yaml"
   responses:
     '200':
       description: "Access granted"

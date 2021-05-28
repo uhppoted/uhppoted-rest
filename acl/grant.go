@@ -48,8 +48,9 @@ func Grant(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, 
 	}
 
 	body := struct {
-		From *types.Date `json:"start-date"`
-		To   *types.Date `json:"end-date"`
+		From    *types.Date `json:"start-date"`
+		To      *types.Date `json:"end-date"`
+		Profile int         `json:"profile"`
 	}{}
 
 	if err = json.Unmarshal(blob, &body); err != nil {
@@ -73,7 +74,7 @@ func Grant(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, 
 	u := ctx.Value("uhppote").(uhppote.IUHPPOTE)
 	devices := ctx.Value("devices").([]uhppote.Device)
 
-	err = api.Grant(u, devices, uint32(cardID), *body.From, *body.To, []string{door})
+	err = api.Grant(u, devices, uint32(cardID), *body.From, *body.To, body.Profile, []string{door})
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("grant", fmt.Sprintf("%v", err)),
