@@ -160,7 +160,7 @@ func (cmd *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.S
 		}
 	}
 
-	u := uhppote.NewUHPPOTE(bind, broadcast, listen, devices, cmd.debug)
+	u := uhppote.NewUHPPOTE(bind, broadcast, listen, c.Timeout, devices, cmd.debug)
 
 	// ... REST task
 
