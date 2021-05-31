@@ -239,45 +239,32 @@ func OpenDoor(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrite
 		// Check time profile
 		if card.Doors[door] >= 2 && card.Doors[door] <= 254 {
 			profileID := uint8(card.Doors[door])
-			profile, err := getTimeProfile(impl, deviceID, profileID)
-			if err != nil {
-				return http.StatusInternalServerError,
-					errors.NewRESTError("open-door", fmt.Sprintf("Error retrieving time profile %v associated with card %v, door %v from device %v", profileID, *body.CardNumber, door, deviceID)),
-					err
-			}
+			checked := map[uint8]bool{}
 
-			if profile == nil {
-				return http.StatusInternalServerError,
-					errors.NewRESTError("open-door", fmt.Sprintf("Failed to retrieve time profile %v associated with card %v, door %v from device %v", profileID, *body.CardNumber, door, deviceID)),
-					fmt.Errorf("GetCard received <nil> response for time profile %v associated with card %v, door %v from device %v", profileID, *body.CardNumber, door, deviceID)
-			}
-
-			if profile.From == nil || profile.To == nil || today.Before(*profile.From) || today.After(*profile.To) {
-				return http.StatusUnauthorized,
-					errors.NewRESTError("open-door", fmt.Sprintf("Card %v: time profile %v on device %v is not valid for %v", card.CardNumber, profileID, deviceID, today)),
-					fmt.Errorf("Card %v: time profile %v on device %v is not valid for %v", card, profileID, deviceID, today)
-			}
-
-			if !profile.Weekdays[today.Weekday()] {
-				return http.StatusUnauthorized,
-					errors.NewRESTError("open-door", fmt.Sprintf("Card %v: time profile %v on device %v is not valid for %v", card.CardNumber, profileID, deviceID, today.Weekday())),
-					fmt.Errorf("Card %v: time profile %v on device %v is not authorized for %v", card, profileID, deviceID, today.Weekday())
-			}
-
-			now := time.Now()
-			allowed := false
-			for _, p := range []uint8{1, 2, 3} {
-				if segment, ok := profile.Segments[p]; ok && segment.Start != nil && segment.End != nil {
-					if !segment.Start.After(now) && !segment.End.Before(now) {
-						allowed = true
-					}
+			for {
+				profile, err := getTimeProfile(impl, deviceID, profileID)
+				if err != nil {
+					return http.StatusInternalServerError,
+						errors.NewRESTError("open-door", fmt.Sprintf("Error retrieving time profile %v associated with card %v, door %v from device %v", profileID, *body.CardNumber, door, deviceID)),
+						err
 				}
-			}
 
-			if !allowed {
-				return http.StatusUnauthorized,
-					errors.NewRESTError("open-door", fmt.Sprintf("Card %v: time profile %v is not valid for %v", card.CardNumber, profileID, types.HHmm(now))),
-					fmt.Errorf("Card %v: time profile %v on device %v is not authorized for %v", card, profileID, deviceID, now)
+				if profile == nil {
+					return http.StatusInternalServerError,
+						errors.NewRESTError("open-door", fmt.Sprintf("Failed to retrieve time profile %v associated with card %v, door %v from device %v", profileID, *body.CardNumber, door, deviceID)),
+						fmt.Errorf("GetCard received <nil> response for time profile %v associated with card %v, door %v from device %v", profileID, *body.CardNumber, door, deviceID)
+				}
+
+				if err = checkTimeProfile(deviceID, *body.CardNumber, card.Doors[door], *profile); err == nil {
+					break
+				}
+
+				if profile.LinkedProfileID < 2 || profile.LinkedProfileID > 254 || checked[profile.LinkedProfileID] {
+					return http.StatusUnauthorized, errors.NewRESTError("open-door", fmt.Sprintf("%v", err)), err
+				}
+
+				checked[profileID] = true
+				profileID = profile.LinkedProfileID
 			}
 		}
 	}
@@ -315,4 +302,27 @@ func getTimeProfile(impl *uhppoted.UHPPOTED, deviceID uint32, profileID uint8) (
 	}
 
 	return &response.TimeProfile, nil
+}
+
+func checkTimeProfile(deviceID, cardNumber uint32, profileID int, profile types.TimeProfile) error {
+	now := time.Now()
+	today := types.Date(now)
+
+	if profile.From == nil || profile.To == nil || today.Before(*profile.From) || today.After(*profile.To) {
+		return fmt.Errorf("Card %v: time profile %v on device %v is not valid for %v", cardNumber, profileID, deviceID, today)
+	}
+
+	if !profile.Weekdays[today.Weekday()] {
+		return fmt.Errorf("Card %v: time profile %v on device %v is not authorized for %v", cardNumber, profileID, deviceID, today.Weekday())
+	}
+
+	for _, p := range []uint8{1, 2, 3} {
+		if segment, ok := profile.Segments[p]; ok && segment.Start != nil && segment.End != nil {
+			if !segment.Start.After(now) && !segment.End.Before(now) {
+				return nil
+			}
+		}
+	}
+
+	return fmt.Errorf("Card %v: time profile %v on device %v is not authorized for %v", cardNumber, profileID, deviceID, types.HHmm(now))
 }
