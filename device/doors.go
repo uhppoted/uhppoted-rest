@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-api/uhppoted"
 	"github.com/uhppoted/uhppoted-rest/errors"
 )
@@ -60,93 +61,6 @@ func GetDoor(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter
 		Door interface{} `json:"door"`
 	}{
 		Door: reply,
-	}, nil
-}
-
-func OpenDoor(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	deviceID := ctx.Value("device-id").(uint32)
-	door := ctx.Value("door").(uint8)
-
-	blob, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		return http.StatusInternalServerError,
-			errors.NewRESTError("open-door", "Error reading request"),
-			err
-	}
-
-	body := struct {
-		CardNumber *uint32 `json:"card-number"`
-	}{}
-
-	err = json.Unmarshal(blob, &body)
-	if err != nil {
-		return http.StatusBadRequest,
-			errors.NewRESTError("open-door", "Error parsing request"),
-			err
-	}
-
-	if body.CardNumber == nil {
-		return http.StatusBadRequest,
-			errors.NewRESTError("open-door", "Missing/invalid user ID"),
-			fmt.Errorf("Missing/invalid user ID in request body (%s)", string(blob))
-	}
-
-	if !authorized(ctx, *body.CardNumber) {
-		return http.StatusUnauthorized,
-			errors.NewRESTError("open-door", fmt.Sprintf("Not authorized for card %v", *body.CardNumber)),
-			fmt.Errorf("Not authorized for card %v", *body.CardNumber)
-	}
-
-	rq := uhppoted.GetCardRequest{
-		DeviceID:   uhppoted.DeviceID(deviceID),
-		CardNumber: *body.CardNumber,
-	}
-
-	response, err := impl.GetCard(rq)
-	if err != nil {
-		return http.StatusInternalServerError,
-			errors.NewRESTError("open-door", fmt.Sprintf("Card %v not valid for device %v", *body.CardNumber, deviceID)),
-			err
-	} else if response == nil {
-		return http.StatusInternalServerError,
-			errors.NewRESTError("open-door", fmt.Sprintf("Card %v not valid for device %v", *body.CardNumber, deviceID)),
-			fmt.Errorf("GetCard returned <nil> for card %v, device %v", *body.CardNumber, deviceID)
-	} else {
-		card := response.Card
-
-		now := time.Now()
-		if card.From == nil || card.To == nil || now.Before(time.Time(*card.From)) || now.After(time.Time(*card.To)) {
-			return http.StatusUnauthorized,
-				errors.NewRESTError("open-door", fmt.Sprintf("Card %v is not valid for %v", card.CardNumber, now)),
-				fmt.Errorf("Card %v is not valid for %v", card, deviceID)
-		}
-
-		// TODO check time profile
-		if door < 1 || door > 4 || card.Doors[door] > 0 {
-			return http.StatusUnauthorized,
-				errors.NewRESTError("open-door", fmt.Sprintf("Card %v is does not have permission for %v, door %v", card.CardNumber, deviceID, door)),
-				fmt.Errorf("Card %v is not valid for %v, door %v", card, deviceID, door)
-		}
-	}
-
-	rqq := uhppoted.OpenDoorRequest{
-		DeviceID: uhppoted.DeviceID(deviceID),
-		Door:     door,
-	}
-
-	result, err := impl.OpenDoor(rqq)
-	if err != nil {
-		return http.StatusInternalServerError,
-			errors.NewRESTError("open-door", "Error opening door"),
-			err
-	} else if response == nil {
-		return http.StatusOK, nil, nil
-	}
-
-	return http.StatusOK, &struct {
-		Opened bool `json:"opened"`
-	}{
-		Opened: result.Opened,
 	}, nil
 }
 
@@ -248,4 +162,157 @@ func SetDoorControl(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respons
 	}{
 		Control: response.Control,
 	}, nil
+}
+
+func OpenDoor(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	deviceID := ctx.Value("device-id").(uint32)
+	door := ctx.Value("door").(uint8)
+
+	blob, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("open-door", "Error reading request"),
+			err
+	}
+
+	body := struct {
+		CardNumber *uint32 `json:"card-number"`
+	}{}
+
+	err = json.Unmarshal(blob, &body)
+	if err != nil {
+		return http.StatusBadRequest,
+			errors.NewRESTError("open-door", "Error parsing request"),
+			err
+	}
+
+	if door < 1 || door > 4 {
+		return http.StatusBadRequest,
+			errors.NewRESTError("open-door", fmt.Sprintf("Invalid door (%v)", door)),
+			fmt.Errorf("Missing/invalid door in request (%v)", door)
+	}
+
+	if body.CardNumber == nil {
+		return http.StatusBadRequest,
+			errors.NewRESTError("open-door", "Missing/invalid user ID"),
+			fmt.Errorf("Missing/invalid user ID in request body (%s)", string(blob))
+	}
+
+	if !authorized(ctx, *body.CardNumber) {
+		return http.StatusUnauthorized,
+			errors.NewRESTError("open-door", fmt.Sprintf("Not authorized for card %v", *body.CardNumber)),
+			fmt.Errorf("Not authorized for card %v", *body.CardNumber)
+	}
+
+	rq := uhppoted.GetCardRequest{
+		DeviceID:   uhppoted.DeviceID(deviceID),
+		CardNumber: *body.CardNumber,
+	}
+
+	response, err := impl.GetCard(rq)
+	if err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("open-door", fmt.Sprintf("Card %v not valid for device %v", *body.CardNumber, deviceID)),
+			err
+	} else if response == nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("open-door", fmt.Sprintf("Card %v not valid for device %v", *body.CardNumber, deviceID)),
+			fmt.Errorf("GetCard returned <nil> for card %v, device %v", *body.CardNumber, deviceID)
+	} else {
+		card := response.Card
+
+		// Check start/end validity dates
+		today := types.Date(time.Now())
+		if card.From == nil || card.To == nil || today.Before(*card.From) || today.After(*card.To) {
+			return http.StatusUnauthorized,
+				errors.NewRESTError("open-door", fmt.Sprintf("Card %v is not valid for %v", card.CardNumber, today)),
+				fmt.Errorf("Card %v is not valid for %v", card, deviceID)
+		}
+
+		// Check door permissions
+		if card.Doors[door] < 1 || card.Doors[door] > 254 {
+			return http.StatusUnauthorized,
+				errors.NewRESTError("open-door", fmt.Sprintf("Card %v is does not have permission for %v, door %v", card.CardNumber, deviceID, door)),
+				fmt.Errorf("Card %v is not valid for %v, door %v", card, deviceID, door)
+		}
+
+		// Check time profile
+		if card.Doors[door] >= 2 && card.Doors[door] <= 254 {
+			profileID := uint8(card.Doors[door])
+			profile, err := getTimeProfile(impl, deviceID, profileID)
+			if err != nil {
+				return http.StatusInternalServerError,
+					errors.NewRESTError("open-door", fmt.Sprintf("Error retrieving time profile %v associated with card %v, door %v from device %v", profileID, *body.CardNumber, door, deviceID)),
+					err
+			}
+
+			if profile == nil {
+				return http.StatusInternalServerError,
+					errors.NewRESTError("open-door", fmt.Sprintf("Failed to retrieve time profile %v associated with card %v, door %v from device %v", profileID, *body.CardNumber, door, deviceID)),
+					fmt.Errorf("GetCard received <nil> response for time profile %v associated with card %v, door %v from device %v", profileID, *body.CardNumber, door, deviceID)
+			}
+
+			if profile.From == nil || profile.To == nil || today.Before(*profile.From) || today.After(*profile.To) {
+				return http.StatusUnauthorized,
+					errors.NewRESTError("open-door", fmt.Sprintf("Card %v: time profile %v on device %v is not valid for %v", card.CardNumber, profileID, deviceID, today)),
+					fmt.Errorf("Card %v: time profile %v on device %v is not valid for %v", card, profileID, deviceID, today)
+			}
+
+			if !profile.Weekdays[today.Weekday()] {
+				return http.StatusUnauthorized,
+					errors.NewRESTError("open-door", fmt.Sprintf("Card %v: time profile %v on device %v is not valid for %v", card.CardNumber, profileID, deviceID, today.Weekday())),
+					fmt.Errorf("Card %v: time profile %v on device %v is not authorized for %v", card, profileID, deviceID, today.Weekday())
+			}
+
+			now := time.Now()
+			allowed := false
+			for _, p := range []uint8{1, 2, 3} {
+				if segment, ok := profile.Segments[p]; ok && segment.Start != nil && segment.End != nil {
+					if !segment.Start.After(now) && !segment.End.Before(now) {
+						allowed = true
+					}
+				}
+			}
+
+			if !allowed {
+				return http.StatusUnauthorized,
+					errors.NewRESTError("open-door", fmt.Sprintf("Card %v: time profile %v is not valid for %v", card.CardNumber, profileID, types.HHmm(now))),
+					fmt.Errorf("Card %v: time profile %v on device %v is not authorized for %v", card, profileID, deviceID, now)
+			}
+		}
+	}
+
+	rqq := uhppoted.OpenDoorRequest{
+		DeviceID: uhppoted.DeviceID(deviceID),
+		Door:     door,
+	}
+
+	result, err := impl.OpenDoor(rqq)
+	if err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("open-door", "Error opening door"),
+			err
+	} else if response == nil {
+		return http.StatusOK, nil, nil
+	}
+
+	return http.StatusOK, &struct {
+		Opened bool `json:"opened"`
+	}{
+		Opened: result.Opened,
+	}, nil
+}
+
+func getTimeProfile(impl *uhppoted.UHPPOTED, deviceID uint32, profileID uint8) (*types.TimeProfile, error) {
+	rq := uhppoted.GetTimeProfileRequest{
+		DeviceID:  deviceID,
+		ProfileID: profileID,
+	}
+
+	response, err := impl.GetTimeProfile(rq)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response.TimeProfile, nil
 }

@@ -102,7 +102,13 @@ func PutCard(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter
 			err
 	}
 
-	card := types.Card{}
+	card := struct {
+		CardNumber uint32                `json:"card-number"`
+		From       *types.Date           `json:"start-date"`
+		To         *types.Date           `json:"end-date"`
+		Doors      map[uint8]interface{} `json:"doors"`
+	}{}
+
 	if err = json.Unmarshal(blob, &card); err != nil {
 		return http.StatusBadRequest,
 			errors.NewRESTError("put-card", fmt.Sprintf("Error parsing request (%v)", err)),
@@ -115,8 +121,21 @@ func PutCard(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter
 			CardNumber: cardNumber,
 			From:       card.From,
 			To:         card.To,
-			Doors:      card.Doors,
+			Doors:      map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0},
 		},
+	}
+
+	for k, v := range card.Doors {
+		switch vv := v.(type) {
+		case bool:
+			if vv {
+				rq.Card.Doors[k] = 1
+			}
+		case int:
+			rq.Card.Doors[k] = vv
+		case float64:
+			rq.Card.Doors[k] = int(vv)
+		}
 	}
 
 	if _, err = impl.PutCard(rq); err != nil {
