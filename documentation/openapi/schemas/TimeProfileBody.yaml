@@ -25,16 +25,8 @@ properties:
     example: "Monday,Wednesday,Friday"
     description: "List of weekdays for which the time profile is active"
   segments:  
-    type: object
-    # properties:
-    #   1: "./TimeSegment.yaml"
-    #   2: "./TimeSegment.yaml"
-    #   3: "./TimeSegment.yaml"
-    additionalProperties: false 
-    example:  { 
-                1: { "start":"08:30", "end":"11:15" }, 
-                2: { "start":"12:00", "end":"16:45" } 
-              }
+    type: array
+    example:  [ { "start":"08:30", "end":"11:15" },{ "start":"12:00", "end":"16:45" } ]
     description: "List of up to 3 time intervals during which the time profile is active"
   linked-profile:  
     type: number
