@@ -317,7 +317,7 @@ func checkTimeProfile(deviceID, cardNumber uint32, profileID int, profile types.
 	}
 
 	for _, p := range []uint8{1, 2, 3} {
-		if segment, ok := profile.Segments[p]; ok && segment.Start != nil && segment.End != nil {
+		if segment, ok := profile.Segments[p]; ok {
 			if !segment.Start.After(now) && !segment.End.Before(now) {
 				return nil
 			}

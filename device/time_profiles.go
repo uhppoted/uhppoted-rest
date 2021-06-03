@@ -82,12 +82,12 @@ func PutTimeProfile(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respons
 
 	profile.ID = profileID
 
-	rq := uhppoted.SetTimeProfileRequest{
+	rq := uhppoted.PutTimeProfileRequest{
 		DeviceID:    deviceID,
 		TimeProfile: profile,
 	}
 
-	if _, err = impl.SetTimeProfile(rq); err != nil {
+	if _, err = impl.PutTimeProfile(rq); err != nil {
 		if errors.Unwrap(err) == nil {
 			return http.StatusBadRequest,
 				rerrors.NewRESTError("set-time-profile", fmt.Sprintf("%v", err)),
@@ -157,12 +157,12 @@ func PutTimeProfiles(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respon
 			err
 	}
 
-	rq := uhppoted.SetTimeProfilesRequest{
+	rq := uhppoted.PutTimeProfilesRequest{
 		DeviceID: deviceID,
 		Profiles: body.Profiles,
 	}
 
-	response, code, err := impl.SetTimeProfiles(rq)
+	response, code, err := impl.PutTimeProfiles(rq)
 	if err != nil {
 		if code == http.StatusBadRequest {
 			return http.StatusBadRequest,
