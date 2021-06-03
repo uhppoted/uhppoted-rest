@@ -56,9 +56,14 @@ func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter,
 	}
 
 	warnings := []string{}
+	duplicates := map[string]bool{}
 	for k, v := range rpt {
 		for _, err := range v.Errors {
-			warnings = append(warnings, fmt.Sprintf("%v: %v", k, err))
+			warning := fmt.Sprintf("%v: %v", k, err)
+			if _, ok := duplicates[warning]; !ok {
+				warnings = append(warnings, warning)
+				duplicates[warning] = true
+			}
 		}
 	}
 
