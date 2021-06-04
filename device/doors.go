@@ -252,7 +252,7 @@ func OpenDoor(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrite
 				if profile == nil {
 					return http.StatusInternalServerError,
 						errors.NewRESTError("open-door", fmt.Sprintf("Failed to retrieve time profile %v associated with card %v, door %v from device %v", profileID, *body.CardNumber, door, deviceID)),
-						fmt.Errorf("GetCard received <nil> response for time profile %v associated with card %v, door %v from device %v", profileID, *body.CardNumber, door, deviceID)
+						fmt.Errorf("GetTimeProfile received <nil> response for time profile %v associated with card %v, door %v from device %v", profileID, *body.CardNumber, door, deviceID)
 				}
 
 				if err = checkTimeProfile(deviceID, *body.CardNumber, card.Doors[door], *profile); err == nil {
