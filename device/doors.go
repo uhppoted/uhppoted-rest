@@ -305,8 +305,8 @@ func getTimeProfile(impl *uhppoted.UHPPOTED, deviceID uint32, profileID uint8) (
 }
 
 func checkTimeProfile(deviceID, cardNumber uint32, profileID int, profile types.TimeProfile) error {
-	now := time.Now()
-	today := types.Date(now)
+	now := types.NewHHmm(time.Now().Hour(), time.Now().Minute())
+	today := types.Date(time.Now())
 
 	if profile.From == nil || profile.To == nil || today.Before(*profile.From) || today.After(*profile.To) {
 		return fmt.Errorf("Card %v: time profile %v on device %v is not valid for %v", cardNumber, profileID, deviceID, today)
@@ -324,5 +324,5 @@ func checkTimeProfile(deviceID, cardNumber uint32, profileID int, profile types.
 		}
 	}
 
-	return fmt.Errorf("Card %v: time profile %v on device %v is not authorized for %v", cardNumber, profileID, deviceID, types.HHmm(now))
+	return fmt.Errorf("Card %v: time profile %v on device %v is not authorized for %v", cardNumber, profileID, deviceID, now)
 }
