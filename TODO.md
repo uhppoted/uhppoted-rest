@@ -1,12 +1,4 @@
-## v0.7.x
-
-### IN PROGRESS
-
-- [ ] Clean up REST error handling (complete 'mare, what was I thinking :-()
-- [ ] Replace internal healthcheck with implementation from `uhppoted-api`
-- [ ] OpenAPI: break up spec into sections
-- [ ] OpenAPI: use fixed map keys for doors, segments
-- [ ] OpenAPI: fix all the new semantic/syntax errors
+## v0.7.0
 
 - [x] OpenDoor API: check against time profile for 
 - [x] Implement time profiles for ACL API
@@ -19,6 +11,12 @@
 - [x] Make compatible with updated `uhppoted-api` and `uhppote-core`
 
 ## TODO
+
+- [ ] Clean up REST error handling (complete 'mare, what was I thinking :-()
+- [ ] Replace internal healthcheck with implementation from `uhppoted-api`
+- [ ] OpenAPI: break up spec into sections
+- [ ] OpenAPI: use fixed map keys for doors, segments
+- [ ] OpenAPI: fix all the new semantic/syntax errors
 
 - [ ] [retool](https://retool.com)
 - [ ] Apply API actions to multiple devices
