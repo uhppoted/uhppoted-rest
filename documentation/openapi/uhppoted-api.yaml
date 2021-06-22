@@ -59,6 +59,9 @@ paths:
   /device/{device-id}/time-profile/{time-profile-id}:
     $ref: "./paths/time-profile.yaml
 
+  /device/{device-id}/tasklist:
+    $ref: "./paths/tasklist.yaml
+
   /device/{device-id}/events:
     $ref: "./paths/events.yaml
 

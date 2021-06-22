@@ -1,19 +1,14 @@
 ## v0.7.0
 
-- [x] OpenDoor API: check against time profile for 
-- [x] Implement time profiles for ACL API
-- [x] OpenAPI: update to 3.0.3
-- [x] Implement `get-time-profiles`
-- [x] Implement `set-time-profiles`
-- [x] Implement `clear-time-profiles`
-- [x] Implement `set-time-profile`
-- [x] Implement `get-time-profile`
-- [x] Make compatible with updated `uhppoted-api` and `uhppote-core`
+## IN PROGRESS
+
+- [ ] Migrate handlerfn to use IUHPPOTED
+- [x] `SetTaskList`
 
 ## TODO
 
 - [ ] Clean up REST error handling (complete 'mare, what was I thinking :-()
-- [ ] Replace internal healthcheck with implementation from `uhppoted-api`
+- [ ] Replace internal healthcheck with implementation from `uhppoted-lib`
 - [ ] OpenAPI: break up spec into sections
 - [ ] OpenAPI: use fixed map keys for doors, segments
 - [ ] OpenAPI: fix all the new semantic/syntax errors

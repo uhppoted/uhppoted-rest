@@ -12,7 +12,7 @@ import (
 	"golang.org/x/sys/windows/svc/eventlog"
 	"golang.org/x/sys/windows/svc/mgr"
 
-	"github.com/uhppoted/uhppoted-api/config"
+	"github.com/uhppoted/uhppoted-lib/config"
 )
 
 type Daemonize struct {

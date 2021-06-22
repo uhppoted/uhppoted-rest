@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/uhppoted/uhppoted-api/config"
+	"github.com/uhppoted/uhppoted-lib/config"
 )
 
 func dump(path string) error {

@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/uhppoted/uhppote-core/types"
-	api "github.com/uhppoted/uhppoted-api/acl"
+	api "github.com/uhppoted/uhppoted-lib/acl"
 )
 
 type permission struct {

@@ -1,0 +1,10 @@
+# schemas/TimeProfilesResult.yaml
+
+required: 
+  - warnings
+properties:
+  warnings:
+    type: array
+    items: 
+      type: string
+    description: "List of warnings for individual time profiles"

@@ -3,7 +3,7 @@ package device
 import (
 	"context"
 	"fmt"
-	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-lib/uhppoted"
 	"github.com/uhppoted/uhppoted-rest/errors"
 	"net/http"
 )

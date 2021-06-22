@@ -13,8 +13,8 @@ import (
 	"golang.org/x/sys/windows/svc/eventlog"
 
 	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted-api/config"
-	filelogger "github.com/uhppoted/uhppoted-api/eventlog"
+	"github.com/uhppoted/uhppoted-lib/config"
+	filelogger "github.com/uhppoted/uhppoted-lib/eventlog"
 )
 
 type Run struct {

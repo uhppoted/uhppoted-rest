@@ -3,7 +3,7 @@ package commands
 import (
 	"flag"
 	"fmt"
-	xml "github.com/uhppoted/uhppoted-api/encoding/plist"
+	xml "github.com/uhppoted/uhppoted-lib/encoding/plist"
 	"os"
 	"os/exec"
 	"path/filepath"

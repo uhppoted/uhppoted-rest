@@ -12,7 +12,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/uhppoted/uhppoted-api/config"
+	"github.com/uhppoted/uhppoted-lib/config"
 )
 
 type usergroup string

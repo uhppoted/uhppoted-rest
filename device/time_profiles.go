@@ -9,7 +9,7 @@ import (
 	"net/http"
 
 	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-lib/uhppoted"
 	rerrors "github.com/uhppoted/uhppoted-rest/errors"
 )
 
@@ -185,7 +185,7 @@ func PutTimeProfiles(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respon
 	}
 
 	return http.StatusOK, struct {
-		Warnings []string
+		Warnings []string `json:"warnings"`
 	}{
 		Warnings: warnings,
 	}, nil

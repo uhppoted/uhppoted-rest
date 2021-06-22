@@ -57,7 +57,7 @@ release: build-all
 
 bump:
 	go get -u github.com/uhppoted/uhppote-core
-	go get -u github.com/uhppoted/uhppoted-api
+	go get -u github.com/uhppoted/uhppoted-lib
 	go get -u golang.org/x/sys
 
 debug: build

@@ -7,12 +7,12 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-lib/uhppoted"
 	"github.com/uhppoted/uhppoted-rest/errors"
 )
 
 // Implements the record-special-events REST API. Extracts the 'enabled' value from the
-// request body and invokes the uhppoted-api.RecordSpecialEvents API function to update
+// request body and invokes the uhppoted-lib.RecordSpecialEvents API function to update
 // the controller 'record special events' flag.
 func SpecialEvents(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)

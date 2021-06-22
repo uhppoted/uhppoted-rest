@@ -1,0 +1,10 @@
+# schemas/TaskList.yaml
+
+required: 
+  - tasks
+properties:
+  tasks:
+    type: array
+    items:
+      $ref: "#/components/schemas/Task"                
+    description: "List of scheduled tasks"

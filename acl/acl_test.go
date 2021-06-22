@@ -2,7 +2,7 @@ package acl
 
 import (
 	"github.com/uhppoted/uhppote-core/types"
-	api "github.com/uhppoted/uhppoted-api/acl"
+	api "github.com/uhppoted/uhppoted-lib/acl"
 	"reflect"
 	"testing"
 	"time"

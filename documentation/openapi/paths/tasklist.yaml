@@ -1,11 +1,11 @@
-# paths/door.yaml
+# paths/tasklist.yaml
 
-get:
+put:
   tags:
     - device
-  summary: "Retrieves the door configuration"
-  description: "Retrieves the door delay setting and current control state"
-  operationId: getDoor
+  summary: "Sets the controller task list"
+  description: "Replaces any existing task list on the controller with the supplied list of scheduled tasks"
+  operationId: setTaskList
   parameters:
     - name: device-id
       in: path
@@ -15,45 +15,42 @@ get:
         type: integer
         format: uint32
         example: 405419896
-    - name: door
-      in: path
-      description: "Door number"
-      required: true
-      schema:
-        type: integer
-        format: uint8
-        example: 3
+  requestBody:
+    description: "List of tasks"
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/TaskList"        
   responses:
     '200':
-      description: "Door delay (in seconds)"
+      description: "Task list updated"
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              door:
-                $ref: "./schemas/Door.yaml"
+              $ref: "#/components/schemas/TaskListResult"         
     '404':
       description: "No device with ID matching device-id"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "#/components/schemas/Error"        
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "#/components/schemas/Error"        
     '500':
       description: "Internal system error"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "#/components/schemas/Error"        
     default:
       description: "Request failed"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "#/components/schemas/Error"        
+

@@ -83,7 +83,7 @@ The above commands build the `'uhppoted-rest` executable to the `bin` directory.
 | *Dependency*                                             | *Description*                              |
 | -------------------------------------------------------- | ------------------------------------------ |
 | [uhppote-core](https://github.com/uhppoted/uhppote-core) | Device level API implementation            |
-| [uhppoted-api](https://github.com/uhppoted/uhppoted-api) | common API for external                    |
+| [uhppoted-lib](https://github.com/uhppoted/uhppoted-lib) | common API for external                    |
 | golang.org/x/sys/windows                                 | Support for Windows services               |
 | golang.org/x/lint/golint                                 | Additional *lint* check for release builds |
 
@@ -101,7 +101,7 @@ Supported commands:
 
 Defaults to `run` if the command it not provided i.e. ```uhppoted-rest <options>``` is equivalent to ```uhppoted-rest run <options>```.
 
-The OpenAPI specification for the [REST API](https://github.com/uhppoted/uhppoted-rest/blob/master/documentation/uhppoted-api.yaml) is included in the documentation folder.
+The OpenAPI specification for the [REST API](https://github.com/uhppoted/uhppoted-rest/blob/master/documentation/uhppoted-lib.yaml) is included in the documentation folder.
 
 ### `run`
 

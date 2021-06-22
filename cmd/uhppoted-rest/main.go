@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted-api/command"
+	"github.com/uhppoted/uhppoted-lib/command"
 	"github.com/uhppoted/uhppoted-rest/commands"
 )
 

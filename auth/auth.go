@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/uhppoted/uhppoted-api/kvs"
+	"github.com/uhppoted/uhppoted-lib/kvs"
 )
 
 type IAuth interface {

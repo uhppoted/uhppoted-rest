@@ -16,7 +16,7 @@ import (
 	"sync"
 
 	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted-api/uhppoted"
+	"github.com/uhppoted/uhppoted-lib/uhppoted"
 	"github.com/uhppoted/uhppoted-rest/acl"
 	"github.com/uhppoted/uhppoted-rest/auth"
 	"github.com/uhppoted/uhppoted-rest/device"
@@ -82,11 +82,18 @@ type RESTD struct {
 }
 
 type handlerfn func(*uhppoted.UHPPOTED, context.Context, http.ResponseWriter, *http.Request) (int, interface{}, error)
+type handlerfnx func(uhppoted.IUHPPOTED, context.Context, http.ResponseWriter, *http.Request) (int, interface{}, error)
 
 type handler struct {
 	re     *regexp.Regexp
 	method string
 	fn     handlerfn
+}
+
+type handlerx struct {
+	re     *regexp.Regexp
+	method string
+	fn     handlerfnx
 }
 
 type dispatcher struct {
@@ -96,6 +103,7 @@ type dispatcher struct {
 	devices     []uhppote.Device
 	log         *log.Logger
 	handlers    []handler
+	handlersx   []handlerx
 	auth        auth.IAuth
 	openapi     http.Handler
 }
@@ -148,6 +156,10 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *log.Logger)
 			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+$"), http.MethodGet, acl.Show},
 			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/door/\\S.*$"), http.MethodPut, acl.Grant},
 			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/door/\\S.*$"), http.MethodDelete, acl.Revoke},
+		},
+
+		handlersx: []handlerx{
+			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/tasklist"), http.MethodPut, device.PutTaskList},
 		},
 
 		log:         l,
@@ -263,6 +275,32 @@ func (d *dispatcher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Dispatch to handler
 	url := r.URL.Path
 	for _, h := range d.handlers {
+		if h.re.MatchString(url) && r.Method == h.method {
+			cards, err := d.authorized(r)
+			if err != nil {
+				d.log.Printf("WARN  %v", err)
+				http.Error(w, "Access denied", http.StatusForbidden)
+				return
+			}
+
+			ctx := context.WithValue(context.Background(), "uhppote", d.uhppote)
+			ctx = context.WithValue(ctx, "devices", d.devices)
+			ctx = context.WithValue(ctx, "log", d.log)
+			ctx = context.WithValue(ctx, "compression", compression)
+			ctx = context.WithValue(ctx, "authorized-cards", cards)
+			ctx = parse(ctx, r)
+
+			status, response, err := h.fn(d.uhppoted, ctx, w, r)
+			if err != nil {
+				d.log.Printf("WARN  %v", err)
+			}
+
+			reply(ctx, w, status, response)
+			return
+		}
+	}
+
+	for _, h := range d.handlersx {
 		if h.re.MatchString(url) && r.Method == h.method {
 			cards, err := d.authorized(r)
 			if err != nil {
