@@ -101,7 +101,7 @@ Supported commands:
 
 Defaults to `run` if the command it not provided i.e. ```uhppoted-rest <options>``` is equivalent to ```uhppoted-rest run <options>```.
 
-The OpenAPI specification for the [REST API](https://github.com/uhppoted/uhppoted-rest/blob/master/documentation/uhppoted-lib.yaml) is included in the documentation folder.
+The OpenAPI specification for the [REST API](https://github.com/uhppoted/uhppoted-rest/blob/master/documentation/uhppoted-api.yaml) is included in the documentation folder.
 
 ### `run`
 

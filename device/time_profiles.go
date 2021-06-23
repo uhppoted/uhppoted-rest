@@ -13,7 +13,7 @@ import (
 	rerrors "github.com/uhppoted/uhppoted-rest/errors"
 )
 
-func GetTimeProfile(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetTimeProfile(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID, err := getDeviceID(r)
 	if err != nil {
 		return http.StatusBadRequest,
@@ -51,7 +51,7 @@ func GetTimeProfile(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respons
 	}, nil
 }
 
-func PutTimeProfile(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func PutTimeProfile(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID, err := getDeviceID(r)
 	if err != nil {
 		return http.StatusBadRequest,
@@ -102,7 +102,7 @@ func PutTimeProfile(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respons
 	return http.StatusOK, nil, nil
 }
 
-func GetTimeProfiles(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetTimeProfiles(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID, err := getDeviceID(r)
 	if err != nil {
 		return http.StatusBadRequest,
@@ -132,7 +132,7 @@ func GetTimeProfiles(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respon
 	}, nil
 }
 
-func PutTimeProfiles(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func PutTimeProfiles(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID, err := getDeviceID(r)
 	if err != nil {
 		return http.StatusBadRequest,
@@ -191,7 +191,7 @@ func PutTimeProfiles(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respon
 	}, nil
 }
 
-func ClearTimeProfiles(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func ClearTimeProfiles(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID, err := getDeviceID(r)
 	if err != nil {
 		return http.StatusBadRequest,

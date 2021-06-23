@@ -141,12 +141,6 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *log.Logger)
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodPut, device.PutCard},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodDelete, device.DeleteCard},
 
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profile/[0-9]+$"), http.MethodGet, device.GetTimeProfile},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profile/[0-9]+$"), http.MethodPut, device.PutTimeProfile},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profiles"), http.MethodGet, device.GetTimeProfiles},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profiles"), http.MethodPut, device.PutTimeProfiles},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profiles"), http.MethodDelete, device.ClearTimeProfiles},
-
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/events$"), http.MethodGet, device.GetEvents},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/event/[0-9]+$"), http.MethodGet, device.GetEvent},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/special-events$"), http.MethodPut, device.SpecialEvents},
@@ -159,6 +153,12 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *log.Logger)
 		},
 
 		handlersx: []handlerx{
+			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profile/[0-9]+$"), http.MethodGet, device.GetTimeProfile},
+			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profile/[0-9]+$"), http.MethodPut, device.PutTimeProfile},
+			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profiles"), http.MethodGet, device.GetTimeProfiles},
+			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profiles"), http.MethodPut, device.PutTimeProfiles},
+			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profiles"), http.MethodDelete, device.ClearTimeProfiles},
+
 			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/tasklist"), http.MethodPut, device.PutTaskList},
 		},
 
