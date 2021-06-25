@@ -20,7 +20,7 @@ type event struct {
 	Result     uint8          `json:"event-result"`
 }
 
-func GetEvents(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetEvents(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	rq := uhppoted.GetEventRangeRequest{
@@ -58,7 +58,7 @@ func GetEvents(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrit
 	}, nil
 }
 
-func GetEvent(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetEvent(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 	eventID := ctx.Value("event-id").(uint32)
 

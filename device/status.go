@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func GetStatus(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetStatus(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	rq := uhppoted.GetStatusRequest{

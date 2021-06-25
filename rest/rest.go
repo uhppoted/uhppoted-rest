@@ -81,8 +81,8 @@ type RESTD struct {
 	OpenAPI
 }
 
-type handlerfn func(*uhppoted.UHPPOTED, context.Context, http.ResponseWriter, *http.Request) (int, interface{}, error)
-type handlerfnx func(uhppoted.IUHPPOTED, context.Context, http.ResponseWriter, *http.Request) (int, interface{}, error)
+type handlerfn func(uhppoted.IUHPPOTED, context.Context, http.ResponseWriter, *http.Request) (int, interface{}, error)
+type handlerfnx func(*uhppoted.UHPPOTED, context.Context, http.ResponseWriter, *http.Request) (int, interface{}, error)
 
 type handler struct {
 	re     *regexp.Regexp
@@ -135,31 +135,32 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *log.Logger)
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/swipes$"), http.MethodPost, device.OpenDoor},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/delay$"), http.MethodPut, device.SetDoorDelay},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/control$"), http.MethodPut, device.SetDoorControl},
+
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/cards$"), http.MethodGet, device.GetCards},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/cards$"), http.MethodDelete, device.DeleteCards},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodGet, device.GetCard},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodPut, device.PutCard},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/card/[0-9]+$"), http.MethodDelete, device.DeleteCard},
 
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profile/[0-9]+$"), http.MethodGet, device.GetTimeProfile},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profile/[0-9]+$"), http.MethodPut, device.PutTimeProfile},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profiles"), http.MethodGet, device.GetTimeProfiles},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profiles"), http.MethodPut, device.PutTimeProfiles},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profiles"), http.MethodDelete, device.ClearTimeProfiles},
+
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/tasklist"), http.MethodPut, device.PutTaskList},
+
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/events$"), http.MethodGet, device.GetEvents},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/event/[0-9]+$"), http.MethodGet, device.GetEvent},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/special-events$"), http.MethodPut, device.SpecialEvents},
-
-			handler{regexp.MustCompile("^/uhppote/acl$"), http.MethodGet, acl.GetACL},
-			handler{regexp.MustCompile("^/uhppote/acl$"), http.MethodPut, acl.PutACL},
-			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+$"), http.MethodGet, acl.Show},
-			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/door/\\S.*$"), http.MethodPut, acl.Grant},
-			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/door/\\S.*$"), http.MethodDelete, acl.Revoke},
 		},
 
 		handlersx: []handlerx{
-			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profile/[0-9]+$"), http.MethodGet, device.GetTimeProfile},
-			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profile/[0-9]+$"), http.MethodPut, device.PutTimeProfile},
-			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profiles"), http.MethodGet, device.GetTimeProfiles},
-			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profiles"), http.MethodPut, device.PutTimeProfiles},
-			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/time-profiles"), http.MethodDelete, device.ClearTimeProfiles},
-
-			handlerx{regexp.MustCompile("^/uhppote/device/[0-9]+/tasklist"), http.MethodPut, device.PutTaskList},
+			handlerx{regexp.MustCompile("^/uhppote/acl$"), http.MethodGet, acl.GetACL},
+			handlerx{regexp.MustCompile("^/uhppote/acl$"), http.MethodPut, acl.PutACL},
+			handlerx{regexp.MustCompile("^/uhppote/acl/card/[0-9]+$"), http.MethodGet, acl.Show},
+			handlerx{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/door/\\S.*$"), http.MethodPut, acl.Grant},
+			handlerx{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/door/\\S.*$"), http.MethodDelete, acl.Revoke},
 		},
 
 		log:         l,

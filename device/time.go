@@ -11,7 +11,7 @@ import (
 	"net/http"
 )
 
-func GetTime(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetTime(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	rq := uhppoted.GetTimeRequest{
@@ -34,7 +34,7 @@ func GetTime(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter
 	}, nil
 }
 
-func SetTime(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func SetTime(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	blob, err := ioutil.ReadAll(r.Body)

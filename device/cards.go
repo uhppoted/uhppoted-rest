@@ -12,7 +12,7 @@ import (
 	"github.com/uhppoted/uhppoted-rest/errors"
 )
 
-func GetCards(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetCards(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	rq := uhppoted.GetCardsRequest{
@@ -37,7 +37,7 @@ func GetCards(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrite
 	}, nil
 }
 
-func DeleteCards(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func DeleteCards(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	rq := uhppoted.DeleteCardsRequest{
@@ -64,7 +64,7 @@ func DeleteCards(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWr
 	return http.StatusOK, nil, nil
 }
 
-func GetCard(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 	cardNumber := ctx.Value("card-number").(uint32)
 
@@ -91,7 +91,7 @@ func GetCard(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter
 	}, nil
 }
 
-func PutCard(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func PutCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 	cardNumber := ctx.Value("card-number").(uint32)
 
@@ -147,7 +147,7 @@ func PutCard(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter
 	return http.StatusOK, nil, nil
 }
 
-func DeleteCard(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func DeleteCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 	cardNumber := ctx.Value("card-number").(uint32)
 

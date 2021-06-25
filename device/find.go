@@ -15,7 +15,7 @@ type device struct {
 	DeviceType string `json:"device-type"`
 }
 
-func GetDevices(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetDevices(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	rq := uhppoted.GetDevicesRequest{}
 
 	response, err := impl.GetDevices(rq)
@@ -43,7 +43,7 @@ func GetDevices(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWri
 	}, nil
 }
 
-func GetDevice(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetDevice(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 
 	rq := uhppoted.GetDeviceRequest{

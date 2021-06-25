@@ -13,7 +13,7 @@ import (
 	"github.com/uhppoted/uhppoted-rest/errors"
 )
 
-func GetDoor(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 	door := ctx.Value("door").(uint8)
 
@@ -64,7 +64,7 @@ func GetDoor(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter
 	}, nil
 }
 
-func SetDoorDelay(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func SetDoorDelay(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 	door := ctx.Value("door").(uint8)
 
@@ -114,7 +114,7 @@ func SetDoorDelay(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseW
 	}, nil
 }
 
-func SetDoorControl(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func SetDoorControl(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 	door := ctx.Value("door").(uint8)
 
@@ -164,7 +164,7 @@ func SetDoorControl(impl *uhppoted.UHPPOTED, ctx context.Context, w http.Respons
 	}, nil
 }
 
-func OpenDoor(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func OpenDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value("device-id").(uint32)
 	door := ctx.Value("door").(uint8)
 
@@ -290,7 +290,7 @@ func OpenDoor(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWrite
 	}, nil
 }
 
-func getTimeProfile(impl *uhppoted.UHPPOTED, deviceID uint32, profileID uint8) (*types.TimeProfile, error) {
+func getTimeProfile(impl uhppoted.IUHPPOTED, deviceID uint32, profileID uint8) (*types.TimeProfile, error) {
 	rq := uhppoted.GetTimeProfileRequest{
 		DeviceID:  deviceID,
 		ProfileID: profileID,
