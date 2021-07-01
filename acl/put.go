@@ -13,7 +13,7 @@ import (
 	"github.com/uhppoted/uhppoted-rest/errors"
 )
 
-func PutACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func PutACL(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	blob, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		return http.StatusInternalServerError,

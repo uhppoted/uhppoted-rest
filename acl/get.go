@@ -11,7 +11,7 @@ import (
 	"github.com/uhppoted/uhppoted-rest/errors"
 )
 
-func GetACL(impl *uhppoted.UHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetACL(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	u := ctx.Value("uhppote").(uhppote.IUHPPOTE)
 	devices := ctx.Value("devices").([]uhppote.Device)
 

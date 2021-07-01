@@ -1,5 +1,3 @@
-VERSION = v0.7.x
-LDFLAGS = -ldflags "-X uhppote.VERSION=$(VERSION)" 
 DIST   ?= development
 DEBUG  ?= --debug
 CMD     = ./bin/uhppoted-rest
