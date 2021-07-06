@@ -3,7 +3,6 @@ package commands
 import (
 	"flag"
 	"fmt"
-	"net"
 	"os"
 	"path/filepath"
 	"strings"
@@ -12,6 +11,7 @@ import (
 	"golang.org/x/sys/windows/svc/eventlog"
 	"golang.org/x/sys/windows/svc/mgr"
 
+	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-lib/config"
 )
 
@@ -25,8 +25,8 @@ type info struct {
 	Description      string
 	Executable       string
 	WorkDir          string
-	BindAddress      *net.UDPAddr
-	BroadcastAddress *net.UDPAddr
+	BindAddress      *types.BindAddr
+	BroadcastAddress *types.BroadcastAddr
 }
 
 const confTemplate = `# UDP

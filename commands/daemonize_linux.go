@@ -3,7 +3,6 @@ package commands
 import (
 	"flag"
 	"fmt"
-	"net"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -12,6 +11,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-lib/config"
 )
 
@@ -31,8 +31,8 @@ type info struct {
 	Uid              int
 	Gid              int
 	LogFiles         []string
-	BindAddress      *net.UDPAddr
-	BroadcastAddress *net.UDPAddr
+	BindAddress      *types.BindAddr
+	BroadcastAddress *types.BroadcastAddr
 }
 
 const serviceTemplate = `[Unit]

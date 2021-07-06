@@ -3,14 +3,15 @@ package commands
 import (
 	"flag"
 	"fmt"
-	"github.com/uhppoted/uhppoted-lib/config"
-	xpath "github.com/uhppoted/uhppoted-lib/encoding/plist"
-	"net"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppoted-lib/config"
+	xpath "github.com/uhppoted/uhppoted-lib/encoding/plist"
 )
 
 type info struct {
@@ -18,8 +19,8 @@ type info struct {
 	Executable       string
 	ConfigDirectory  string
 	WorkingDirectory string
-	BindAddress      *net.UDPAddr
-	BroadcastAddress *net.UDPAddr
+	BindAddress      *types.BindAddr
+	BroadcastAddress *types.BroadcastAddr
 }
 
 type plist struct {

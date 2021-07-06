@@ -1,7 +1,6 @@
-## v0.7.1
+## v0.7.x
 
-- [x] Migrate ACL dispatch to use IUHPPOTED
-- [x] `SetTaskList`
+- [ ] Use `uhppoted-lib` `config` command implementation
 
 ## TODO
 
