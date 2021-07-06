@@ -6,17 +6,21 @@ import (
 
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-lib/command"
+	"github.com/uhppoted/uhppoted-lib/config"
 	"github.com/uhppoted/uhppoted-rest/commands"
 )
 
 var cli = []uhppoted.Command{
 	&commands.RUN,
-	&commands.CONFIG,
 	commands.NewDaemonize(),
 	commands.NewUndaemonize(),
 	&uhppoted.Version{
 		Application: commands.SERVICE,
 		Version:     uhppote.VERSION,
+	},
+	&uhppoted.Config{
+		Application: commands.SERVICE,
+		Config:      config.DefaultConfig,
 	},
 }
 
