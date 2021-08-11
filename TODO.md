@@ -1,6 +1,6 @@
 ## v0.7.x
 
-- [ ] Use `uhppoted-lib` `config` command implementation
+- [x] Use `uhppoted-lib` `config` command implementation
 
 ## TODO
 

@@ -50,8 +50,8 @@ func GetDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 	}
 
 	reply := struct {
-		Delay        uint8                 `json:"delay"`
-		ControlState uhppoted.ControlState `json:"control"`
+		Delay        uint8              `json:"delay"`
+		ControlState types.ControlState `json:"control"`
 	}{
 		Delay:        delay.Delay,
 		ControlState: control.Control,
@@ -126,7 +126,7 @@ func SetDoorControl(impl uhppoted.IUHPPOTED, ctx context.Context, w http.Respons
 	}
 
 	body := struct {
-		Control *uhppoted.ControlState `json:"control"`
+		Control *types.ControlState `json:"control"`
 	}{}
 
 	err = json.Unmarshal(blob, &body)
@@ -158,7 +158,7 @@ func SetDoorControl(impl uhppoted.IUHPPOTED, ctx context.Context, w http.Respons
 	}
 
 	return http.StatusOK, &struct {
-		Control uhppoted.ControlState `json:"control"`
+		Control types.ControlState `json:"control"`
 	}{
 		Control: response.Control,
 	}, nil
