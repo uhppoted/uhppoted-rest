@@ -155,7 +155,7 @@ func (cmd *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.S
 
 	devices := []uhppote.Device{}
 	for id, d := range c.Devices {
-		if device := uhppote.NewDevice(d.Name, id, d.Address, d.Rollover, d.Doors); device != nil {
+		if device := uhppote.NewDevice(d.Name, id, d.Address, d.Doors); device != nil {
 			devices = append(devices, *device)
 		}
 	}
