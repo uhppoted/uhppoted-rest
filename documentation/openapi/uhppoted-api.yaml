@@ -24,61 +24,61 @@ security:
 
 paths:
   /device:
-    $ref: "./paths/devices.yaml
+    $ref: "./paths/devices.yaml"
 
   /device/{device-id}:
-    $ref: "./paths/device.yaml
+    $ref: "./paths/device.yaml"
           
   /device/{device-id}/time:
-    $ref: "./paths/time.yaml
+    $ref: "./paths/time.yaml"
 
   /device/{device-id}/door/{door}:
-    $ref: "./paths/door.yaml
+    $ref: "./paths/door.yaml"
 
   /device/{device-id}/door/{door}/delay:
-    $ref: "./paths/door-control.yaml
+    $ref: "./paths/door-control.yaml"
 
   /device/{device-id}/door/{door}/control:
-    $ref: "./paths/door-control.yaml
+    $ref: "./paths/door-control.yaml"
 
   /device/{device-id}/door/{door}/swipes:
-    $ref: "./paths/door-open.yaml
+    $ref: "./paths/door-open.yaml"
 
   /device/{device-id}/status:
-    $ref: "./paths/status.yaml
+    $ref: "./paths/status.yaml"
 
   /device/{device-id}/cards:
-    $ref: "./paths/cards.yaml
+    $ref: "./paths/cards.yaml"
 
   /device/{device-id}/card/{card-number}:
-    $ref: "./paths/card.yaml
+    $ref: "./paths/card.yaml"
 
   /device/{device-id}/time-profiles:
-    $ref: "./paths/time-profiles.yaml
+    $ref: "./paths/time-profiles.yaml"
 
   /device/{device-id}/time-profile/{time-profile-id}:
-    $ref: "./paths/time-profile.yaml
+    $ref: "./paths/time-profile.yaml"
 
   /device/{device-id}/tasklist:
-    $ref: "./paths/tasklist.yaml
+    $ref: "./paths/tasklist.yaml"
 
   /device/{device-id}/events:
-    $ref: "./paths/events.yaml
+    $ref: "./paths/events.yaml"
 
   /device/{device-id}/event/{event-id}:
-    $ref: "./paths/event.yaml
+    $ref: "./paths/event.yaml"
 
   /device/{device-id}/special-events:
-    $ref: "./paths/record-special-events.yaml
+    $ref: "./paths/record-special-events.yaml"
         
   /acl:
-    $ref: "./paths/acl.yaml
+    $ref: "./paths/acl.yaml"
         
   /acl/card/{card-number}:
-    $ref: "./paths/acl-show.yaml
+    $ref: "./paths/acl-show.yaml"
 
   /acl/card/{card-number}/door/{door}:
-    $ref: "./paths/acl-grant.yaml
+    $ref: "./paths/acl-grant.yaml"
 
 components:
   securitySchemes:

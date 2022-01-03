@@ -1,6 +1,14 @@
 ## v0.7.x
 
 - [x] Use `uhppoted-lib` `config` command implementation
+- [x] Rework 'get-events' to return first, last and current event indices
+- [ ] Rework 'get-event' to accept:
+      - [x] index
+      - [x] first
+      - [x] last
+      - [x] current
+      - [ ] next
+      - [ ] range
 
 ## TODO
 

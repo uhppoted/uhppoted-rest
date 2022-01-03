@@ -1091,7 +1091,7 @@ paths:
       tags:
         - device
       summary: "Retrieves the device event list indices"
-      description: "Retrieves the indices of the first and last stored events"
+      description: "Retrieves the indices of the first, last and current events"
       operationId: getEvents
       parameters:
         - name: device-id
@@ -1104,7 +1104,7 @@ paths:
             example: 405419896
       responses:
         '200':
-          description: "Event list"
+          description: "Event indices"
           content:
             application/json:
               schema:
@@ -1134,7 +1134,7 @@ paths:
               schema:
                   $ref: "#/components/schemas/Error"        
 
-  /device/{device-id}/event/{event-id}:
+  /device/{device-id}/events/{event-index}:
     get:
       tags:
         - device
@@ -1150,13 +1150,12 @@ paths:
             type: integer
             format: uint32
             example: 405419896
-        - name: event-id
+        - name: event-index
           in: path
-          description: "Event ID"
+          description: "Numeric event index or 'first', 'last', 'current' or 'next'"
           required: true
           schema:
-            type: integer
-            format: uint32
+            type: string
             example: 31
       responses:
         '200':
@@ -2179,9 +2178,9 @@ components:
         - events
       properties:
         events:
-          $ref: "#/components/schemas/EventRange"        
+          $ref: "#/components/schemas/EventIndices"        
 
-    EventRange:
+    EventIndices:
       properties:
         first:
           type: number
@@ -2193,7 +2192,12 @@ components:
           format: uint32
           description: "Index of the last stored event. Not provided if device has no events."
           example: 78
-          
+        current:
+          type: number
+          format: uint32
+          description: "Current event index"
+          example: 17
+
     Event:
       required: 
         - event-id

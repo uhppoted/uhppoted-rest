@@ -143,7 +143,7 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *log.Logger)
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/tasklist"), http.MethodPut, device.PutTaskList},
 
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/events$"), http.MethodGet, device.GetEvents},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/event/[0-9]+$"), http.MethodGet, device.GetEvent},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/events/([0-9]+|first|last|current|next)$"), http.MethodGet, device.GetEvent},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/special-events$"), http.MethodPut, device.SpecialEvents},
 
 			handler{regexp.MustCompile("^/uhppote/acl$"), http.MethodGet, acl.GetACL},
@@ -322,11 +322,26 @@ func parse(ctx context.Context, r *http.Request) context.Context {
 		}
 	}
 
-	matches = regexp.MustCompile("^/uhppote/device/[0-9]+/event/([0-9]+)$").FindStringSubmatch(url)
+	matches = regexp.MustCompile("^/uhppote/device/[0-9]+/events/([0-9]+|first|last|current|next)$").FindStringSubmatch(url)
 	if matches != nil {
-		eventID, err := strconv.ParseUint(matches[1], 10, 32)
-		if err == nil {
-			ctx = context.WithValue(ctx, "event-id", uint32(eventID))
+		switch matches[1] {
+		case "first":
+			ctx = context.WithValue(ctx, "event-index", "first")
+
+		case "last":
+			ctx = context.WithValue(ctx, "event-index", "last")
+
+		case "current":
+			ctx = context.WithValue(ctx, "event-index", "current")
+
+		case "next":
+			ctx = context.WithValue(ctx, "event-index", "next")
+
+		default:
+			index, err := strconv.ParseUint(matches[1], 10, 32)
+			if err == nil {
+				ctx = context.WithValue(ctx, "event-index", uint32(index))
+			}
 		}
 	}
 
