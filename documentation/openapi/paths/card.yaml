@@ -32,19 +32,19 @@ get:
             type: object
             properties:
               card:
-                $ref: "./schemas/Card.yaml"
+                $ref: "../schemas/Card.yaml"
     '404':
       description: "No matching device and/or card"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '500':
       description: "Internal system error"
     default:
@@ -52,7 +52,7 @@ get:
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
 
 put:
   tags:
@@ -83,7 +83,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: "./schemas/CardDetails.yaml"
+          $ref: "../schemas/CardDetails.yaml"
   responses:
     '200':
       description: "Card details added/updated"
@@ -92,13 +92,13 @@ put:
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '500':
       description: "Internal system error"
     default:
@@ -106,7 +106,7 @@ put:
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
 
 delete:
   tags:
@@ -139,22 +139,22 @@ delete:
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '500':
       description: "Internal system error"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     default:
       description: "Request failed"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"

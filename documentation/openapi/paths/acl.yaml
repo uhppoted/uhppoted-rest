@@ -12,25 +12,25 @@ get:
       content:
         application/json:
           schema:
-            $ref: "./schemas/ACL.yaml"
+            $ref: "../schemas/ACL.yaml"
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '500':
       description: "Internal system error"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     default:
       description: "Request failed"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
 
 put:
   tags:
@@ -44,29 +44,29 @@ put:
     content:
       application/json:
         schema:
-          $ref: "./schemas/ACL.yaml"
+          $ref: "../schemas/ACL.yaml"
   responses:
     '200':
       description: "Result of access control lists update"
       content:
         application/json:
           schema:
-              $ref: "./schemas/PutACLResult.yaml"
+              $ref: "../schemas/PutACLResult.yaml"
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '500':
       description: "Internal system error"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     default:
       description: "Request failed"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"

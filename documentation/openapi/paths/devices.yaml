@@ -12,22 +12,22 @@ get:
       content:
         application/json:
           schema:
-              $ref: "./schemas/DeviceList.yaml"
+              $ref: "../schemas/DeviceList.yaml"
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '500':
       description: "Internal system error"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     default:
       description: "Request failed"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"

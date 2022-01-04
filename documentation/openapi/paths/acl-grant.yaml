@@ -30,7 +30,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: "./schemas/DateRangeAndProfile.yaml"
+          $ref: "../schemas/DateRangeAndProfile.yaml"
   responses:
     '200':
       description: "Access granted"
@@ -39,19 +39,19 @@ put:
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '500':
       description: "Internal system error"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     default:
       description: "Request failed"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
 
 delete:
   tags:
@@ -85,7 +85,7 @@ delete:
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '500':
       description: "Internal system error"
     default:
@@ -93,5 +93,5 @@ delete:
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
 

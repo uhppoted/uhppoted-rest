@@ -31,28 +31,28 @@ get:
             type: object
             properties:
               event:
-                $ref: "#/components/schemas/Event"        
+                $ref: "../schemas/Event.yaml"        
     '404':
       description: "No matching device and/or event"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/Error"        
+              $ref: "../schemas/Error.yaml"        
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/Error"        
+              $ref: "../schemas/Error.yaml"        
     '500':
       description: "Internal system error"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/Error"        
+              $ref: "../schemas/Error.yaml"        
     default:
       description: "Request failed"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/Error"        
+              $ref: "../schemas/Error.yaml"        

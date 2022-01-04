@@ -6,5 +6,5 @@ properties:
   tasks:
     type: array
     items:
-      $ref: "#/components/schemas/Task"                
+      $ref: "../schemas/Task.yaml"                
     description: "List of scheduled tasks"

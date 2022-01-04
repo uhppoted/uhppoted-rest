@@ -21,7 +21,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: "./schemas/SpecialEvents.yaml"
+          $ref: "../schemas/SpecialEvents.yaml"
         examples:
           enable: 
             value:
@@ -36,34 +36,34 @@ put:
       content:
         application/json:
           schema:
-              $ref: "./schemas/SpecialEvents.yaml"
+              $ref: "../schemas/SpecialEvents.yaml"
     '403':
       description: "Access denied"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '404':
       description: "No device with ID matching device-id"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '500':
       description: "Internal system error"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     default:
       description: "Request failed"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"

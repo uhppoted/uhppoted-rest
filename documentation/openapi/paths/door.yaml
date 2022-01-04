@@ -32,29 +32,29 @@ get:
             type: object
             properties:
               door:
-                $ref: "#/components/schemas/Door"        
+                $ref: "../schemas/Door.yaml"        
     '404':
       description: "No device with ID matching device-id"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/Error"        
+              $ref: "../schemas/Error.yaml"        
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/Error"        
+              $ref: "../schemas/Error.yaml"        
     '500':
       description: "Internal system error"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/Error"        
+              $ref: "../schemas/Error.yaml"        
     default:
       description: "Request failed"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/Error"        
+              $ref: "../schemas/Error.yaml"        
 

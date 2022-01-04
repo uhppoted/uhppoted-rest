@@ -29,35 +29,35 @@ put:
     content:
       application/json:
         schema:
-          $ref: "./schemas/DoorDelay.yaml"
+          $ref: "../schemas/DoorDelay.yaml"
   responses:
     '200':
       description: "Door delay in seconds"
       content:
         application/json:
           schema:
-              $ref: "./schemas/DoorDelay.yaml"
+              $ref: "../schemas/DoorDelay.yaml"
     '404':
       description: "No device with ID matching device-id"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '500':
       description: "Internal system error"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     default:
       description: "Request failed"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"

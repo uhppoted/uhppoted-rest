@@ -27,7 +27,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: './schemas/CardSwipe.yaml'
+          $ref: "../schemas/CardSwipe.yaml"
   responses:
     '200':
       description: "Door opened"
@@ -37,35 +37,35 @@ post:
             type: object
             properties:
               door:
-                $ref: "./schemas/DoorOpened.yaml"
+                $ref: "../schemas/DoorOpened.yaml"
     '401':
       description: "User does not have permssions to open door"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '404':
       description: "No device with ID matching device-id"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '500':
       description: "Internal system error"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     default:
       description: "Request failed"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
 

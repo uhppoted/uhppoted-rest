@@ -6,6 +6,6 @@ properties:
   profiles:
     type: array
     items:
-      $ref: "#/components/schemas/TimeProfile"                
+      $ref: "../schemas/TimeProfile.yaml"                
     description: "List of time profiles"
 

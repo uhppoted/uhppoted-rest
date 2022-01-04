@@ -21,36 +21,36 @@ put:
     content:
       application/json:
         schema:
-          $ref: "#/components/schemas/TaskList"        
+          $ref: "../schemas/TaskList.yaml"        
   responses:
     '200':
       description: "Task list updated"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/TaskListResult"         
+              $ref: "../schemas/TaskListResult.yaml"         
     '404':
       description: "No device with ID matching device-id"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/Error"        
+              $ref: "../schemas/Error.yaml"        
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/Error"        
+              $ref: "../schemas/Error.yaml"        
     '500':
       description: "Internal system error"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/Error"        
+              $ref: "../schemas/Error.yaml"        
     default:
       description: "Request failed"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/Error"        
+              $ref: "../schemas/Error.yaml"        
 

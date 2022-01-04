@@ -29,13 +29,13 @@ get:
       content:
         application/json:
           schema:
-              $ref: "./schemas/TimeProfile.yaml"
+              $ref: "../schemas/TimeProfile.yaml"
     '404':
       description: "No time profile defined for device-id + time-profile-id"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
           example: {
               tag: "get-time-profile",
               message: "Time profile 29 not found"
@@ -45,19 +45,19 @@ get:
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '500':
       description: "Internal system error"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     default:
       description: "Request failed"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
 
 put:
   tags:
@@ -88,7 +88,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: "./schemas/TimeProfile.yaml"
+          $ref: "../schemas/TimeProfile.yaml"
   responses:
     '200':
       description: "Time profile added/updated"
@@ -97,13 +97,13 @@ put:
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
     '500':
       description: "Internal system error"
     default:
@@ -111,5 +111,5 @@ put:
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "../schemas/Error.yaml"
 

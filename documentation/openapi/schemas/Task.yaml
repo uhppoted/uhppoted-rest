@@ -1,0 +1,49 @@
+# schemas/Task.yaml
+
+required: 
+  - task
+  - door
+  - start-date
+  - end-date
+  - weekdays
+  - start-time
+properties:
+  task:  
+    type: string
+    format: enum
+    description: "Standard task description"
+    example: "enable time profile"
+  door:  
+    type: number
+    format: uint8
+    description: "Door [1..4] for which to run task"
+    example: 3
+  start-date:  
+    type: string
+    format: yyyy-MM-dd
+    description: "Date from which task is active"
+    example: "2021-01-01"
+  end-date:  
+    type: string
+    format: yyyy-MM-dd
+    description: "Date after which task is no longer active"
+    example: "2021-12-31"
+  weekdays:  
+    type: string
+    items:
+       type: string
+       format: "comma seperated list of weekdays"
+       description: "List of weekdays for which the task is active. Weekday name are case-insensitive and 3 letter abbreviations are valid."
+    example: "Monday,Wednesday,Friday"
+    description: "List of weekdays for which the time profile is active"
+  start:  
+    type: string
+    format: HH:mm
+    description: "Time at which to run task"
+    example: "15:30"
+  cards:  
+    type: number
+    format: uint8
+    description: "Number of cards to allow for the 'more-cards' task."
+    example: 7
+
