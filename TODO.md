@@ -2,13 +2,12 @@
 
 - [x] Use `uhppoted-lib` `config` command implementation
 - [x] Rework 'get-events' to return first, last and current event indices
-- [ ] Rework 'get-event' to accept:
+- [x] Rework 'get-event' to accept:
       - [x] index
       - [x] first
       - [x] last
       - [x] current
-      - [ ] next
-      - [ ] range
+      - [x] next
 
 ## TODO
 
@@ -17,6 +16,7 @@
 - [ ] OpenAPI: break up spec into sections
 - [ ] OpenAPI: use fixed map keys for doors, segments
 - [ ] OpenAPI: fix all the new semantic/syntax errors
+- [ ] GetEvent - range
 
 - [ ] [retool](https://retool.com)
 - [ ] Apply API actions to multiple devices

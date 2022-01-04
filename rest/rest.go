@@ -322,29 +322,6 @@ func parse(ctx context.Context, r *http.Request) context.Context {
 		}
 	}
 
-	matches = regexp.MustCompile("^/uhppote/device/[0-9]+/events/([0-9]+|first|last|current|next)$").FindStringSubmatch(url)
-	if matches != nil {
-		switch matches[1] {
-		case "first":
-			ctx = context.WithValue(ctx, "event-index", "first")
-
-		case "last":
-			ctx = context.WithValue(ctx, "event-index", "last")
-
-		case "current":
-			ctx = context.WithValue(ctx, "event-index", "current")
-
-		case "next":
-			ctx = context.WithValue(ctx, "event-index", "next")
-
-		default:
-			index, err := strconv.ParseUint(matches[1], 10, 32)
-			if err == nil {
-				ctx = context.WithValue(ctx, "event-index", uint32(index))
-			}
-		}
-	}
-
 	return ctx
 }
 

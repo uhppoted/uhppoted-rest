@@ -15,13 +15,12 @@ get:
         type: integer
         format: uint32
         example: 405419896
-    - name: event-id
+    - name: event-index
       in: path
-      description: "Event ID"
+      description: "Numeric event index or 'first', 'last', 'current' or 'next'"
       required: true
       schema:
-        type: integer
-        format: uint32
+        type: string
         example: 31
   responses:
     '200':
@@ -32,28 +31,28 @@ get:
             type: object
             properties:
               event:
-                $ref: "./schemas/Event.yaml"
+                $ref: "#/components/schemas/Event"        
     '404':
       description: "No matching device and/or event"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "#/components/schemas/Error"        
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "#/components/schemas/Error"        
     '500':
       description: "Internal system error"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "#/components/schemas/Error"        
     default:
       description: "Request failed"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "#/components/schemas/Error"        

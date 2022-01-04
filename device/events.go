@@ -3,6 +3,9 @@ package device
 import (
 	"context"
 	"fmt"
+	"regexp"
+	"strconv"
+
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
 	"github.com/uhppoted/uhppoted-rest/errors"
@@ -21,94 +24,98 @@ type event struct {
 }
 
 func GetEvents(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	deviceID := ctx.Value("device-id").(uint32)
+	var deviceID uint32
 
-	rq := uhppoted.GetEventsRequest{
-		DeviceID: uhppoted.DeviceID(deviceID),
+	if matches := regexp.MustCompile("^/uhppote/device/([0-9]+)(?:$|/.*$)").FindStringSubmatch(r.URL.Path); matches == nil {
+		return http.StatusBadRequest, nil, errors.NewRESTError("get-events", "Missing device ID")
+	} else if v, err := strconv.ParseUint(matches[1], 10, 32); err != nil {
+		return http.StatusBadRequest, nil, errors.NewRESTError("get-events", fmt.Sprintf("Invalid device ID (%v)", matches[1]))
+	} else {
+		deviceID = uint32(v)
 	}
 
-	response, err := impl.GetEvents(rq)
+	first, last, current, err := impl.GetEventIndices(deviceID)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("get-events", fmt.Sprintf("Error retrieving event indices from %v", deviceID)),
 			err
 	}
 
-	if response == nil {
-		return http.StatusNotFound,
-			errors.NewRESTError("get-events", fmt.Sprintf("No events on device %v", deviceID)),
-			fmt.Errorf("No events on device %v", deviceID)
-	}
-
-	return http.StatusOK, &struct {
+	response := struct {
 		Events struct {
 			First   uint32 `json:"first,omitempty"`
 			Last    uint32 `json:"last,omitempty"`
 			Current uint32 `json:"current,omitempty"`
 		} `json:"events"`
-	}{
-		Events: response.Events,
-	}, nil
+	}{}
+
+	response.Events.First = first
+	response.Events.Last = last
+	response.Events.Current = current
+
+	return http.StatusOK, &response, nil
 }
 
 func GetEvent(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	var deviceID = ctx.Value("device-id").(uint32)
-	var index uint32
+	var url = r.URL.Path
+	var deviceID uint32
+	var index string
+
+	if matches := regexp.MustCompile("^/uhppote/device/([0-9]+)(?:$|/.*$)").FindStringSubmatch(url); matches == nil {
+		return http.StatusBadRequest, nil, errors.NewRESTError("get-events", "Missing device ID")
+	} else if v, err := strconv.ParseUint(matches[1], 10, 32); err != nil {
+		return http.StatusBadRequest, nil, errors.NewRESTError("get-events", fmt.Sprintf("Invalid device ID(%v)", matches[1]))
+	} else {
+		deviceID = uint32(v)
+	}
+
+	if matches := regexp.MustCompile("^/uhppote/device/[0-9]+/events/([0-9]+|first|last|current|next)$").FindStringSubmatch(url); matches == nil {
+		return http.StatusBadRequest, nil, errors.NewRESTError("get-events", "Missing event index")
+	} else {
+		index = matches[1]
+	}
 
 	// .. get event indices
-	events, err := impl.GetEvents(uhppoted.GetEventsRequest{DeviceID: uhppoted.DeviceID(deviceID)})
+	first, last, current, err := impl.GetEventIndices(deviceID)
 	if err != nil {
 		return http.StatusInternalServerError,
-			errors.NewRESTError("get-event", fmt.Sprintf("Error retrieving event indices from %v", deviceID)),
+			errors.NewRESTError("get-events", fmt.Sprintf("Error retrieving event indices from %v", deviceID)),
 			err
-	} else if events == nil {
-		return http.StatusNotFound,
-			errors.NewRESTError("get-events", fmt.Sprintf("No events on device %v", deviceID)),
-			fmt.Errorf("No events on device %v", deviceID)
 	}
 
-	switch v := ctx.Value("event-index").(type) {
-	case uint32:
-		index = v
+	// ... get event
+	switch index {
+	case "first":
+		return getEvent(impl, deviceID, first)
 
-	case string:
-		switch v {
-		case "first":
-			index = 0
+	case "last":
+		return getEvent(impl, deviceID, last)
 
-		case "last":
-			index = 0xffffffff
+	case "current":
+		return getEvent(impl, deviceID, current)
 
-		case "current":
-			index = events.Events.Current
-
-		case "next":
-			index = events.Events.Current + 1
-
-		default:
-			return http.StatusBadRequest,
-				errors.NewRESTError("get-event", "Missing/invalid event index"),
-				fmt.Errorf("Missing/invalid event index")
-		}
+	case "next":
+		return getNextEvent(impl, deviceID)
 
 	default:
-		return http.StatusBadRequest,
-			errors.NewRESTError("get-event", "Missing/invalid event index"),
-			fmt.Errorf("Missing/invalid event index")
+		if v, err := strconv.ParseUint(index, 10, 32); err != nil {
+			return http.StatusBadRequest,
+				nil,
+				errors.NewRESTError("get-events", fmt.Sprintf("Invalid event index (%v)", index))
+		} else {
+			return getEvent(impl, deviceID, uint32(v))
+		}
 	}
+}
 
-	rq := uhppoted.GetEventRequest{
-		DeviceID: uhppoted.DeviceID(deviceID),
-		Index:    index,
-	}
-
-	response, err := impl.GetEvent(rq)
+func getEvent(impl uhppoted.IUHPPOTED, deviceID uint32, index uint32) (int, interface{}, error) {
+	event, err := impl.GetEvent(deviceID, index)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("get-event", fmt.Sprintf("%v", err)),
 			err
-	} else if response == nil {
-		return http.StatusInternalServerError,
+	} else if event == nil {
+		return http.StatusNotFound,
 			errors.NewRESTError("get-event", fmt.Sprintf("Error retrieving event %v from %v", index, deviceID)),
 			fmt.Errorf("No response returned to request for event %v from device %v", index, deviceID)
 	}
@@ -116,6 +123,25 @@ func GetEvent(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWrite
 	return http.StatusOK, struct {
 		Event interface{} `json:"event"`
 	}{
-		Event: response.Event,
+		Event: event,
+	}, nil
+}
+
+func getNextEvent(impl uhppoted.IUHPPOTED, deviceID uint32) (int, interface{}, error) {
+	event, err := impl.GetNextEvent(deviceID)
+	if err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("get-event", fmt.Sprintf("%v", err)),
+			err
+	} else if event == nil {
+		return http.StatusNotFound,
+			errors.NewRESTError("get-event", fmt.Sprintf("Error retrieving 'next' event from %v", deviceID)),
+			fmt.Errorf("No response returned to request for 'next' event from device %v", deviceID)
+	}
+
+	return http.StatusOK, struct {
+		Event interface{} `json:"event"`
+	}{
+		Event: event,
 	}, nil
 }

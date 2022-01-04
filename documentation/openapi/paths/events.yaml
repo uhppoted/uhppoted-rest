@@ -1,10 +1,11 @@
 # paths/events.yaml
 
+evice/{device-id}/events:
 get:
   tags:
     - device
   summary: "Retrieves the device event list indices"
-  description: "Retrieves the indices of the first and last stored events"
+  description: "Retrieves the indices of the first, last and current events"
   operationId: getEvents
   parameters:
     - name: device-id
@@ -17,32 +18,32 @@ get:
         example: 405419896
   responses:
     '200':
-      description: "Event list"
+      description: "Event indices"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Events.yaml"
+              $ref: "#/components/schemas/Events"        
     '404':
       description: "No device with ID matching device-id"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "#/components/schemas/Error"        
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "#/components/schemas/Error"        
     '500':
       description: "Internal system error"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "#/components/schemas/Error"        
     default:
       description: "Request failed"
       content:
         application/json:
           schema:
-              $ref: "./schemas/Error.yaml"
+              $ref: "#/components/schemas/Error"        
