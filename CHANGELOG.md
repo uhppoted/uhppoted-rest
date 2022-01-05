@@ -4,6 +4,7 @@
 
 1. Migrated to uhppoted-lib `config` command implementation
 2. Reworked `get-events` to return `first`, `last` and `current` event indices.
+3. Reworked `get-event` to return `first`, `last`, `current` and `next` events.
 
 ### v0.7.1
 

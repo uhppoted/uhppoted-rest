@@ -6,22 +6,10 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
 	"github.com/uhppoted/uhppoted-rest/errors"
 	"net/http"
 )
-
-type event struct {
-	Index      uint32         `json:"event-id"`
-	Type       uint8          `json:"event-type"`
-	Granted    bool           `json:"access-granted"`
-	Door       uint8          `json:"door-id"`
-	DoorOpened bool           `json:"door-opened"`
-	UserID     uint32         `json:"user-id"`
-	Timestamp  types.DateTime `json:"timestamp"`
-	Result     uint8          `json:"event-result"`
-}
 
 func GetEvents(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	var deviceID uint32
