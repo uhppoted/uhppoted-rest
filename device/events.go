@@ -116,7 +116,7 @@ func getEvent(impl uhppoted.IUHPPOTED, deviceID uint32, index uint32) (int, inte
 }
 
 func getNextEvent(impl uhppoted.IUHPPOTED, deviceID uint32) (int, interface{}, error) {
-	event, err := impl.GetNextEvent(deviceID)
+	event, err := impl.GetEvents(deviceID, 1)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("get-event", fmt.Sprintf("%v", err)),
