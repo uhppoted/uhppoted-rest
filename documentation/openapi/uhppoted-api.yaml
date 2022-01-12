@@ -65,6 +65,9 @@ paths:
   /device/{device-id}/events:
     $ref: "./paths/events.yaml"
 
+  /device/{device-id}/events/{range}:
+    $ref: "./paths/events-range.yaml"
+
   /device/{device-id}/event/{event-id}:
     $ref: "./paths/event.yaml"
 

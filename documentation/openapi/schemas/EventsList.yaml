@@ -1,0 +1,33 @@
+# schemas/EventsList.yaml
+
+    EventsList:
+      properties:
+        first:
+          description: "Index of the first stored event. Not provided if device has no events."
+          type: number
+          format: uint32
+          example: 3
+        last:
+          description: "Index of the last stored event. Not provided if device has no events."
+          type: number
+          format: uint32
+          example: 78
+        current:
+          description: "Current event index"
+          type: number
+          format: uint32
+          example: 17
+        events:
+          description: "List of events"
+          type: array
+          items:
+            $ref: "./Event.yaml"                
+          example: [ { "event-id": 13,
+                       "event-type": 1,
+                       "access-granted": true,
+                       "door-id": 2,
+                       "user-id": 192837465,
+                       "timestamp": '2020-03-27 12:34:56',
+                       "event-result": 6
+                      }
+                    ]

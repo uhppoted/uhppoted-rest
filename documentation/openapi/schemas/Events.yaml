@@ -4,4 +4,4 @@
         - events
       properties:
         events:
-          $ref: "./EventRange.yaml"        
+          $ref: "./EventsList.yaml"        

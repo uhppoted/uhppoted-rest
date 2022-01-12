@@ -12,14 +12,32 @@ import (
 )
 
 func GetEvents(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	var deviceID uint32
+	url := r.URL.Path
+	count := 0
+	events := []interface{}{}
 
-	if matches := regexp.MustCompile("^/uhppote/device/([0-9]+)(?:$|/.*$)").FindStringSubmatch(r.URL.Path); matches == nil {
+	deviceID, err := getDeviceID(r)
+	if err != nil {
 		return http.StatusBadRequest, nil, errors.NewRESTError("get-events", "Missing device ID")
-	} else if v, err := strconv.ParseUint(matches[1], 10, 32); err != nil {
-		return http.StatusBadRequest, nil, errors.NewRESTError("get-events", fmt.Sprintf("Invalid device ID (%v)", matches[1]))
-	} else {
-		deviceID = uint32(v)
+	}
+
+	if matches := regexp.MustCompile("^/uhppote/device/[0-9]+/events/([0-9]+)$").FindStringSubmatch(url); matches != nil {
+		if N, err := strconv.ParseInt(matches[1], 10, 32); err == nil {
+			count = int(N)
+		}
+	}
+
+	if count > 0 {
+		list, err := impl.GetEvents(deviceID, count)
+		if err != nil {
+			return http.StatusInternalServerError,
+				errors.NewRESTError("get-event", fmt.Sprintf("%v", err)),
+				err
+		}
+
+		for _, e := range list {
+			events = append(events, e)
+		}
 	}
 
 	first, last, current, err := impl.GetEventIndices(deviceID)
@@ -31,30 +49,28 @@ func GetEvents(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWrit
 
 	response := struct {
 		Events struct {
-			First   uint32 `json:"first,omitempty"`
-			Last    uint32 `json:"last,omitempty"`
-			Current uint32 `json:"current,omitempty"`
+			First   uint32        `json:"first,omitempty"`
+			Last    uint32        `json:"last,omitempty"`
+			Current uint32        `json:"current,omitempty"`
+			Events  []interface{} `json:"events,omitempty"`
 		} `json:"events"`
 	}{}
 
 	response.Events.First = first
 	response.Events.Last = last
 	response.Events.Current = current
+	response.Events.Events = events
 
 	return http.StatusOK, &response, nil
 }
 
 func GetEvent(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	var url = r.URL.Path
-	var deviceID uint32
 	var index string
 
-	if matches := regexp.MustCompile("^/uhppote/device/([0-9]+)(?:$|/.*$)").FindStringSubmatch(url); matches == nil {
+	deviceID, err := getDeviceID(r)
+	if err != nil {
 		return http.StatusBadRequest, nil, errors.NewRESTError("get-events", "Missing device ID")
-	} else if v, err := strconv.ParseUint(matches[1], 10, 32); err != nil {
-		return http.StatusBadRequest, nil, errors.NewRESTError("get-events", fmt.Sprintf("Invalid device ID(%v)", matches[1]))
-	} else {
-		deviceID = uint32(v)
 	}
 
 	if matches := regexp.MustCompile("^/uhppote/device/[0-9]+/events/([0-9]+|first|last|current|next)$").FindStringSubmatch(url); matches == nil {

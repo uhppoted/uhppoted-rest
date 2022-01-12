@@ -64,17 +64,17 @@ TimeSegment:
 SpecialEvents:
   $ref: "./SpecialEvents.yaml"
 
+Events:
+  $ref: "./Events.yaml"
+
+EventsList:
+  $ref: "./EventsList.yaml"
+
 Event:
   $ref: "./Event.yaml"
 
 StatusEvent:
   $ref: "./StatusEvent.yaml"
-
-Events:
-  $ref: "./Events.yaml"
-
-EventRange:
-  $ref: "./EventRange.yaml"
 
 ACL:
   $ref: "./ACL.yaml"
