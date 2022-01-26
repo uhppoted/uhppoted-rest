@@ -1,4 +1,4 @@
-## v0.7.x
+## v0.7.2
 
 - [x] Use `uhppoted-lib` `config` command implementation
 - [x] Rework 'get-events' to return first, last and current event indices
@@ -8,6 +8,7 @@
       - [x] last
       - [x] current
       - [x] next
+- [x] Get modularized OpenAPI stuff to at least 'bundle'
 
 ## TODO
 

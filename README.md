@@ -18,6 +18,7 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.7.2    | Updated events handling (including removing any rollover)                                 |
 | v0.7.1    | Implemented PutTaskList API                                                               |
 | v0.7.0    | Added support for time profiles from the extended API                                     |
 | v0.6.12   | Added handling for `nil` events in `GetStatus`                                            |
@@ -85,8 +86,7 @@ The above commands build the `'uhppoted-rest` executable to the `bin` directory.
 | -------------------------------------------------------- | ------------------------------------------ |
 | [uhppote-core](https://github.com/uhppoted/uhppote-core) | Device level API implementation            |
 | [uhppoted-lib](https://github.com/uhppoted/uhppoted-lib) | common API for external                    |
-| golang.org/x/sys/windows                                 | Support for Windows services               |
-| golang.org/x/lint/golint                                 | Additional *lint* check for release builds |
+| golang.org/x/sys                                         | Support for Windows services               |
 
 ## uhppoted-rest
 
