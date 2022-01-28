@@ -1,14 +1,6 @@
-## v0.7.2
+## v0.7.x
 
-- [x] Use `uhppoted-lib` `config` command implementation
-- [x] Rework 'get-events' to return first, last and current event indices
-- [x] Rework 'get-event' to accept:
-      - [x] index
-      - [x] first
-      - [x] last
-      - [x] current
-      - [x] next
-- [x] Get modularized OpenAPI stuff to at least 'bundle'
+- [x] Add -trimpath to `go build`
 
 ## TODO
 

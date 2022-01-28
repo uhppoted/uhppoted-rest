@@ -75,7 +75,7 @@ If you prefer not to use `make`:
 git clone https://github.com/uhppoted/uhppoted-rest.git
 cd uhppoted-rest
 mkdir bin
-go build -o bin ./...
+go build -trimpath -o bin ./...
 ```
 
 The above commands build the `'uhppoted-rest` executable to the `bin` directory.
