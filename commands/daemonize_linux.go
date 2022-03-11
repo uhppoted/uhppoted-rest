@@ -51,7 +51,7 @@ Group={{.Group}}
 WantedBy=multi-user.target
 `
 
-const logRotateTemplate = `{{range .LogFiles}}{{.}} {
+const logRotateTemplate = `{{range .LogFiles}}{{.}} {{end} {
     daily
     rotate 30
     compress
@@ -64,7 +64,7 @@ const logRotateTemplate = `{{range .LogFiles}}{{.}} {
     postrotate
        /usr/bin/killall -HUP uhppoted
     endscript
-}{{end}}
+}
 `
 
 const confTemplate = `# UDP
