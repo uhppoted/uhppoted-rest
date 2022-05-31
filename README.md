@@ -18,6 +18,7 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.7.3    | Maintenance release for version compatibility with `uhppoted-core` `v0.7.3`               |
 | v0.7.2    | Updated events handling (including removing any rollover)                                 |
 | v0.7.1    | Implemented PutTaskList API                                                               |
 | v0.7.0    | Added support for time profiles from the extended API                                     |
