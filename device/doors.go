@@ -79,8 +79,7 @@ func SetDoorDelay(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseW
 		Delay *uint8 `json:"delay"`
 	}{}
 
-	err = json.Unmarshal(blob, &body)
-	if err != nil {
+	if err := json.Unmarshal(blob, &body); err != nil {
 		return http.StatusBadRequest,
 			errors.NewRESTError("set-door-delay", "Error parsing request"),
 			err
@@ -92,25 +91,16 @@ func SetDoorDelay(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseW
 			fmt.Errorf("Missing/invalid door delay value in request body (%s)", string(blob))
 	}
 
-	rq := uhppoted.SetDoorDelayRequest{
-		DeviceID: uhppoted.DeviceID(deviceID),
-		Door:     door,
-		Delay:    *body.Delay,
-	}
-
-	response, err := impl.SetDoorDelay(rq)
-	if err != nil {
+	if err := impl.SetDoorDelay(deviceID, door, *body.Delay); err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("set-door-delay", "Error setting device door delay"),
 			err
-	} else if response == nil {
-		return http.StatusOK, nil, nil
 	}
 
 	return http.StatusOK, &struct {
 		Delay uint8 `json:"delay"`
 	}{
-		Delay: response.Delay,
+		Delay: *body.Delay,
 	}, nil
 }
 
@@ -129,8 +119,7 @@ func SetDoorControl(impl uhppoted.IUHPPOTED, ctx context.Context, w http.Respons
 		Control *types.ControlState `json:"control"`
 	}{}
 
-	err = json.Unmarshal(blob, &body)
-	if err != nil {
+	if err := json.Unmarshal(blob, &body); err != nil {
 		return http.StatusBadRequest,
 			errors.NewRESTError("set-door-control", "Error parsing request"),
 			err
@@ -142,25 +131,16 @@ func SetDoorControl(impl uhppoted.IUHPPOTED, ctx context.Context, w http.Respons
 			fmt.Errorf("Missing/invalid door control value in request body (%s)", string(blob))
 	}
 
-	rq := uhppoted.SetDoorControlRequest{
-		DeviceID: uhppoted.DeviceID(deviceID),
-		Door:     door,
-		Control:  *body.Control,
-	}
-
-	response, err := impl.SetDoorControl(rq)
-	if err != nil {
+	if err := impl.SetDoorControl(deviceID, door, *body.Control); err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("set-door-control", "Error setting device door control"),
 			err
-	} else if response == nil {
-		return http.StatusOK, nil, nil
 	}
 
 	return http.StatusOK, &struct {
 		Control types.ControlState `json:"control"`
 	}{
-		Control: response.Control,
+		Control: *body.Control,
 	}, nil
 }
 
@@ -304,7 +284,7 @@ func getTimeProfile(impl uhppoted.IUHPPOTED, deviceID uint32, profileID uint8) (
 	return &response.TimeProfile, nil
 }
 
-func checkTimeProfile(deviceID, cardNumber uint32, profileID int, profile types.TimeProfile) error {
+func checkTimeProfile(deviceID, cardNumber uint32, profileID uint8, profile types.TimeProfile) error {
 	now := types.NewHHmm(time.Now().Hour(), time.Now().Minute())
 	today := types.Date(time.Now())
 

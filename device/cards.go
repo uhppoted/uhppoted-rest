@@ -121,7 +121,7 @@ func PutCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 			CardNumber: cardNumber,
 			From:       card.From,
 			To:         card.To,
-			Doors:      map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0},
+			Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
 		},
 	}
 
@@ -131,10 +131,12 @@ func PutCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 			if vv {
 				rq.Card.Doors[k] = 1
 			}
+
 		case int:
-			rq.Card.Doors[k] = vv
+			rq.Card.Doors[k] = uint8(vv)
+
 		case float64:
-			rq.Card.Doors[k] = int(vv)
+			rq.Card.Doors[k] = uint8(vv)
 		}
 	}
 

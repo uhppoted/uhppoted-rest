@@ -154,8 +154,8 @@ func PermissionsFromTable(table *api.Table) ([]permission, error) {
 
 		permissions = append(permissions, permission{
 			CardNumber: uint32(cardID),
-			From:       from,
-			To:         to,
+			From:       &from,
+			To:         &to,
 			Doors:      doors,
 		})
 	}
