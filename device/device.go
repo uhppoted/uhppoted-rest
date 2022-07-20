@@ -10,6 +10,12 @@ import (
 	"strconv"
 )
 
+var protocol string = ""
+
+func SetProtocol(version string) {
+	protocol = version
+}
+
 func reply(ctx context.Context, w http.ResponseWriter, response interface{}) {
 	b, err := json.Marshal(response)
 	if err != nil {

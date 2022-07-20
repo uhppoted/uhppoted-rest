@@ -3,18 +3,53 @@ package device
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"regexp"
 	"strconv"
 
+	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppoted-lib/locales"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
 	"github.com/uhppoted/uhppoted-rest/errors"
-	"net/http"
 )
 
-func GetEvents(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+type Event_v0 struct {
+	DeviceID   uint32         `json:"device-id"`
+	Index      uint32         `json:"event-id"`
+	Type       uint8          `json:"event-type"`
+	Granted    bool           `json:"access-granted"`
+	Door       uint8          `json:"door-id"`
+	Direction  uint8          `json:"direction"`
+	CardNumber uint32         `json:"card-number"`
+	Timestamp  types.DateTime `json:"timestamp"`
+	Reason     uint8          `json:"event-reason"`
+}
+
+type Event struct {
+	DeviceID uint32 `json:"device-id"`
+	Index    uint32 `json:"event-id"`
+	Type     struct {
+		Code        uint8  `json:"code"`
+		Description string `json:"description"`
+	} `json:"event-type"`
+	Granted   bool  `json:"access-granted"`
+	Door      uint8 `json:"door-id"`
+	Direction struct {
+		Code        uint8  `json:"code"`
+		Description string `json:"description"`
+	} `json:"direction"`
+	CardNumber uint32         `json:"card-number"`
+	Timestamp  types.DateTime `json:"timestamp"`
+	Reason     struct {
+		Code        uint8  `json:"code"`
+		Description string `json:"description"`
+	} `json:"event-reason"`
+}
+
+func GetEvents(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	url := r.URL.Path
 	count := 0
-	events := []interface{}{}
+	events := []any{}
 
 	deviceID, err := getDeviceID(r)
 	if err != nil {
@@ -49,10 +84,10 @@ func GetEvents(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWrit
 
 	response := struct {
 		Events struct {
-			First   uint32        `json:"first,omitempty"`
-			Last    uint32        `json:"last,omitempty"`
-			Current uint32        `json:"current,omitempty"`
-			Events  []interface{} `json:"events,omitempty"`
+			First   uint32 `json:"first,omitempty"`
+			Last    uint32 `json:"last,omitempty"`
+			Current uint32 `json:"current,omitempty"`
+			Events  []any  `json:"events,omitempty"`
 		} `json:"events"`
 	}{}
 
@@ -64,7 +99,7 @@ func GetEvents(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWrit
 	return http.StatusOK, &response, nil
 }
 
-func GetEvent(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetEvent(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	var url = r.URL.Path
 	var index string
 
@@ -73,7 +108,7 @@ func GetEvent(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWrite
 		return http.StatusBadRequest, nil, errors.NewRESTError("get-events", "Missing device ID")
 	}
 
-	if matches := regexp.MustCompile("^/uhppote/device/[0-9]+/events/([0-9]+|first|last|current|next)$").FindStringSubmatch(url); matches == nil {
+	if matches := regexp.MustCompile("^/uhppote/device/[0-9]+/event/([0-9]+|first|last|current|next)$").FindStringSubmatch(url); matches == nil {
 		return http.StatusBadRequest, nil, errors.NewRESTError("get-events", "Missing event index")
 	} else {
 		index = matches[1]
@@ -112,7 +147,7 @@ func GetEvent(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWrite
 	}
 }
 
-func getEvent(impl uhppoted.IUHPPOTED, deviceID uint32, index uint32) (int, interface{}, error) {
+func getEvent(impl uhppoted.IUHPPOTED, deviceID uint32, index uint32) (int, any, error) {
 	event, err := impl.GetEvent(deviceID, index)
 	if err != nil {
 		return http.StatusInternalServerError,
@@ -125,27 +160,86 @@ func getEvent(impl uhppoted.IUHPPOTED, deviceID uint32, index uint32) (int, inte
 	}
 
 	return http.StatusOK, struct {
-		Event interface{} `json:"event"`
+		Event any `json:"event"`
 	}{
-		Event: event,
+		Event: Transmogrify(*event),
 	}, nil
 }
 
-func getNextEvent(impl uhppoted.IUHPPOTED, deviceID uint32) (int, interface{}, error) {
-	event, err := impl.GetEvents(deviceID, 1)
+func getNextEvent(impl uhppoted.IUHPPOTED, deviceID uint32) (int, any, error) {
+	response := struct {
+		DeviceID uint32 `json:"device-id"`
+		Event    any    `json:"event"`
+	}{
+		DeviceID: deviceID,
+	}
+
+	events, err := impl.GetEvents(deviceID, 1)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("get-event", fmt.Sprintf("%v", err)),
 			err
-	} else if event == nil {
+	} else if events == nil {
 		return http.StatusNotFound,
 			errors.NewRESTError("get-event", fmt.Sprintf("Error retrieving 'next' event from %v", deviceID)),
 			fmt.Errorf("No response returned to request for 'next' event from device %v", deviceID)
+	} else if len(events) > 0 {
+		response.Event = Transmogrify(events[0])
 	}
 
-	return http.StatusOK, struct {
-		Event interface{} `json:"event"`
-	}{
-		Event: event,
-	}, nil
+	return http.StatusOK, &response, nil
+}
+
+func Transmogrify(e uhppoted.Event) any {
+	lookup := func(key string) string {
+		if v, ok := locales.Lookup(key); ok {
+			return v
+		}
+
+		return ""
+	}
+
+	if protocol == "v0" {
+		return Event_v0{
+			DeviceID:   e.DeviceID,
+			Index:      e.Index,
+			Type:       e.Type,
+			Granted:    e.Granted,
+			Door:       e.Door,
+			Direction:  e.Direction,
+			CardNumber: e.CardNumber,
+			Timestamp:  e.Timestamp,
+			Reason:     e.Reason,
+		}
+	}
+
+	return Event{
+		DeviceID: e.DeviceID,
+		Index:    e.Index,
+		Type: struct {
+			Code        uint8  `json:"code"`
+			Description string `json:"description"`
+		}{
+			Code:        e.Type,
+			Description: lookup(fmt.Sprintf("event.type.%v", e.Type)),
+		},
+		Granted: e.Granted,
+		Door:    e.Door,
+		Direction: struct {
+			Code        uint8  `json:"code"`
+			Description string `json:"description"`
+		}{
+			Code:        e.Direction,
+			Description: lookup(fmt.Sprintf("event.direction.%v", e.Direction)),
+		},
+		CardNumber: e.CardNumber,
+		Timestamp:  e.Timestamp,
+		Reason: struct {
+			Code        uint8  `json:"code"`
+			Description string `json:"description"`
+		}{
+			Code:        e.Reason,
+			Description: lookup(fmt.Sprintf("event.reason.%v", e.Reason)),
+		},
+	}
 }

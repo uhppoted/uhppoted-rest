@@ -8,6 +8,7 @@ import (
 	"math"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"sync"
 	"syscall"
 	"time"
@@ -15,6 +16,7 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-lib/config"
+	"github.com/uhppoted/uhppoted-lib/locales"
 	"github.com/uhppoted/uhppoted-rest/rest"
 )
 
@@ -96,6 +98,18 @@ func (cmd *Run) execute(f func(*config.Config) error) error {
 
 func (cmd *Run) run(c *config.Config, logger *log.Logger) {
 	logger.Printf("START")
+
+	// ... set (optional) locale
+	if c.REST.Locale != "" {
+		folder := filepath.Dir(c.REST.Locale)
+		file := filepath.Base(c.REST.Locale)
+		fs := os.DirFS(folder)
+		if err := locales.Load(fs, file); err != nil {
+			logger.Printf("WARN  %v", err)
+		} else {
+			logger.Printf("INFO  using translations from %v", c.REST.Locale)
+		}
+	}
 
 	// ... syscall SIG handlers
 
@@ -179,6 +193,7 @@ func (cmd *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.S
 		AuthGroups:                c.REST.Groups,
 		HOTPWindow:                c.REST.HOTP.Range,
 		HOTPCounters:              c.REST.HOTP.Counters,
+		Protocol:                  c.REST.Protocol,
 		OpenAPI: rest.OpenAPI{
 			Enabled:   c.OpenAPI.Enabled,
 			Directory: c.OpenAPI.Directory,

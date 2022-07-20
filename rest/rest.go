@@ -77,6 +77,9 @@ type RESTD struct {
 	//HOTPCounters is the filepath for the 'counters' file that stores the HOTP counters
 	HOTPCounters string
 
+	//Protocol version sets the version used for encoding JSON structs in responses
+	Protocol string
+
 	//OpenAPI runtime flags.
 	OpenAPI
 }
@@ -107,6 +110,8 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *log.Logger)
 	if err != nil {
 		log.Fatalf("Error initialising AuthProvider (%v)", err)
 	}
+
+	device.SetProtocol(r.Protocol)
 
 	d := dispatcher{
 		uhppote: u,

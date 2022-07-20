@@ -1,4 +1,15 @@
-## CHANGELOG
+# CHANGELOG
+
+## [Unreleased]
+
+### Changed
+
+1. Reworked event struct in `get-status`, `get-event` and `get-events` to include:
+   - event type code and description
+   - event reason code and description
+   - event direction code and description
+2. Added (optional) protocol version to configuration.
+3. Added (optional) translation locale to configuration.
 
 ## [v0.8.0] - 2022-07-01
 
