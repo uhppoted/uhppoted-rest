@@ -13,37 +13,19 @@ import (
 	"github.com/uhppoted/uhppoted-rest/errors"
 )
 
-type Event_v0 struct {
-	DeviceID   uint32         `json:"device-id"`
-	Index      uint32         `json:"event-id"`
-	Type       uint8          `json:"event-type"`
-	Granted    bool           `json:"access-granted"`
-	Door       uint8          `json:"door-id"`
-	Direction  uint8          `json:"direction"`
-	CardNumber uint32         `json:"card-number"`
-	Timestamp  types.DateTime `json:"timestamp"`
-	Reason     uint8          `json:"event-reason"`
-}
-
 type Event struct {
-	DeviceID uint32 `json:"device-id"`
-	Index    uint32 `json:"event-id"`
-	Type     struct {
-		Code        uint8  `json:"code"`
-		Description string `json:"description"`
-	} `json:"event-type"`
-	Granted   bool  `json:"access-granted"`
-	Door      uint8 `json:"door-id"`
-	Direction struct {
-		Code        uint8  `json:"code"`
-		Description string `json:"description"`
-	} `json:"direction"`
-	CardNumber uint32         `json:"card-number"`
-	Timestamp  types.DateTime `json:"timestamp"`
-	Reason     struct {
-		Code        uint8  `json:"code"`
-		Description string `json:"description"`
-	} `json:"event-reason"`
+	DeviceID      uint32         `json:"device-id"`
+	Index         uint32         `json:"event-id"`
+	Type          uint8          `json:"event-type"`
+	TypeText      string         `json:"event-type-text"`
+	Granted       bool           `json:"access-granted"`
+	Door          uint8          `json:"door-id"`
+	Direction     uint8          `json:"direction"`
+	DirectionText string         `json:"direction-text"`
+	CardNumber    uint32         `json:"card-number"`
+	Timestamp     types.DateTime `json:"timestamp"`
+	Reason        uint8          `json:"event-reason"`
+	ReasonText    string         `json:"event-reason-text"`
 }
 
 func GetEvents(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
@@ -199,47 +181,18 @@ func Transmogrify(e uhppoted.Event) any {
 		return ""
 	}
 
-	if protocol == "v0" {
-		return Event_v0{
-			DeviceID:   e.DeviceID,
-			Index:      e.Index,
-			Type:       e.Type,
-			Granted:    e.Granted,
-			Door:       e.Door,
-			Direction:  e.Direction,
-			CardNumber: e.CardNumber,
-			Timestamp:  e.Timestamp,
-			Reason:     e.Reason,
-		}
-	}
-
 	return Event{
-		DeviceID: e.DeviceID,
-		Index:    e.Index,
-		Type: struct {
-			Code        uint8  `json:"code"`
-			Description string `json:"description"`
-		}{
-			Code:        e.Type,
-			Description: lookup(fmt.Sprintf("event.type.%v", e.Type)),
-		},
-		Granted: e.Granted,
-		Door:    e.Door,
-		Direction: struct {
-			Code        uint8  `json:"code"`
-			Description string `json:"description"`
-		}{
-			Code:        e.Direction,
-			Description: lookup(fmt.Sprintf("event.direction.%v", e.Direction)),
-		},
-		CardNumber: e.CardNumber,
-		Timestamp:  e.Timestamp,
-		Reason: struct {
-			Code        uint8  `json:"code"`
-			Description string `json:"description"`
-		}{
-			Code:        e.Reason,
-			Description: lookup(fmt.Sprintf("event.reason.%v", e.Reason)),
-		},
+		DeviceID:      e.DeviceID,
+		Index:         e.Index,
+		Type:          e.Type,
+		TypeText:      lookup(fmt.Sprintf("event.type.%v", e.Type)),
+		Granted:       e.Granted,
+		Door:          e.Door,
+		Direction:     e.Direction,
+		DirectionText: lookup(fmt.Sprintf("event.direction.%v", e.Direction)),
+		CardNumber:    e.CardNumber,
+		Timestamp:     e.Timestamp,
+		Reason:        e.Reason,
+		ReasonText:    lookup(fmt.Sprintf("event.reason.%v", e.Reason)),
 	}
 }
