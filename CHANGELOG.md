@@ -1,15 +1,16 @@
 # CHANGELOG
 
-## [Unreleased]
+## [v0.8.1] - 2022-08-01
 
 ### Changed
-
 1. Reworked event struct in `get-status`, `get-event` and `get-events` to include:
    - event type code and description
    - event reason code and description
    - event direction code and description
 2. Added (optional) protocol version to configuration.
 3. Added (optional) translation locale to configuration.
+4. Resolved INADDR_ANY to interface IPv4 address for controller listener address health check.
+
 
 ## [v0.8.0] - 2022-07-01
 
