@@ -24,6 +24,8 @@ github.com/uhppoted/uhppoted-lib v0.8.1-0.20220726174717-616442c292f0 h1:lVN7mDd
 github.com/uhppoted/uhppoted-lib v0.8.1-0.20220726174717-616442c292f0/go.mod h1:+6t4CCOf5uZAJwkWs/xGRG3WxpZOVFnwkSMmJr2gaXE=
 github.com/uhppoted/uhppoted-lib v0.8.1 h1:lMsNTYN4VXjCSgxgsiUXasJ6AauCCjod55bZpVR5DmM=
 github.com/uhppoted/uhppoted-lib v0.8.1/go.mod h1:19sXIK1ABuhqtpEgQMrxp1LakKrV2QN3XN5ngLREcn8=
+github.com/uhppoted/uhppoted-lib v0.8.2-0.20220803173656-034525be3037 h1:RSiSpNzceDmwjEJJO44oLtklWSa1+TeRrnLkhr/cWo0=
+github.com/uhppoted/uhppoted-lib v0.8.2-0.20220803173656-034525be3037/go.mod h1:19sXIK1ABuhqtpEgQMrxp1LakKrV2QN3XN5ngLREcn8=
 golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 h1:XfKQ4OlFl8okEOr5UvAqFRVj8pY/4yfcXrddB8qAbU0=
 golang.org/x/sys v0.0.0-20220114195835-da31bd327af9/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a h1:dGzPydgVsqGcTRVwiLJ1jVbufYwmzD3LfVPLKsKg+0k=
