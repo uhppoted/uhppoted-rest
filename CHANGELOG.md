@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [Unreleased]
+
+### Changed
+1. Reworked RecordSpecialEvents to not use wrapped requests/responses
+
+
 ## [v0.8.1] - 2022-08-01
 
 ### Changed

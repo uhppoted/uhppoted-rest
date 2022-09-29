@@ -69,7 +69,7 @@ func (hotp *HOTP) Validate(uid, secret, otp string) error {
 		}
 
 		if subtle.ConstantTimeCompare([]byte(generated), []byte(otp)) == 1 {
-			hotp.counters.Store(uid, counter.(uint64)+1, hotp.counters.filepath, hotp.counters.log)
+			hotp.counters.Store(uid, counter.(uint64)+1, hotp.counters.filepath)
 			return nil
 		}
 

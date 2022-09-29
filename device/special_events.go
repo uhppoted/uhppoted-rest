@@ -43,25 +43,14 @@ func SpecialEvents(impl uhppoted.IUHPPOTED, ctx context.Context, w http.Response
 
 	enabled := *body.Enabled
 
-	rq := uhppoted.RecordSpecialEventsRequest{
-		DeviceID: uhppoted.DeviceID(deviceID),
-		Enable:   enabled,
-	}
-
-	response, err := impl.RecordSpecialEvents(rq)
+	updated, err := impl.RecordSpecialEvents(deviceID, enabled)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("special-events", "Error setting 'record special events'"),
 			err
 	}
 
-	if response == nil {
-		return http.StatusInternalServerError,
-			errors.NewRESTError("special-events", "Error setting 'record special events'"),
-			fmt.Errorf("No response to 'record special events' request")
-	}
-
-	if !response.Updated {
+	if !updated {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("special-events", "Failed to update 'record special events'"),
 			fmt.Errorf("Failed to update 'record special events'")

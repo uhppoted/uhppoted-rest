@@ -104,8 +104,8 @@ func NewAuthProvider(enabled bool, users, groups, counters string, window uint64
 			return nil, err
 		}
 
-		provider.users.Watch(users, logger)
-		provider.groups.Watch(groups, logger)
+		provider.users.Watch(users)
+		provider.groups.Watch(groups)
 		provider.hotp = hotp
 	}
 
