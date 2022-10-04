@@ -4,6 +4,7 @@
 
 ### Changed
 1. Reworked RecordSpecialEvents to not use wrapped requests/responses
+2. Added 'swipe open' and 'swipe close' event reasons to message internationalisation.
 
 
 ## [v0.8.1] - 2022-08-01
