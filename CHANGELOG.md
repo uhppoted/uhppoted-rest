@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [Unreleased]
+
+### Changed
+1. Updated _systemd_ unit file to wait on `network-online.target`
+
+
 ## [0.8.2](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.2) - 2022-10-14
 
 ### Changed

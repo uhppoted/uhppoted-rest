@@ -38,7 +38,8 @@ type info struct {
 const serviceTemplate = `[Unit]
 Description={{.Description}}
 Documentation={{.Documentation}}
-After=syslog.target network.target
+After=syslog.target network-online.target
+Wants=syslog.target network-online.target
 
 [Service]
 Type=simple
@@ -181,6 +182,10 @@ func (cmd *Daemonize) Execute(args ...interface{}) error {
 	fmt.Println()
 	fmt.Printf("     > sudo systemctl start  %s", SERVICE)
 	fmt.Printf("     > sudo systemctl status %s", SERVICE)
+	fmt.Println()
+	fmt.Println("   For some system configurations it may be necessary to also enable the service:")
+	fmt.Println()
+	fmt.Printf("     > sudo systemctl enable %v\n", SERVICE)
 	fmt.Println()
 	fmt.Println("   The firewall may need additional rules to allow UDP broadcast e.g. for UFW:")
 	fmt.Println()
