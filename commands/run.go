@@ -3,8 +3,7 @@ package commands
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"log"
+	syslog "log"
 	"math"
 	"os"
 	"os/signal"
@@ -13,10 +12,13 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-lib/config"
 	"github.com/uhppoted/uhppoted-lib/locales"
+	"github.com/uhppoted/uhppoted-lib/lockfile"
+
+	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppote-core/uhppote"
+	"github.com/uhppoted/uhppoted-rest/log"
 	"github.com/uhppoted/uhppoted-rest/rest"
 )
 
@@ -76,28 +78,41 @@ func (cmd *Run) Help() {
 func (cmd *Run) execute(f func(*config.Config) error) error {
 	conf := config.NewConfig()
 	if err := conf.Load(cmd.configuration); err != nil {
-		log.Printf("\n   WARN:  Could not load configuration (%v)\n\n", err)
+		log.Warnf("RUN", "Could not load configuration (%v)", err)
 	}
 
 	if err := os.MkdirAll(cmd.dir, os.ModeDir|os.ModePerm); err != nil {
 		return fmt.Errorf("Unable to create working directory '%v': %v", cmd.dir, err)
 	}
 
-	pid := fmt.Sprintf("%d\n", os.Getpid())
-
-	if err := ioutil.WriteFile(cmd.pidFile, []byte(pid), 0644); err != nil {
-		return fmt.Errorf("Unable to create pid file: %v\n", err)
+	// ... create lockfile
+	lockFile := config.Lockfile{
+		File:   cmd.pidFile,
+		Remove: conf.LockfileRemove,
 	}
 
-	defer func() {
-		os.Remove(cmd.pidFile)
-	}()
+	if lockFile.File == "" {
+		lockFile.File = filepath.Join(os.TempDir(), fmt.Sprintf("%s.pid", SERVICE))
+	}
 
+	if kraken, err := lockfile.MakeLockFile(lockFile); err != nil {
+		return err
+	} else {
+		defer func() {
+			kraken.Release()
+		}()
+
+		log.AddFatalHook(func() {
+			kraken.Release()
+		})
+	}
+
+	// ... run
 	return f(conf)
 }
 
-func (cmd *Run) run(c *config.Config, logger *log.Logger) {
-	logger.Printf("START")
+func (cmd *Run) run(c *config.Config, logger *syslog.Logger) {
+	log.Infof("RUN", "START")
 
 	// ... set (optional) locale
 	if c.REST.Locale != "" {
@@ -122,18 +137,18 @@ func (cmd *Run) run(c *config.Config, logger *log.Logger) {
 	for {
 		err := cmd.listen(c, logger, interrupt)
 		if err != nil {
-			log.Printf("ERROR: %v", err)
+			log.Errorf("RUN", "%v", err)
 			continue
 		}
 
-		log.Printf("exit\n")
+		log.Infof("RUN", "exit")
 		break
 	}
 
-	logger.Printf("STOP")
+	log.Infof("RUN", "STOP")
 }
 
-func (cmd *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.Signal) error {
+func (cmd *Run) listen(c *config.Config, logger *syslog.Logger, interrupt chan os.Signal) error {
 	s := state{
 		started: time.Now(),
 
@@ -244,7 +259,7 @@ func (cmd *Run) listen(c *config.Config, logger *log.Logger, interrupt chan os.S
 	}
 }
 
-func healthcheck(u uhppote.IUHPPOTE, st *state, l *log.Logger) {
+func healthcheck(u uhppote.IUHPPOTE, st *state, l *syslog.Logger) {
 	l.Printf("health-check")
 
 	now := time.Now()
@@ -278,7 +293,7 @@ func healthcheck(u uhppote.IUHPPOTE, st *state, l *log.Logger) {
 	st.healthcheck.touched = &now
 }
 
-func watchdog(u uhppote.IUHPPOTE, st *state, l *log.Logger) error {
+func watchdog(u uhppote.IUHPPOTE, st *state, l *syslog.Logger) error {
 	warnings := 0
 	errors := 0
 	healthCheckRunning := false
