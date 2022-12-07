@@ -2,9 +2,13 @@
 
 ## [Unreleased]
 
+### Added
+1. Added ARM64 to release build artifacts
+
 ### Changed
 1. Updated _systemd_ unit file to wait on `network-online.target`.
 2. Updated service lockfile to use `flock` _syscall_.
+3. Removed _zip_ files from release artifacts (no longer necessary)
 
 
 ## [0.8.2](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.2) - 2022-10-14
