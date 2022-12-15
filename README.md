@@ -18,6 +18,7 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.8.3    | Reworked lockfile to use `flock` syscall                                                  |
 | v0.8.2    | Maintenance release for version compatibility with `uhppoted-core` `v0.8.2`               |
 | v0.8.1    | Added human-readable event fields and fixed health check for INADDR_ANY addresses         |
 | v0.8.0    | Maintenance release for version compatibility with `uhppoted-core` `v0.8.0`               |

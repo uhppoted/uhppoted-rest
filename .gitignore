@@ -3,3 +3,4 @@ bin
 dist
 generated.yaml
 package-lock.json
+release-notes.md
