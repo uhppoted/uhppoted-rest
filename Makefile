@@ -31,13 +31,13 @@ build: format
 	mkdir -p bin
 	go build -trimpath -o bin ./...
 
-test: build
+test: 
 	go test ./...
 
-vet: build
+vet: 
 	go vet ./...
 
-lint: build
+lint: 
 	staticcheck ./...
 
 benchmark: build
@@ -49,7 +49,7 @@ coverage: build
 open-api:
 	swagger-cli bundle documentation/openapi/uhppoted-api.yaml --outfile generated.yaml --type yaml
 
-build-all: test vet
+build-all: build test vet lint
 	mkdir -p dist/$(DIST)/windows
 	mkdir -p dist/$(DIST)/darwin
 	mkdir -p dist/$(DIST)/linux
