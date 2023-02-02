@@ -84,7 +84,7 @@ func (cmd *Undaemonize) systemd(path string) error {
 		fmt.Printf("   > %s\n", out)
 	}
 	if err != nil {
-		return fmt.Errorf("ERROR: Failed to stop '%s' (%v)\n", "uhppoted-rest", err)
+		return fmt.Errorf("failed to stop '%s' (%v)\n", "uhppoted-rest", err)
 	}
 
 	fmt.Printf("   ... removing '%s'\n", path)
