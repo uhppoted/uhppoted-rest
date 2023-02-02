@@ -5,7 +5,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"log"
 	"regexp"
 	"strings"
 
@@ -43,7 +42,7 @@ func (p permission) String() string {
 	return fmt.Sprintf("resource:`%s` action:`%s`", p.resource, p.action)
 }
 
-func NewAuthProvider(enabled bool, users, groups, counters string, window uint64, logger *log.Logger) (*AuthProvider, error) {
+func NewAuthProvider(enabled bool, users, groups, counters string, window uint64) (*AuthProvider, error) {
 	separator := regexp.MustCompile(`\s*,\s*`)
 
 	f := func(value string) (interface{}, error) {
@@ -99,7 +98,7 @@ func NewAuthProvider(enabled bool, users, groups, counters string, window uint64
 			return nil, err
 		}
 
-		hotp, err := NewHOTP(8, counters, logger)
+		hotp, err := NewHOTP(8, counters)
 		if err != nil {
 			return nil, err
 		}

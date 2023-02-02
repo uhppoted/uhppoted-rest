@@ -3,7 +3,7 @@ package commands
 import (
 	"flag"
 	"fmt"
-	"log"
+	syslog "log"
 	"os"
 	"path/filepath"
 	"sync"
@@ -15,6 +15,7 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-lib/config"
 	filelogger "github.com/uhppoted/uhppoted-lib/eventlog"
+	"github.com/uhppoted/uhppoted-rest/log"
 )
 
 type Run struct {
@@ -30,7 +31,7 @@ type Run struct {
 type service struct {
 	name   string
 	conf   *config.Config
-	logger *log.Logger
+	logger *syslog.Logger
 	cmd    *Run
 }
 
@@ -63,7 +64,7 @@ func (r *Run) FlagSet() *flag.FlagSet {
 }
 
 func (r *Run) Execute(args ...interface{}) error {
-	log.Printf("uhppoted-rest daemon %s - %s (PID %d)\n", uhppote.VERSION, "Microsoft Windows", os.Getpid())
+	log.Infof("", "uhppoted-rest daemon %s - %s (PID %d)\n", uhppote.VERSION, "Microsoft Windows", os.Getpid())
 
 	f := func(c *config.Config) error {
 		return r.start(c)
@@ -73,20 +74,20 @@ func (r *Run) Execute(args ...interface{}) error {
 }
 
 func (r *Run) start(c *config.Config) error {
-	var logger *log.Logger
+	var logger *syslog.Logger
 
 	eventlogger, err := eventlog.Open("uhppoted-rest")
 	if err != nil {
 		events := filelogger.Ticker{Filename: r.logFile, MaxSize: r.logFileSize}
-		logger = log.New(&events, "", log.Ldate|log.Ltime|log.LUTC)
+		logger = syslog.New(&events, "", syslog.Ldate|syslog.Ltime|syslog.LUTC)
 	} else {
 		defer eventlogger.Close()
 
 		events := EventLog{eventlogger}
-		logger = log.New(&events, "uhppoted-rest", log.Ldate|log.Ltime|log.LUTC)
+		logger = syslog.New(&events, "uhppoted-rest", syslog.Ldate|syslog.Ltime|syslog.LUTC)
 	}
 
-	logger.Printf("uhppoted-rest service - start\n")
+	log.Infof("", "uhppoted-rest service - start\n")
 
 	if r.console {
 		r.run(c, logger)

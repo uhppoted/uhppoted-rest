@@ -4,6 +4,7 @@
 
 ### Added
 1. `doc.go` package overview documentation.
+2. Reworked logging to use uhppoted-lib/log package.
 
 
 ## [0.8.3](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.3) - 2022-12-16

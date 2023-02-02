@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
+	syslog "log"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -17,9 +17,11 @@ import (
 
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
+
 	"github.com/uhppoted/uhppoted-rest/acl"
 	"github.com/uhppoted/uhppoted-rest/auth"
 	"github.com/uhppoted/uhppoted-rest/device"
+	"github.com/uhppoted/uhppoted-rest/log"
 )
 
 // OpenAPI is a container for the runtime flags for the Open API user interface
@@ -97,7 +99,6 @@ type dispatcher struct {
 	uhppote     uhppote.IUHPPOTE
 	uhppoted    *uhppoted.UHPPOTED
 	devices     []uhppote.Device
-	log         *log.Logger
 	handlers    []handler
 	auth        auth.IAuth
 	openapi     http.Handler
@@ -105,10 +106,10 @@ type dispatcher struct {
 
 // Run configures and starts the REST daemon HTTP and HTTPS request listeners. It returns once the listen
 // connections have been closed.
-func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *log.Logger) {
-	auth, err := auth.NewAuthProvider(r.AuthEnabled, r.AuthUsers, r.AuthGroups, r.HOTPCounters, r.HOTPWindow, l)
+func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *syslog.Logger) {
+	auth, err := auth.NewAuthProvider(r.AuthEnabled, r.AuthUsers, r.AuthGroups, r.HOTPCounters, r.HOTPWindow)
 	if err != nil {
-		log.Fatalf("Error initialising AuthProvider (%v)", err)
+		log.Fatalf("RESTD", "error initialising AuthProvider (%v)", err)
 	}
 
 	device.SetProtocol(r.Protocol)
@@ -159,7 +160,6 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *log.Logger)
 			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/door/\\S.*$"), http.MethodDelete, acl.Revoke},
 		},
 
-		log:         l,
 		corsEnabled: r.CORSEnabled,
 		auth:        auth,
 		openapi:     http.NotFoundHandler(),
@@ -175,8 +175,10 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *log.Logger)
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			log.Printf("... listening on port %d\n", r.HTTPPort)
-			log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", r.HTTPPort), &d))
+			log.Infof("RESTD", "... listening on port %d\n", r.HTTPPort)
+			if err := http.ListenAndServe(fmt.Sprintf(":%d", r.HTTPPort), &d); err != nil {
+				log.Fatalf("RESTD", "%v", err)
+			}
 		}()
 	}
 
@@ -184,16 +186,16 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *log.Logger)
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			log.Printf("... listening on port %d\n", r.HTTPSPort)
+			log.Infof("RESTD", "... listening on port %d\n", r.HTTPSPort)
 
 			ca, err := ioutil.ReadFile(r.CACertificateFile)
 			if err != nil {
-				log.Fatal(err)
+				log.Fatalf("RESTD", "%v", err)
 			}
 
 			certificates := x509.NewCertPool()
 			if !certificates.AppendCertsFromPEM(ca) {
-				log.Fatal("Unable failed to parse CA certificate")
+				log.Fatalf("RESTD", "Unable failed to parse CA certificate")
 			}
 
 			tlsConfig := tls.Config{
@@ -223,7 +225,9 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *log.Logger)
 				TLSConfig: &tlsConfig,
 			}
 
-			log.Fatal(httpsd.ListenAndServeTLS(r.TLSCertificateFile, r.TLSKeyFile))
+			if err := httpsd.ListenAndServeTLS(r.TLSCertificateFile, r.TLSKeyFile); err != nil {
+				log.Fatalf("RESTD", "%v", err)
+			}
 		}()
 	}
 
@@ -275,21 +279,20 @@ func (d *dispatcher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if h.re.MatchString(url) && r.Method == h.method {
 			cards, err := d.authorized(r)
 			if err != nil {
-				d.log.Printf("WARN  %v", err)
+				log.Warnf("RESTD", "%v", err)
 				http.Error(w, "Access denied", http.StatusForbidden)
 				return
 			}
 
 			ctx := context.WithValue(context.Background(), "uhppote", d.uhppote)
 			ctx = context.WithValue(ctx, "devices", d.devices)
-			ctx = context.WithValue(ctx, "log", d.log)
 			ctx = context.WithValue(ctx, "compression", compression)
 			ctx = context.WithValue(ctx, "authorized-cards", cards)
 			ctx = parse(ctx, r)
 
 			status, response, err := h.fn(d.uhppoted, ctx, w, r)
 			if err != nil {
-				d.log.Printf("WARN  %v", err)
+				log.Warnf("RESTD", "%v", err)
 			}
 
 			reply(ctx, w, status, response)

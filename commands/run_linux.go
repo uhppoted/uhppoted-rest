@@ -2,7 +2,7 @@ package commands
 
 import (
 	"flag"
-	"log"
+	syslog "log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -10,6 +10,7 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-lib/config"
 	"github.com/uhppoted/uhppoted-lib/eventlog"
+	"github.com/uhppoted/uhppoted-rest/log"
 )
 
 type Run struct {
@@ -47,7 +48,7 @@ func (r *Run) FlagSet() *flag.FlagSet {
 }
 
 func (r *Run) Execute(args ...interface{}) error {
-	log.Printf("uhppoted-rest daemon %s - %s (PID %d)\n", uhppote.VERSION, "Linux", os.Getpid())
+	log.Infof("", "uhppoted-rest daemon %s - %s (PID %d)\n", uhppote.VERSION, "Linux", os.Getpid())
 
 	f := func(c *config.Config) error {
 		return r.exec(c)
@@ -57,11 +58,11 @@ func (r *Run) Execute(args ...interface{}) error {
 }
 
 func (r *Run) exec(c *config.Config) error {
-	logger := log.New(os.Stdout, "", log.LstdFlags)
+	logger := syslog.New(os.Stdout, "", syslog.LstdFlags)
 
 	if !r.console {
 		events := eventlog.Ticker{Filename: r.logFile, MaxSize: r.logFileSize}
-		logger = log.New(&events, "", log.Ldate|log.Ltime|log.LUTC)
+		logger = syslog.New(&events, "", syslog.Ldate|syslog.Ltime|syslog.LUTC)
 		rotate := make(chan os.Signal, 1)
 
 		signal.Notify(rotate, syscall.SIGHUP)
@@ -69,7 +70,7 @@ func (r *Run) exec(c *config.Config) error {
 		go func() {
 			for {
 				<-rotate
-				log.Printf("Rotating uhppoted-rest log file '%s'\n", r.logFile)
+				log.Infof("", "rotating uhppoted-rest log file '%s'\n", r.logFile)
 				events.Rotate()
 			}
 		}()

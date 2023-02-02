@@ -112,7 +112,7 @@ func (cmd *Run) execute(f func(*config.Config) error) error {
 }
 
 func (cmd *Run) run(c *config.Config, logger *syslog.Logger) {
-	log.Infof("RUN", "START")
+	log.Infof("", "START")
 
 	// ... set (optional) locale
 	if c.REST.Locale != "" {
@@ -120,9 +120,9 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger) {
 		file := filepath.Base(c.REST.Locale)
 		fs := os.DirFS(folder)
 		if err := locales.Load(fs, file); err != nil {
-			logger.Printf("WARN  %v", err)
+			log.Warnf("", "%v", err)
 		} else {
-			logger.Printf("INFO  using translations from %v", c.REST.Locale)
+			log.Infof("", "using translations from %v", c.REST.Locale)
 		}
 	}
 
@@ -249,11 +249,11 @@ func (cmd *Run) listen(c *config.Config, logger *syslog.Logger, interrupt chan o
 			}
 
 		case <-interrupt:
-			logger.Printf("... interrupt")
+			log.Infof("", "... interrupt")
 			return nil
 
 		case <-closed:
-			logger.Printf("... closed")
+			log.Infof("", "... closed")
 			return errors.New("Server error")
 		}
 	}

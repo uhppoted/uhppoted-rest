@@ -7,12 +7,13 @@ import (
 	"encoding/base32"
 	"encoding/binary"
 	"fmt"
-	"github.com/uhppoted/uhppoted-lib/kvs"
 	"hash"
-	"log"
 	"math"
 	"strconv"
 	"strings"
+
+	"github.com/uhppoted/uhppoted-lib/kvs"
+	"github.com/uhppoted/uhppoted-rest/log"
 )
 
 type HOTP struct {
@@ -20,13 +21,12 @@ type HOTP struct {
 	counters struct {
 		*kvs.KeyValueStore
 		filepath string
-		log      *log.Logger
 	}
 }
 
 const DIGITS = 6
 
-func NewHOTP(window uint64, counters string, logger *log.Logger) (*HOTP, error) {
+func NewHOTP(window uint64, counters string) (*HOTP, error) {
 	v := func(value string) (interface{}, error) {
 		return strconv.ParseUint(value, 10, 64)
 	}
@@ -36,16 +36,14 @@ func NewHOTP(window uint64, counters string, logger *log.Logger) (*HOTP, error) 
 		counters: struct {
 			*kvs.KeyValueStore
 			filepath string
-			log      *log.Logger
 		}{
 			kvs.NewKeyValueStore("hotp:counters", v),
 			counters,
-			logger,
 		},
 	}
 
 	if err := hotp.counters.LoadFromFile(counters); err != nil {
-		log.Printf("WARN  %v", err)
+		log.Warnf("HOTP", "%v", err)
 	}
 
 	return &hotp, nil

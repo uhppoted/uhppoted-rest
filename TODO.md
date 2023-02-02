@@ -1,8 +1,9 @@
 # TODO
 
-### IN PROGRESS
+- [ ] Replace logging with uhppoted-lib/log
+      - [x] Replace log.Printf with _log.Infof_,etc
 
-## TODO
+### TODO
 
 - [ ] Clean up REST error handling (complete 'mare, what was I thinking :-()
 - [ ] Replace internal healthcheck with implementation from `uhppoted-lib`
