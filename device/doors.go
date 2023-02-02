@@ -4,18 +4,20 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
+
 	"github.com/uhppoted/uhppoted-rest/errors"
+	"github.com/uhppoted/uhppoted-rest/lib"
 )
 
 func GetDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	deviceID := ctx.Value("device-id").(uint32)
-	door := ctx.Value("door").(uint8)
+	deviceID := ctx.Value(lib.DeviceID).(uint32)
+	door := ctx.Value(lib.Door).(uint8)
 
 	delay, err := impl.GetDoorDelay(uhppoted.GetDoorDelayRequest{
 		DeviceID: uhppoted.DeviceID(deviceID),
@@ -31,7 +33,7 @@ func GetDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 	if delay == nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("get-door", fmt.Sprintf("Error retrieving delay for door %d from device %v", door, deviceID)),
-			fmt.Errorf("No response returned to request for all cards from device %v", deviceID)
+			fmt.Errorf("no response returned to request for all cards from device %v", deviceID)
 	}
 
 	control, err := impl.GetDoorControl(uhppoted.GetDoorControlRequest{
@@ -65,10 +67,10 @@ func GetDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 }
 
 func SetDoorDelay(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	deviceID := ctx.Value("device-id").(uint32)
-	door := ctx.Value("door").(uint8)
+	deviceID := ctx.Value(lib.DeviceID).(uint32)
+	door := ctx.Value(lib.Door).(uint8)
 
-	blob, err := ioutil.ReadAll(r.Body)
+	blob, err := io.ReadAll(r.Body)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("set-door-delay", "Error reading request"),
@@ -88,7 +90,7 @@ func SetDoorDelay(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseW
 	if body.Delay == nil {
 		return http.StatusBadRequest,
 			errors.NewRESTError("set-door-delay", "Missing/invalid door delay"),
-			fmt.Errorf("Missing/invalid door delay value in request body (%s)", string(blob))
+			fmt.Errorf("missing/invalid door delay value in request body (%s)", string(blob))
 	}
 
 	if err := impl.SetDoorDelay(deviceID, door, *body.Delay); err != nil {
@@ -105,10 +107,10 @@ func SetDoorDelay(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseW
 }
 
 func SetDoorControl(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	deviceID := ctx.Value("device-id").(uint32)
-	door := ctx.Value("door").(uint8)
+	deviceID := ctx.Value(lib.DeviceID).(uint32)
+	door := ctx.Value(lib.Door).(uint8)
 
-	blob, err := ioutil.ReadAll(r.Body)
+	blob, err := io.ReadAll(r.Body)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("set-door-control", "Error reading request"),
@@ -128,7 +130,7 @@ func SetDoorControl(impl uhppoted.IUHPPOTED, ctx context.Context, w http.Respons
 	if body.Control == nil {
 		return http.StatusBadRequest,
 			errors.NewRESTError("set-door-control", "Missing/invalid door control"),
-			fmt.Errorf("Missing/invalid door control value in request body (%s)", string(blob))
+			fmt.Errorf("missing/invalid door control value in request body (%s)", string(blob))
 	}
 
 	if err := impl.SetDoorControl(deviceID, door, *body.Control); err != nil {
@@ -145,10 +147,10 @@ func SetDoorControl(impl uhppoted.IUHPPOTED, ctx context.Context, w http.Respons
 }
 
 func OpenDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	deviceID := ctx.Value("device-id").(uint32)
-	door := ctx.Value("door").(uint8)
+	deviceID := ctx.Value(lib.DeviceID).(uint32)
+	door := ctx.Value(lib.Door).(uint8)
 
-	blob, err := ioutil.ReadAll(r.Body)
+	blob, err := io.ReadAll(r.Body)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("open-door", "Error reading request"),
@@ -169,19 +171,19 @@ func OpenDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWrite
 	if door < 1 || door > 4 {
 		return http.StatusBadRequest,
 			errors.NewRESTError("open-door", fmt.Sprintf("Invalid door (%v)", door)),
-			fmt.Errorf("Missing/invalid door in request (%v)", door)
+			fmt.Errorf("missing/invalid door in request (%v)", door)
 	}
 
 	if body.CardNumber == nil {
 		return http.StatusBadRequest,
 			errors.NewRESTError("open-door", "Missing/invalid user ID"),
-			fmt.Errorf("Missing/invalid user ID in request body (%s)", string(blob))
+			fmt.Errorf("missing/invalid user ID in request body (%s)", string(blob))
 	}
 
 	if !authorized(ctx, *body.CardNumber) {
 		return http.StatusUnauthorized,
 			errors.NewRESTError("open-door", fmt.Sprintf("Not authorized for card %v", *body.CardNumber)),
-			fmt.Errorf("Not authorized for card %v", *body.CardNumber)
+			fmt.Errorf("not authorized for card %v", *body.CardNumber)
 	}
 
 	rq := uhppoted.GetCardRequest{
@@ -197,7 +199,7 @@ func OpenDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWrite
 	} else if response == nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("open-door", fmt.Sprintf("Card %v not valid for device %v", *body.CardNumber, deviceID)),
-			fmt.Errorf("GetCard returned <nil> for card %v, device %v", *body.CardNumber, deviceID)
+			fmt.Errorf("function GetCard returned <nil> for card %v, device %v", *body.CardNumber, deviceID)
 	} else {
 		card := response.Card
 
@@ -206,14 +208,14 @@ func OpenDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWrite
 		if card.From == nil || card.To == nil || today.Before(*card.From) || today.After(*card.To) {
 			return http.StatusUnauthorized,
 				errors.NewRESTError("open-door", fmt.Sprintf("Card %v is not valid for %v", card.CardNumber, today)),
-				fmt.Errorf("Card %v is not valid for %v", card, deviceID)
+				fmt.Errorf("card %v is not valid for %v", card, deviceID)
 		}
 
 		// Check door permissions
 		if card.Doors[door] < 1 || card.Doors[door] > 254 {
 			return http.StatusUnauthorized,
 				errors.NewRESTError("open-door", fmt.Sprintf("Card %v is does not have permission for %v, door %v", card.CardNumber, deviceID, door)),
-				fmt.Errorf("Card %v is not valid for %v, door %v", card, deviceID, door)
+				fmt.Errorf("card %v is not valid for %v, door %v", card, deviceID, door)
 		}
 
 		// Check time profile
@@ -289,11 +291,11 @@ func checkTimeProfile(deviceID, cardNumber uint32, profileID uint8, profile type
 	today := types.Date(time.Now())
 
 	if profile.From == nil || profile.To == nil || today.Before(*profile.From) || today.After(*profile.To) {
-		return fmt.Errorf("Card %v: time profile %v on device %v is not valid for %v", cardNumber, profileID, deviceID, today)
+		return fmt.Errorf("card %v: time profile %v on device %v is not valid for %v", cardNumber, profileID, deviceID, today)
 	}
 
 	if !profile.Weekdays[today.Weekday()] {
-		return fmt.Errorf("Card %v: time profile %v on device %v is not authorized for %v", cardNumber, profileID, deviceID, today.Weekday())
+		return fmt.Errorf("card %v: time profile %v on device %v is not authorized for %v", cardNumber, profileID, deviceID, today.Weekday())
 	}
 
 	for _, p := range []uint8{1, 2, 3} {
@@ -304,5 +306,5 @@ func checkTimeProfile(deviceID, cardNumber uint32, profileID uint8, profile type
 		}
 	}
 
-	return fmt.Errorf("Card %v: time profile %v on device %v is not authorized for %v", cardNumber, profileID, deviceID, now)
+	return fmt.Errorf("card %v: time profile %v on device %v is not authorized for %v", cardNumber, profileID, deviceID, now)
 }

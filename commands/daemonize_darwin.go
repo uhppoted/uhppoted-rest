@@ -279,14 +279,14 @@ func (cmd *Daemonize) firewall() error {
 
 	path, err := os.Executable()
 	if err != nil {
-		return fmt.Errorf("Failed to get path to executable: %v", err)
+		return fmt.Errorf("failed to get path to executable: %v", err)
 	}
 
 	command := exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--getglobalstate")
 	out, err := command.CombinedOutput()
 	fmt.Printf("   > %s", out)
 	if err != nil {
-		return fmt.Errorf("Failed to retrieve application firewall global state (%v)", err)
+		return fmt.Errorf("failed to retrieve application firewall global state (%v)", err)
 	}
 
 	if strings.Contains(string(out), "State = 1") {
@@ -294,28 +294,28 @@ func (cmd *Daemonize) firewall() error {
 		out, err = command.CombinedOutput()
 		fmt.Printf("   > %s", out)
 		if err != nil {
-			return fmt.Errorf("Failed to disable the application firewall (%v)", err)
+			return fmt.Errorf("failed to disable the application firewall (%v)", err)
 		}
 
 		command = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--add", path)
 		out, err = command.CombinedOutput()
 		fmt.Printf("   > %s", out)
 		if err != nil {
-			return fmt.Errorf("Failed to add 'uhppoted-rest' to the application firewall (%v)", err)
+			return fmt.Errorf("failed to add 'uhppoted-rest' to the application firewall (%v)", err)
 		}
 
 		command = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--unblockapp", path)
 		out, err = command.CombinedOutput()
 		fmt.Printf("   > %s", out)
 		if err != nil {
-			return fmt.Errorf("Failed to unblock 'uhppoted-rest' on the application firewall (%v)", err)
+			return fmt.Errorf("failed to unblock 'uhppoted-rest' on the application firewall (%v)", err)
 		}
 
 		command = exec.Command("/usr/libexec/ApplicationFirewall/socketfilterfw", "--setglobalstate", "on")
 		out, err = command.CombinedOutput()
 		fmt.Printf("   > %s", out)
 		if err != nil {
-			return fmt.Errorf("Failed to re-enable the application firewall (%v)", err)
+			return fmt.Errorf("failed to re-enable the application firewall (%v)", err)
 		}
 
 		fmt.Println()

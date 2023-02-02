@@ -8,12 +8,14 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-lib/acl"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
+
 	"github.com/uhppoted/uhppoted-rest/errors"
+	"github.com/uhppoted/uhppoted-rest/lib"
 )
 
 func GetACL(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	u := ctx.Value("uhppote").(uhppote.IUHPPOTE)
-	devices := ctx.Value("devices").([]uhppote.Device)
+	u := ctx.Value(lib.Uhppote).(uhppote.IUHPPOTE)
+	devices := ctx.Value(lib.Devices).([]uhppote.Device)
 
 	acl, errs := api.GetACL(u, devices)
 	if len(errs) > 0 {

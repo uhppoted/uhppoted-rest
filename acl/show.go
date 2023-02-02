@@ -3,14 +3,17 @@ package acl
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"regexp"
+	"strconv"
+
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-lib/acl"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
+
 	"github.com/uhppoted/uhppoted-rest/errors"
-	"net/http"
-	"regexp"
-	"strconv"
+	"github.com/uhppoted/uhppoted-rest/lib"
 )
 
 func Show(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
@@ -20,7 +23,7 @@ func Show(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r
 	if matches == nil || len(matches) < 2 {
 		return http.StatusBadRequest,
 			errors.NewRESTError("show", "Missing card number/door"),
-			fmt.Errorf("Missing card number/door in request URL %s)", url)
+			fmt.Errorf("missing card number/door in request URL %s)", url)
 	}
 
 	cardID, err := strconv.ParseUint(matches[1], 10, 32)
@@ -30,8 +33,8 @@ func Show(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r
 			err
 	}
 
-	u := ctx.Value("uhppote").(uhppote.IUHPPOTE)
-	devices := ctx.Value("devices").([]uhppote.Device)
+	u := ctx.Value(lib.Uhppote).(uhppote.IUHPPOTE)
+	devices := ctx.Value(lib.Devices).([]uhppote.Device)
 
 	acl, err := api.GetCard(u, devices, uint32(cardID))
 	if err != nil {

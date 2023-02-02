@@ -56,7 +56,7 @@ func PutTaskList(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWr
 	} else if response == nil {
 		return http.StatusInternalServerError,
 			rerrors.NewRESTError("set-task-list", fmt.Sprintf("Error updating task list on controller %v", deviceID)),
-			fmt.Errorf("No response returned to task list update on controller %v", deviceID)
+			fmt.Errorf("no response returned to task list update on controller %v", deviceID)
 	}
 
 	warnings := []string{}

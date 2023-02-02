@@ -7,16 +7,6 @@ import (
 	"github.com/uhppoted/uhppoted-lib/log"
 )
 
-type LogLevel int
-
-const (
-	none LogLevel = iota
-	debug
-	info
-	warn
-	errors
-)
-
 const f = "%-12v %v"
 
 func SetDebug(enabled bool) {

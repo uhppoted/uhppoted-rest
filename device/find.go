@@ -3,11 +3,14 @@ package device
 import (
 	"context"
 	"fmt"
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppoted-lib/uhppoted"
-	"github.com/uhppoted/uhppoted-rest/errors"
 	"net"
 	"net/http"
+
+	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppoted-lib/uhppoted"
+
+	"github.com/uhppoted/uhppoted-rest/errors"
+	"github.com/uhppoted/uhppoted-rest/lib"
 )
 
 type device struct {
@@ -44,7 +47,7 @@ func GetDevices(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWri
 }
 
 func GetDevice(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	deviceID := ctx.Value("device-id").(uint32)
+	deviceID := ctx.Value(lib.DeviceID).(uint32)
 
 	rq := uhppoted.GetDeviceRequest{
 		DeviceID: uhppoted.DeviceID(deviceID),

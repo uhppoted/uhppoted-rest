@@ -138,7 +138,7 @@ func getEvent(impl uhppoted.IUHPPOTED, deviceID uint32, index uint32) (int, any,
 	} else if event == nil {
 		return http.StatusNotFound,
 			errors.NewRESTError("get-event", fmt.Sprintf("Error retrieving event %v from %v", index, deviceID)),
-			fmt.Errorf("No response returned to request for event %v from device %v", index, deviceID)
+			fmt.Errorf("no response returned to request for event %v from device %v", index, deviceID)
 	}
 
 	return http.StatusOK, struct {
@@ -164,7 +164,7 @@ func getNextEvent(impl uhppoted.IUHPPOTED, deviceID uint32) (int, any, error) {
 	} else if events == nil {
 		return http.StatusNotFound,
 			errors.NewRESTError("get-event", fmt.Sprintf("Error retrieving 'next' event from %v", deviceID)),
-			fmt.Errorf("No response returned to request for 'next' event from device %v", deviceID)
+			fmt.Errorf("no response returned to request for 'next' event from device %v", deviceID)
 	} else if len(events) > 0 {
 		response.Event = Transmogrify(events[0])
 	}

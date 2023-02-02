@@ -4,15 +4,18 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
+
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
+
 	"github.com/uhppoted/uhppoted-rest/errors"
-	"io/ioutil"
-	"net/http"
+	"github.com/uhppoted/uhppoted-rest/lib"
 )
 
 func GetTime(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	deviceID := ctx.Value("device-id").(uint32)
+	deviceID := ctx.Value(lib.DeviceID).(uint32)
 
 	rq := uhppoted.GetTimeRequest{
 		DeviceID: uhppoted.DeviceID(deviceID),
@@ -35,9 +38,9 @@ func GetTime(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 }
 
 func SetTime(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	deviceID := ctx.Value("device-id").(uint32)
+	deviceID := ctx.Value(lib.DeviceID).(uint32)
 
-	blob, err := ioutil.ReadAll(r.Body)
+	blob, err := io.ReadAll(r.Body)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("set-time", "Error reading request"),
@@ -58,7 +61,7 @@ func SetTime(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 	if body.DateTime == nil {
 		return http.StatusBadRequest,
 			errors.NewRESTError("set-time", "Missing/invalid date/time"),
-			fmt.Errorf("Missing/invalid date-time in request body (%s)", string(blob))
+			fmt.Errorf("missing/invalid date-time in request body (%s)", string(blob))
 	}
 
 	rq := uhppoted.SetTimeRequest{

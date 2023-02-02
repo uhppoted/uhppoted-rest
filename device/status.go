@@ -7,7 +7,9 @@ import (
 
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
+
 	"github.com/uhppoted/uhppoted-rest/errors"
+	"github.com/uhppoted/uhppoted-rest/lib"
 )
 
 type Status struct {
@@ -23,7 +25,7 @@ type Status struct {
 }
 
 func GetStatus(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	deviceID := ctx.Value("device-id").(uint32)
+	deviceID := ctx.Value(lib.DeviceID).(uint32)
 
 	reply, err := impl.GetStatus(deviceID)
 	if err != nil {

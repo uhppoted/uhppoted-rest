@@ -132,7 +132,7 @@ func (a *AuthProvider) VerifyPassword(uid, pwd string) error {
 	hash := sha256.Sum256([]byte(pwd))
 	hashx := hex.EncodeToString(hash[:])
 	if hashx != u.(*user).Password {
-		return fmt.Errorf("Invalid credentials %v, %v", uid, pwd)
+		return fmt.Errorf("invalid credentials %v, %v", uid, pwd)
 	}
 
 	return nil

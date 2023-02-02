@@ -7,9 +7,9 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	syslog "log"
 	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -21,6 +21,7 @@ import (
 	"github.com/uhppoted/uhppoted-rest/acl"
 	"github.com/uhppoted/uhppoted-rest/auth"
 	"github.com/uhppoted/uhppoted-rest/device"
+	"github.com/uhppoted/uhppoted-rest/lib"
 	"github.com/uhppoted/uhppoted-rest/log"
 )
 
@@ -156,8 +157,8 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *syslog.Logg
 			handler{regexp.MustCompile("^/uhppote/acl$"), http.MethodGet, acl.GetACL},
 			handler{regexp.MustCompile("^/uhppote/acl$"), http.MethodPut, acl.PutACL},
 			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+$"), http.MethodGet, acl.Show},
-			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/door/\\S.*$"), http.MethodPut, acl.Grant},
-			handler{regexp.MustCompile("^/uhppote/acl/card/[0-9]+/door/\\S.*$"), http.MethodDelete, acl.Revoke},
+			handler{regexp.MustCompile(`^/uhppote/acl/card/[0-9]+/door/\S.*$`), http.MethodPut, acl.Grant},
+			handler{regexp.MustCompile(`^/uhppote/acl/card/[0-9]+/door/\S.*$`), http.MethodDelete, acl.Revoke},
 		},
 
 		corsEnabled: r.CORSEnabled,
@@ -188,7 +189,7 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *syslog.Logg
 			defer wg.Done()
 			log.Infof("RESTD", "... listening on port %d\n", r.HTTPSPort)
 
-			ca, err := ioutil.ReadFile(r.CACertificateFile)
+			ca, err := os.ReadFile(r.CACertificateFile)
 			if err != nil {
 				log.Fatalf("RESTD", "%v", err)
 			}
@@ -284,10 +285,10 @@ func (d *dispatcher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			ctx := context.WithValue(context.Background(), "uhppote", d.uhppote)
-			ctx = context.WithValue(ctx, "devices", d.devices)
-			ctx = context.WithValue(ctx, "compression", compression)
-			ctx = context.WithValue(ctx, "authorized-cards", cards)
+			ctx := context.WithValue(context.Background(), lib.Uhppote, d.uhppote)
+			ctx = context.WithValue(ctx, lib.Devices, d.devices)
+			ctx = context.WithValue(ctx, lib.Compression, compression)
+			ctx = context.WithValue(ctx, lib.AuthorizedCards, cards)
 			ctx = parse(ctx, r)
 
 			status, response, err := h.fn(d.uhppoted, ctx, w, r)
@@ -311,7 +312,7 @@ func parse(ctx context.Context, r *http.Request) context.Context {
 	if matches != nil {
 		deviceID, err := strconv.ParseUint(matches[1], 10, 32)
 		if err == nil {
-			ctx = context.WithValue(ctx, "device-id", uint32(deviceID))
+			ctx = context.WithValue(ctx, lib.DeviceID, uint32(deviceID))
 		}
 	}
 
@@ -319,7 +320,7 @@ func parse(ctx context.Context, r *http.Request) context.Context {
 	if matches != nil {
 		door, err := strconv.ParseUint(matches[1], 10, 8)
 		if err == nil {
-			ctx = context.WithValue(ctx, "door", uint8(door))
+			ctx = context.WithValue(ctx, lib.Door, uint8(door))
 		}
 	}
 
@@ -327,7 +328,7 @@ func parse(ctx context.Context, r *http.Request) context.Context {
 	if matches != nil {
 		cardNumber, err := strconv.ParseUint(matches[1], 10, 32)
 		if err == nil {
-			ctx = context.WithValue(ctx, "card-number", uint32(cardNumber))
+			ctx = context.WithValue(ctx, lib.CardNumber, uint32(cardNumber))
 		}
 	}
 
@@ -347,7 +348,7 @@ func reply(ctx context.Context, w http.ResponseWriter, status int, response inte
 
 	w.Header().Set("Content-Type", "application/json")
 
-	if len(b) > 1024 && ctx.Value("compression") == "gzip" {
+	if len(b) > 1024 && ctx.Value(lib.Compression) == "gzip" {
 		w.Header().Set("Content-Encoding", "gzip")
 		w.WriteHeader(status)
 		encoder := gzip.NewWriter(w)

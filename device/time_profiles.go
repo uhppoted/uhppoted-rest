@@ -41,7 +41,7 @@ func GetTimeProfile(impl uhppoted.IUHPPOTED, ctx context.Context, w http.Respons
 	} else if response == nil {
 		return http.StatusInternalServerError,
 			rerrors.NewRESTError("get-time-profile", fmt.Sprintf("Error retrieving time profile %v from controller %v", profileID, deviceID)),
-			fmt.Errorf("No response returned to request for time profile %v from controller %v", profileID, deviceID)
+			fmt.Errorf("no response returned to request for time profile %v from controller %v", profileID, deviceID)
 	}
 
 	return http.StatusOK, struct {
@@ -122,7 +122,7 @@ func GetTimeProfiles(impl uhppoted.IUHPPOTED, ctx context.Context, w http.Respon
 	} else if response == nil {
 		return http.StatusInternalServerError,
 			rerrors.NewRESTError("get-cards", fmt.Sprintf("Error retrieving time profiles from controller %v", deviceID)),
-			fmt.Errorf("No response returned to request for time profiles from controller %v", deviceID)
+			fmt.Errorf("no response returned to request for time profiles from controller %v", deviceID)
 	}
 
 	return http.StatusOK, &struct {
@@ -176,7 +176,7 @@ func PutTimeProfiles(impl uhppoted.IUHPPOTED, ctx context.Context, w http.Respon
 	} else if response == nil {
 		return http.StatusInternalServerError,
 			rerrors.NewRESTError("set-time-profiles", fmt.Sprintf("Error updating time profiles on controller %v", deviceID)),
-			fmt.Errorf("No response returned to time profile update on controller %v", deviceID)
+			fmt.Errorf("no response returned to time profile update on controller %v", deviceID)
 	}
 
 	warnings := []string{}
@@ -211,7 +211,7 @@ func ClearTimeProfiles(impl uhppoted.IUHPPOTED, ctx context.Context, w http.Resp
 	} else if response == nil {
 		return http.StatusInternalServerError,
 			rerrors.NewRESTError("clear-time-profiles", fmt.Sprintf("Error clearing all time profiles from %v", deviceID)),
-			fmt.Errorf("No response for clear-time-profiles request from controller %v", deviceID)
+			fmt.Errorf("no response for clear-time-profiles request from controller %v", deviceID)
 	}
 
 	if !response.Cleared {

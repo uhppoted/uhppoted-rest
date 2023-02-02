@@ -2,6 +2,10 @@
 
 - [ ] Replace logging with uhppoted-lib/log
       - [x] Replace log.Printf with _log.Infof_,etc
+      - [ ] Update watchdog and health-check to use uhppoted-lib/log
+      - [ ] Check daemonized event logging
+
+- [ ] staticcheck
 
 ### TODO
 

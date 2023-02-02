@@ -38,7 +38,7 @@ func (d *dispatcher) authorized(r *http.Request) ([]string, error) {
 			return d.bearer(resource, action, credentials)
 
 		default:
-			return []string{}, fmt.Errorf("Unsupported authorization scheme: '%s'", scheme)
+			return []string{}, fmt.Errorf("unsupported authorization scheme: '%s'", scheme)
 		}
 	}
 
@@ -85,7 +85,7 @@ func (d *dispatcher) bearer(resource, action, credentials string) ([]string, err
 
 	}
 
-	return []string{}, fmt.Errorf("Unsupported bearer token")
+	return []string{}, fmt.Errorf("unsupported bearer token")
 }
 
 func (d *dispatcher) hotp(resource, action, credentials string) ([]string, error) {

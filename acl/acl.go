@@ -29,11 +29,11 @@ func PermissionsToTable(p []permission) (*api.Table, error) {
 
 	for _, r := range p {
 		if r.From == nil {
-			return nil, fmt.Errorf("Card %v: missing 'start-date'", r.CardNumber)
+			return nil, fmt.Errorf("card %v: missing 'start-date'", r.CardNumber)
 		}
 
 		if r.To == nil {
-			return nil, fmt.Errorf("Card %v: missing 'end-date'", r.CardNumber)
+			return nil, fmt.Errorf("card %v: missing 'end-date'", r.CardNumber)
 		}
 
 		for _, door := range r.Doors {
@@ -48,8 +48,8 @@ func PermissionsToTable(p []permission) (*api.Table, error) {
 	for _, r := range p {
 		record := make([]string, len(header))
 		record[0] = fmt.Sprintf("%v", r.CardNumber)
-		record[1] = fmt.Sprintf("%s", r.From)
-		record[2] = fmt.Sprintf("%s", r.To)
+		record[1] = fmt.Sprintf("%v", r.From)
+		record[2] = fmt.Sprintf("%v", r.To)
 		for i := 3; i < len(record); i++ {
 			record[i] = "N"
 		}
@@ -66,7 +66,7 @@ func PermissionsToTable(p []permission) (*api.Table, error) {
 				continue
 			}
 
-			return nil, fmt.Errorf("Card %v: unindexed door '%v'", r.CardNumber, door.Door)
+			return nil, fmt.Errorf("card %v: unindexed door '%v'", r.CardNumber, door.Door)
 		}
 
 		records = append(records, record)
@@ -107,32 +107,32 @@ func PermissionsFromTable(table *api.Table) ([]permission, error) {
 	}
 
 	if index.cardnumber == 0 {
-		return nil, fmt.Errorf("Invalid ACL table - missing 'card number'")
+		return nil, fmt.Errorf("invalid ACL table - missing 'card number'")
 	}
 
 	if index.from == 0 {
-		return nil, fmt.Errorf("Invalid ACL table - missing 'from' date")
+		return nil, fmt.Errorf("invalid ACL table - missing 'from' date")
 	}
 
 	if index.to == 0 {
-		return nil, fmt.Errorf("Invalid ACL table - missing 'to' date")
+		return nil, fmt.Errorf("invalid ACL table - missing 'to' date")
 	}
 
 	permissions := []permission{}
 	for _, row := range table.Records {
 		cardID, err := strconv.ParseUint(row[index.cardnumber-1], 10, 32)
 		if err != nil {
-			return nil, fmt.Errorf("Invalid ACL table - invalid 'card number':%s (%w)", row[index.cardnumber-1], err)
+			return nil, fmt.Errorf("invalid ACL table - invalid 'card number':%s (%w)", row[index.cardnumber-1], err)
 		}
 
 		from, err := types.DateFromString(row[index.from-1])
 		if err != nil {
-			return nil, fmt.Errorf("Invalid ACL table - invalid 'from' date:%s (%w)", row[index.from-1], err)
+			return nil, fmt.Errorf("invalid ACL table - invalid 'from' date:%s (%w)", row[index.from-1], err)
 		}
 
 		to, err := types.DateFromString(row[index.to-1])
 		if err != nil {
-			return nil, fmt.Errorf("Invalid ACL table - invalid 'to' date:%s (%w)", row[index.to-1], err)
+			return nil, fmt.Errorf("invalid ACL table - invalid 'to' date:%s (%w)", row[index.to-1], err)
 		}
 
 		doors := []door{}

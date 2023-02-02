@@ -82,7 +82,7 @@ func (cmd *Run) execute(f func(*config.Config) error) error {
 	}
 
 	if err := os.MkdirAll(cmd.dir, os.ModeDir|os.ModePerm); err != nil {
-		return fmt.Errorf("Unable to create working directory '%v': %v", cmd.dir, err)
+		return fmt.Errorf("unable to create working directory '%v': %v", cmd.dir, err)
 	}
 
 	// ... create lockfile
@@ -254,7 +254,8 @@ func (cmd *Run) listen(c *config.Config, logger *syslog.Logger, interrupt chan o
 
 		case <-closed:
 			log.Infof("", "... closed")
-			return errors.New("Server error")
+
+			return errors.New("server error")
 		}
 	}
 }
@@ -265,22 +266,19 @@ func healthcheck(u uhppote.IUHPPOTE, st *state, l *syslog.Logger) {
 	now := time.Now()
 	devices := make(map[uint32]bool)
 
-	found, err := u.GetDevices()
-	if err != nil {
+	if found, err := u.GetDevices(); err != nil {
 		l.Printf("WARN  'keep-alive' error: %v", err)
-	}
-
-	if found != nil {
+	} else {
 		for _, id := range found {
 			devices[uint32(id.SerialNumber)] = true
 		}
 	}
 
-	for id, _ := range u.DeviceList() {
+	for id := range u.DeviceList() {
 		devices[id] = true
 	}
 
-	for id, _ := range devices {
+	for id := range devices {
 		s, err := u.GetStatus(id)
 		if err == nil {
 			st.devices.status.Store(id, status{
@@ -326,7 +324,7 @@ func watchdog(u uhppote.IUHPPOTE, st *state, l *syslog.Logger) error {
 	// Verify configured devices
 
 	if healthCheckRunning {
-		for id, _ := range u.DeviceList() {
+		for id := range u.DeviceList() {
 			alerted := alerts{
 				missing:      false,
 				unexpected:   false,
@@ -411,7 +409,7 @@ func watchdog(u uhppote.IUHPPOTE, st *state, l *syslog.Logger) error {
 			alerted.synchronized = v.(alerts).synchronized
 		}
 
-		for id, _ := range u.DeviceList() {
+		for id := range u.DeviceList() {
 			if id == key {
 				if alerted.unexpected {
 					l.Printf("ERROR UTC0311-L0x %s added to configuration", types.SerialNumber(key.(uint32)))

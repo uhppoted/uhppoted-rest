@@ -4,17 +4,19 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/uhppoted/uhppote-core/uhppote"
 	api "github.com/uhppoted/uhppoted-lib/acl"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
+
 	"github.com/uhppoted/uhppoted-rest/errors"
+	"github.com/uhppoted/uhppoted-rest/lib"
 )
 
 func PutACL(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
-	blob, err := ioutil.ReadAll(r.Body)
+	blob, err := io.ReadAll(r.Body)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("put-acl", "Error reading request"),
@@ -38,8 +40,8 @@ func PutACL(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter,
 			err
 	}
 
-	u := ctx.Value("uhppote").(uhppote.IUHPPOTE)
-	devices := ctx.Value("devices").([]uhppote.Device)
+	u := ctx.Value(lib.Uhppote).(uhppote.IUHPPOTE)
+	devices := ctx.Value(lib.Devices).([]uhppote.Device)
 
 	acl, _, err := api.ParseTable(table, devices, true)
 	if err != nil {
