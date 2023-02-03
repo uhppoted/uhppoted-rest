@@ -2,8 +2,9 @@
 
 - [ ] Replace logging with uhppoted-lib/log
       - [x] Replace log.Printf with _log.Infof_,etc
-      - [ ] Update watchdog and health-check to use uhppoted-lib/log
+      - [x] Update watchdog and health-check to use uhppoted-lib/log
       - [ ] Check daemonized event logging
+      - [ ] Update uhppoted-mqtt for watchdog and health-check
 
 - [ ] staticcheck
 

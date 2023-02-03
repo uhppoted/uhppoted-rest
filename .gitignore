@@ -1,6 +1,8 @@
 .DS_Store
 bin
 dist
+go.work
+go.work.sum
 generated.yaml
 package-lock.json
 release-notes.md
