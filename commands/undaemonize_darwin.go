@@ -131,7 +131,7 @@ func (cmd *Undaemonize) logrotate() error {
 }
 
 func (cmd *Undaemonize) rmdirs(d info) error {
-	dir := d.WorkingDirectory
+	dir := d.WorkDir
 
 	fmt.Printf("   ... removing '%s'\n", dir)
 

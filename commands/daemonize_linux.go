@@ -33,6 +33,7 @@ type info struct {
 	LogFiles         []string
 	BindAddress      *types.BindAddr
 	BroadcastAddress *types.BroadcastAddr
+	WorkDir          string
 }
 
 const serviceTemplate = `[Unit]

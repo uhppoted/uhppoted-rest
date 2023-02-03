@@ -18,7 +18,7 @@ type info struct {
 	Label            string
 	Executable       string
 	ConfigDirectory  string
-	WorkingDirectory string
+	WorkDir          string
 	BindAddress      *types.BindAddr
 	BroadcastAddress *types.BroadcastAddr
 }
@@ -110,7 +110,7 @@ func (cmd *Daemonize) Execute(args ...interface{}) error {
 		Label:            "com.github.uhppoted-rest",
 		Executable:       executable,
 		ConfigDirectory:  "/usr/local/etc/com.github.uhppoted",
-		WorkingDirectory: "/usr/local/var/com.github.uhppoted",
+		WorkDir:          "/usr/local/var/com.github.uhppoted",
 		BindAddress:      &bind,
 		BroadcastAddress: &broadcast,
 	}
@@ -160,7 +160,7 @@ func (cmd *Daemonize) launchd(d *info) error {
 		KeepAlive:         true,
 		RunAtLoad:         true,
 		StandardOutPath:   "/usr/local/var/log/com.github.uhppoted-rest.log",
-		StandardErrorPath: "/usr/local/var/log/com.github.uhppoted-rest.err",
+		StandardErrorPath: "/usr/local/var/log/com.github.uhppoted-rest.log",
 	}
 
 	if !os.IsNotExist(err) {

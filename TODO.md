@@ -6,7 +6,7 @@
       - [ ] Check daemonized event logging
       - [ ] Update uhppoted-mqtt for watchdog and health-check
 
-- [ ] staticcheck
+- [x] staticcheck
 
 ### TODO
 
