@@ -150,6 +150,7 @@ func (cmd *Daemonize) Execute(args ...interface{}) error {
 	d := info{
 		Description:      "UHPPOTE UTO311-L0x access card controllers service/daemon ",
 		Documentation:    "https://github.com/uhppoted/uhppoted-rest",
+		WorkDir:          "/var/uhppoted/rest",
 		Executable:       executable,
 		PID:              "/var/uhppoted/uhppoted-rest.pid",
 		User:             "uhppoted",

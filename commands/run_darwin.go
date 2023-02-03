@@ -74,9 +74,11 @@ func (cmd *Run) exec(c *config.Config) error {
 				events.Rotate()
 			}
 		}()
+
 	}
 
-	cmd.run(c, logger)
+	log.SetLogger(logger)
+	cmd.run(c)
 
 	return nil
 }

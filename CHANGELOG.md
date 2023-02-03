@@ -8,6 +8,7 @@
 
 ### Updated
 1. Fixed static-check lint errors and warnings.
+2. Fixed MacOS daemonize to log to StdOut (was logging to StdErr)
 
 
 ## [0.8.3](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.3) - 2022-12-16

@@ -7,7 +7,6 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"fmt"
-	syslog "log"
 	"net/http"
 	"os"
 	"regexp"
@@ -107,7 +106,7 @@ type dispatcher struct {
 
 // Run configures and starts the REST daemon HTTP and HTTPS request listeners. It returns once the listen
 // connections have been closed.
-func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *syslog.Logger) {
+func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device) {
 	auth, err := auth.NewAuthProvider(r.AuthEnabled, r.AuthUsers, r.AuthGroups, r.HOTPCounters, r.HOTPWindow)
 	if err != nil {
 		log.Fatalf("RESTD", "error initialising AuthProvider (%v)", err)
@@ -120,7 +119,6 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device, l *syslog.Logg
 		uhppoted: &uhppoted.UHPPOTED{
 			UHPPOTE:         u,
 			ListenBatchSize: 32,
-			Log:             l,
 		},
 		devices: devices,
 

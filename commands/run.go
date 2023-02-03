@@ -3,7 +3,6 @@ package commands
 import (
 	"errors"
 	"fmt"
-	syslog "log"
 	"math"
 	"os"
 	"os/signal"
@@ -111,7 +110,7 @@ func (cmd *Run) execute(f func(*config.Config) error) error {
 	return f(conf)
 }
 
-func (cmd *Run) run(c *config.Config, logger *syslog.Logger) {
+func (cmd *Run) run(c *config.Config) {
 	log.Infof("", "START")
 
 	// ... set (optional) locale
@@ -135,7 +134,7 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger) {
 	// ... listen forever
 
 	for {
-		err := cmd.listen(c, logger, interrupt)
+		err := cmd.listen(c, interrupt)
 		if err != nil {
 			log.Errorf("RUN", "%v", err)
 			continue
@@ -148,7 +147,7 @@ func (cmd *Run) run(c *config.Config, logger *syslog.Logger) {
 	log.Infof("RUN", "STOP")
 }
 
-func (cmd *Run) listen(c *config.Config, logger *syslog.Logger, interrupt chan os.Signal) error {
+func (cmd *Run) listen(c *config.Config, interrupt chan os.Signal) error {
 	s := state{
 		started: time.Now(),
 
@@ -216,7 +215,7 @@ func (cmd *Run) listen(c *config.Config, logger *syslog.Logger, interrupt chan o
 	}
 
 	go func() {
-		restd.Run(u, devices, logger)
+		restd.Run(u, devices)
 	}()
 
 	defer rest.Close()

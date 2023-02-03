@@ -76,7 +76,8 @@ func (r *Run) exec(c *config.Config) error {
 		}()
 	}
 
-	r.run(c, logger)
+	log.SetLogger(logger)
+	r.run(c)
 
 	return nil
 }

@@ -29,10 +29,9 @@ type Run struct {
 }
 
 type service struct {
-	name   string
-	conf   *config.Config
-	logger *syslog.Logger
-	cmd    *Run
+	name string
+	conf *config.Config
+	cmd  *Run
 }
 
 type EventLog struct {
@@ -87,18 +86,18 @@ func (r *Run) start(c *config.Config) error {
 		logger = syslog.New(&events, "uhppoted-rest", syslog.Ldate|syslog.Ltime|syslog.LUTC)
 	}
 
+	log.SetLogger(logger)
 	log.Infof("", "uhppoted-rest service - start\n")
 
 	if r.console {
-		r.run(c, logger)
+		r.run(c)
 		return nil
 	}
 
 	uhppoted := service{
-		name:   "uhppoted-rest",
-		conf:   c,
-		logger: logger,
-		cmd:    r,
+		name: "uhppoted-rest",
+		conf: c,
+		cmd:  r,
 	}
 
 	logger.Printf("uhppoted-rest service - starting\n")
@@ -121,7 +120,7 @@ func (r *Run) start(c *config.Config) error {
 }
 
 func (s *service) Execute(args []string, r <-chan svc.ChangeRequest, status chan<- svc.Status) (ssec bool, errno uint32) {
-	s.logger.Printf("uhppoted-rest service - Execute\n")
+	log.Debugf("", "uhppoted-rest service - Execute")
 
 	const commands = svc.AcceptStop | svc.AcceptShutdown
 
@@ -134,14 +133,14 @@ func (s *service) Execute(args []string, r <-chan svc.ChangeRequest, status chan
 	go func() {
 		defer wg.Done()
 		for {
-			err := s.cmd.listen(s.conf, s.logger, interrupt)
+			err := s.cmd.listen(s.conf, interrupt)
 
 			if err != nil {
-				s.logger.Printf("ERROR: %v", err)
+				log.Errorf("", "%v", err)
 				continue
 			}
 
-			s.logger.Printf("exit\n")
+			log.Infof("", "exit")
 			break
 		}
 	}()
@@ -152,33 +151,33 @@ loop:
 	for {
 		select {
 		case c := <-r:
-			s.logger.Printf("uhppoted-rest service - select: %v  %v\n", c.Cmd, c.CurrentStatus)
+			log.Debugf("", "uhppoted-rest service - select: %v  %v\n", c.Cmd, c.CurrentStatus)
 			switch c.Cmd {
 			case svc.Interrogate:
-				s.logger.Printf("uhppoted-rest service - svc.Interrogate %v\n", c.CurrentStatus)
+				log.Debugf("", "uhppoted-rest service - svc.Interrogate %v\n", c.CurrentStatus)
 				status <- c.CurrentStatus
 
 			case svc.Stop:
 				interrupt <- syscall.SIGINT
-				s.logger.Printf("uhppoted-rest service- svc.Stop\n")
+				log.Infof("", "uhppoted-rest service- svc.Stop\n")
 				break loop
 
 			case svc.Shutdown:
 				interrupt <- syscall.SIGTERM
-				s.logger.Printf("uhppoted-rest service - svc.Shutdown\n")
+				log.Infof("", "uhppoted-rest service - svc.Shutdown\n")
 				break loop
 
 			default:
-				s.logger.Printf("uhppoted-rest service - svc.????? (%v)\n", c.Cmd)
+				log.Debugf("", "uhppoted-rest service - svc.????? (%v)\n", c.Cmd)
 			}
 		}
 	}
 
-	s.logger.Printf("uhppoted-rest service - stopping\n")
+	log.Infof("", "uhppoted-rest service - stopping")
 	status <- svc.Status{State: svc.StopPending}
 	wg.Wait()
 	status <- svc.Status{State: svc.Stopped}
-	s.logger.Printf("uhppoted-rest service - stopped\n")
+	log.Infof("", "uhppoted-rest service - stopped\n")
 
 	return false, 0
 }
