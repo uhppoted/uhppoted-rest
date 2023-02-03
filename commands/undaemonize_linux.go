@@ -70,7 +70,7 @@ func (cmd *Undaemonize) Execute(args ...interface{}) error {
 
 	fmt.Println("   ... uhppoted-rest unregistered as a systemd service")
 	fmt.Println()
-	fmt.Println("   Log files in directory /var/uhppoted/log and configuration files in /etc/uhppoted should be removed manually")
+	fmt.Println("   Log files in directory /var/log/uhppoted and configuration files in /etc/uhppoted should be removed manually")
 	fmt.Println()
 
 	return nil
