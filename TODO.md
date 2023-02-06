@@ -7,10 +7,10 @@
             - [x] MacOS
             - [x] Linux
             - [ ] Windows
-      - [ ] Update uhppoted-mqtt for watchdog and health-check
+      - [x] Update uhppoted-mqtt for watchdog and health-check
 
 - [x] staticcheck
-- [ ] Linux daemonize overwrites uhppoted.conf
+- [ ] Install overwrites uhppoted.conf
 
 ### TODO
 

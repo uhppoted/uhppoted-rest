@@ -75,15 +75,16 @@ func (r *Run) Execute(args ...interface{}) error {
 func (r *Run) start(c *config.Config) error {
 	var logger *syslog.Logger
 
-	eventlogger, err := eventlog.Open("uhppoted-rest")
-	if err != nil {
-		events := filelogger.Ticker{Filename: r.logFile, MaxSize: r.logFileSize}
-		logger = syslog.New(&events, "", syslog.Ldate|syslog.Ltime|syslog.LUTC)
-	} else {
+	if r.console {
+		logger = syslog.New(os.Stdout, "", syslog.LstdFlags)
+	} else if eventlogger, err := eventlog.Open(SERVICE); err == nil {
 		defer eventlogger.Close()
 
 		events := EventLog{eventlogger}
-		logger = syslog.New(&events, "uhppoted-rest", syslog.Ldate|syslog.Ltime|syslog.LUTC)
+		logger = syslog.New(&events, SERVICE, syslog.Ldate|syslog.Ltime|syslog.LUTC)
+	} else {
+		events := filelogger.Ticker{Filename: r.logFile, MaxSize: r.logFileSize}
+		logger = syslog.New(&events, "", syslog.Ldate|syslog.Ltime|syslog.LUTC)
 	}
 
 	log.SetLogger(logger)
@@ -101,9 +102,8 @@ func (r *Run) start(c *config.Config) error {
 	}
 
 	logger.Printf("uhppoted-rest service - starting\n")
-	err = svc.Run("uhppoted-rest", &uhppoted)
 
-	if err != nil {
+	if err := svc.Run("uhppoted-rest", &uhppoted); err != nil {
 		fmt.Printf("   Unable to execute ServiceManager.Run request (%v)\n", err)
 		fmt.Println()
 		fmt.Println("   To run uhppoted-rest as a command line application, type:")
@@ -116,6 +116,7 @@ func (r *Run) start(c *config.Config) error {
 	}
 
 	logger.Printf("uhppoted-rest daemon - started\n")
+
 	return nil
 }
 
