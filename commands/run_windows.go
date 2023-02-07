@@ -149,28 +149,25 @@ func (s *service) Execute(args []string, r <-chan svc.ChangeRequest, status chan
 	status <- svc.Status{State: svc.Running, Accepts: commands}
 
 loop:
-	for {
-		select {
-		case c := <-r:
-			log.Debugf("", "uhppoted-rest service - select: %v  %v\n", c.Cmd, c.CurrentStatus)
-			switch c.Cmd {
-			case svc.Interrogate:
-				log.Debugf("", "uhppoted-rest service - svc.Interrogate %v\n", c.CurrentStatus)
-				status <- c.CurrentStatus
+	for c := range r {
+		log.Debugf("", "uhppoted-rest service - select: %v  %v\n", c.Cmd, c.CurrentStatus)
+		switch c.Cmd {
+		case svc.Interrogate:
+			log.Debugf("", "uhppoted-rest service - svc.Interrogate %v\n", c.CurrentStatus)
+			status <- c.CurrentStatus
 
-			case svc.Stop:
-				interrupt <- syscall.SIGINT
-				log.Infof("", "uhppoted-rest service- svc.Stop\n")
-				break loop
+		case svc.Stop:
+			interrupt <- syscall.SIGINT
+			log.Infof("", "uhppoted-rest service- svc.Stop\n")
+			break loop
 
-			case svc.Shutdown:
-				interrupt <- syscall.SIGTERM
-				log.Infof("", "uhppoted-rest service - svc.Shutdown\n")
-				break loop
+		case svc.Shutdown:
+			interrupt <- syscall.SIGTERM
+			log.Infof("", "uhppoted-rest service - svc.Shutdown\n")
+			break loop
 
-			default:
-				log.Debugf("", "uhppoted-rest service - svc.????? (%v)\n", c.Cmd)
-			}
+		default:
+			log.Debugf("", "uhppoted-rest service - svc.????? (%v)\n", c.Cmd)
 		}
 	}
 

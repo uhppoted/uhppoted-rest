@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"text/template"
 
 	"golang.org/x/sys/windows/svc/eventlog"
 	"golang.org/x/sys/windows/svc/mgr"
@@ -28,32 +27,6 @@ type info struct {
 	BindAddress      *types.BindAddr
 	BroadcastAddress *types.BroadcastAddr
 }
-
-const confTemplate = `# UDP
-bind.address = {{.BindAddress}}
-broadcast.address = {{.BroadcastAddress}}
-
-# REST API
-rest.http.enabled = false
-rest.http.port = 8080
-rest.https.enabled = true
-rest.https.port = 8443
-rest.tls.key = {{.WorkDir}}\rest\uhppoted.key
-rest.tls.certificate = {{.WorkDir}}\rest\uhppoted.cert
-rest.tls.ca = {{.WorkDir}}\rest\ca.cert
-
-# OPEN API
-# openapi.enabled = false
-# openapi.directory = {{.WorkDir}}\rest\openapi
-
-# DEVICES
-# Example configuration for UTO311-L04 with serial number 405419896
-# UT0311-L0x.405419896.address = 192.168.1.100:60000
-# UT0311-L0x.405419896.door.1 = Front Door
-# UT0311-L0x.405419896.door.2 = Side Door
-# UT0311-L0x.405419896.door.3 = Garage
-# UT0311-L0x.405419896.door.4 = Workshop
-`
 
 func NewDaemonize() *Daemonize {
 	return &Daemonize{
@@ -184,12 +157,32 @@ func (cmd *Daemonize) mkdirs(d *info) error {
 
 func (cmd *Daemonize) conf(d *info) error {
 	path := filepath.Join(d.WorkDir, "uhppoted.conf")
-	t := template.Must(template.New("uhppoted.conf").Parse(confTemplate))
-	var b strings.Builder
 
 	fmt.Printf("   ... creating '%s'\n", path)
 
-	if err := t.Execute(&b, d); err != nil {
+	// initialise config from existing uhppoted.conf
+	cfg := config.NewConfig()
+	if f, err := os.Open(path); err != nil {
+		if !os.IsNotExist(err) {
+			return err
+		}
+	} else {
+		err := cfg.Read(f)
+		f.Close()
+		if err != nil {
+			return err
+		}
+	}
+
+	// replace line endings and write back config with any updated information
+	var b strings.Builder
+	var replacer = strings.NewReplacer(
+		"\r\n", "\r\n",
+		"\r", "\r\n",
+		"\n", "\r\n",
+	)
+
+	if err := cfg.Write(&b); err != nil {
 		return err
 	}
 
@@ -199,12 +192,6 @@ func (cmd *Daemonize) conf(d *info) error {
 	}
 
 	defer f.Close()
-
-	replacer := strings.NewReplacer(
-		"\r\n", "\r\n",
-		"\r", "\r\n",
-		"\n", "\r\n",
-	)
 
 	if _, err = f.Write([]byte(replacer.Replace(b.String()))); err != nil {
 		return err

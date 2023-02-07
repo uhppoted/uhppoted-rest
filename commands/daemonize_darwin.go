@@ -38,32 +38,6 @@ const newsyslog = `#logfilename                                       [owner:gro
 {{range .}}{{.LogFile}}  :              644   30     10000  @T00  J     {{.PID}}
 {{end}}`
 
-const confTemplate = `# UDP
-bind.address = {{.BindAddress}}
-broadcast.address = {{.BroadcastAddress}}
-
-# REST API
-rest.http.enabled = false
-rest.http.port = 8080
-rest.https.enabled = true
-rest.https.port = 8443
-rest.tls.key = {{.ConfigDirectory}}/rest/uhppoted.key
-rest.tls.certificate = {{.ConfigDirectory}}/rest/uhppoted.cert
-rest.tls.ca = {{.ConfigDirectory}}/rest/ca.cert
-
-# OPEN API
-# openapi.enabled = false
-# openapi.directory = {{.WorkDir}}\rest\openapi
-
-# DEVICES
-# Example configuration for UTO311-L04 with serial number 405419896
-# UT0311-L0x.405419896.address = 192.168.1.100:60000
-# UT0311-L0x.405419896.door.1 = Front Door
-# UT0311-L0x.405419896.door.2 = Side Door
-# UT0311-L0x.405419896.door.3 = Garage
-# UT0311-L0x.405419896.door.4 = Workshop
-`
-
 type Daemonize struct {
 }
 
@@ -225,17 +199,29 @@ func (cmd *Daemonize) mkdirs() error {
 
 func (cmd *Daemonize) conf(d *info) error {
 	path := filepath.Join(d.ConfigDirectory, "uhppoted.conf")
-	t := template.Must(template.New("uhppoted.conf").Parse(confTemplate))
 
 	fmt.Printf("   ... creating '%s'\n", path)
-	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-	if err != nil {
+
+	// initialise config from existing uhppoted.conf
+	cfg := config.NewConfig()
+	if f, err := os.Open(path); err != nil && !os.IsNotExist(err) {
 		return err
+	} else if err == nil {
+		err := cfg.Read(f)
+		f.Close()
+		if err != nil {
+			return err
+		}
 	}
 
-	defer f.Close()
+	// write back config with any updated information
+	if f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644); err != nil {
+		return err
+	} else {
+		defer f.Close()
 
-	return t.Execute(f, d)
+		return cfg.Write(f)
+	}
 }
 
 func (cmd *Daemonize) logrotate() error {
