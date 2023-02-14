@@ -5,6 +5,7 @@
 ### Added
 1. `doc.go` package overview documentation.
 2. Reworked logging to use uhppoted-lib/log package.
+3. Added PIN support to get-card and put-card APIs.
 
 ### Updated
 1. Fixed static-check lint errors and warnings.
