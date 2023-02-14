@@ -22,6 +22,7 @@ type Run struct {
 	configuration string
 	dir           string
 	pidFile       string
+	logLevel      string
 	logFile       string
 	logFileSize   int
 	console       bool
@@ -48,16 +49,17 @@ var RUN = Run{
 	debug:         false,
 }
 
-func (r *Run) FlagSet() *flag.FlagSet {
+func (cmd *Run) FlagSet() *flag.FlagSet {
 	flagset := flag.NewFlagSet("", flag.ExitOnError)
 
-	flagset.StringVar(&r.configuration, "config", r.configuration, "Sets the configuration file path")
-	flagset.StringVar(&r.dir, "dir", r.dir, "Work directory")
-	flagset.StringVar(&r.pidFile, "pid", r.pidFile, "Sets the service PID file path")
-	flagset.StringVar(&r.logFile, "logfile", r.logFile, "Sets the log file path")
-	flagset.IntVar(&r.logFileSize, "logfilesize", r.logFileSize, "Sets the log file size before forcing a log rotate")
-	flagset.BoolVar(&r.console, "console", r.console, "Run as command-line application")
-	flagset.BoolVar(&r.debug, "debug", r.debug, "Displays internal information for diagnosing errors")
+	flagset.StringVar(&cmd.configuration, "config", cmd.configuration, "Sets the configuration file path")
+	flagset.StringVar(&cmd.dir, "dir", cmd.dir, "Work directory")
+	flagset.StringVar(&cmd.pidFile, "pid", cmd.pidFile, "Sets the service PID file path")
+	flagset.StringVar(&cmd.logLevel, "log-level", cmd.logLevel, "Sets the logging level (none/debug/info/warn/error)")
+	flagset.StringVar(&cmd.logFile, "logfile", cmd.logFile, "Sets the log file path")
+	flagset.IntVar(&cmd.logFileSize, "logfilesize", cmd.logFileSize, "Sets the log file size before forcing a log rotate")
+	flagset.BoolVar(&cmd.console, "console", cmd.console, "Run as command-line application")
+	flagset.BoolVar(&cmd.debug, "debug", cmd.debug, "Displays internal information for diagnosing errors")
 
 	return flagset
 }
@@ -72,10 +74,10 @@ func (r *Run) Execute(args ...interface{}) error {
 	return r.execute(f)
 }
 
-func (r *Run) start(c *config.Config) error {
+func (cmd *Run) start(c *config.Config) error {
 	var logger *syslog.Logger
 
-	if r.console {
+	if cmd.console {
 		logger = syslog.New(os.Stdout, "", syslog.LstdFlags)
 	} else if eventlogger, err := eventlog.Open(SERVICE); err == nil {
 		defer eventlogger.Close()
@@ -83,22 +85,23 @@ func (r *Run) start(c *config.Config) error {
 		events := EventLog{eventlogger}
 		logger = syslog.New(&events, SERVICE, syslog.Ldate|syslog.Ltime|syslog.LUTC)
 	} else {
-		events := filelogger.Ticker{Filename: r.logFile, MaxSize: r.logFileSize}
+		events := filelogger.Ticker{Filename: cmd.logFile, MaxSize: cmd.logFileSize}
 		logger = syslog.New(&events, "", syslog.Ldate|syslog.Ltime|syslog.LUTC)
 	}
 
 	log.SetLogger(logger)
+	log.SetLevel(cmd.logLevel)
 	log.Infof("", "uhppoted-rest service - start\n")
 
-	if r.console {
-		r.run(c)
+	if cmd.console {
+		cmd.run(c)
 		return nil
 	}
 
 	uhppoted := service{
 		name: "uhppoted-rest",
 		conf: c,
-		cmd:  r,
+		cmd:  cmd,
 	}
 
 	logger.Printf("uhppoted-rest service - starting\n")

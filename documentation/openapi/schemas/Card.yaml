@@ -5,6 +5,7 @@ required:
   - start-date
   - end-date
   - doors
+  - PIN
 properties:
   card-number:  
     type: number
@@ -15,12 +16,12 @@ properties:
     type: string
     format: yyyy-MM-dd
     description: "First date card is valid"
-    example: "2020-01-01"
+    example: "2023-01-01"
   end-date:  
     type: string
     format: yyyy-MM-dd
     description: "Last date card is valid"
-    example: "2020-12-31"
+    example: "2023-12-31"
   doors:  
     type: object
     items:
@@ -29,3 +30,8 @@ properties:
        description: "Door access permitted"
     example: { "1":true, "2":false, "3":false, "4":true }
     description: "List of doors and access"
+  PIN:  
+    type: number
+    format: uint32
+    description: "(optional) keypad PIN code in the range 0 to 999999"
+    example: 7531

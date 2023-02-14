@@ -109,6 +109,7 @@ func PutCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 		From       *types.Date           `json:"start-date"`
 		To         *types.Date           `json:"end-date"`
 		Doors      map[uint8]interface{} `json:"doors"`
+		PIN        uint32                `json:"PIN,omitempty"`
 	}{}
 
 	if err = json.Unmarshal(blob, &card); err != nil {
@@ -117,32 +118,36 @@ func PutCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 			err
 	}
 
-	rq := uhppoted.PutCardRequest{
-		DeviceID: uhppoted.DeviceID(deviceID),
-		Card: types.Card{
-			CardNumber: cardNumber,
-			From:       card.From,
-			To:         card.To,
-			Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
-		},
+	if card.PIN > 999999 {
+		return http.StatusBadRequest,
+			errors.NewRESTError("put-card", fmt.Sprintf("Invalid card PIN (%v)", card.PIN)),
+			err
+	}
+
+	c := types.Card{
+		CardNumber: cardNumber,
+		From:       card.From,
+		To:         card.To,
+		Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
+		PIN:        types.PIN(card.PIN),
 	}
 
 	for k, v := range card.Doors {
 		switch vv := v.(type) {
 		case bool:
 			if vv {
-				rq.Card.Doors[k] = 1
+				c.Doors[k] = 1
 			}
 
 		case int:
-			rq.Card.Doors[k] = uint8(vv)
+			c.Doors[k] = uint8(vv)
 
 		case float64:
-			rq.Card.Doors[k] = uint8(vv)
+			c.Doors[k] = uint8(vv)
 		}
 	}
 
-	if _, err = impl.PutCard(rq); err != nil {
+	if _, err = impl.PutCard(deviceID, c); err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("put-card", fmt.Sprintf("Error storing card %v to device %v", cardNumber, deviceID)),
 			err

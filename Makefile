@@ -101,7 +101,7 @@ undaemonize: build
 	sudo $(CMD) undaemonize
 
 run: build
-	$(CMD) --console
+	$(CMD) --log-level debug --console
 
 swagger: 
 	docker run --detach --publish 80:8080 --rm swaggerapi/swagger-editor 

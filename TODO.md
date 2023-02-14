@@ -1,22 +1,20 @@
 # TODO
 
-- [ ] Replace logging with uhppoted-lib/log
-      - [x] Replace log.Printf with _log.Infof_,etc
-      - [x] Update watchdog and health-check to use uhppoted-lib/log
-      - [x] Check daemonized event logging
-            - [x] MacOS
-            - [x] Linux
-            - [ ] Windows
-      - [x] Update uhppoted-mqtt for watchdog and health-check
+- [x] Install overwrites uhppoted.conf
+- [x] Card + PIN support
+      - [x] get-card
+      - [x] put-card
+      - [x] get-acl/get-acl-card
+      - [x] put-acl
+      - [x] revoke
+      - [x] OpenAPI
 
-- [x] staticcheck
-- [ ] Install overwrites uhppoted.conf
+- [x] OpenAPI: break up spec into sections
 
 ### TODO
 
 - [ ] Clean up REST error handling (complete 'mare, what was I thinking :-()
 - [ ] Replace internal healthcheck with implementation from `uhppoted-lib`
-- [ ] OpenAPI: break up spec into sections
 - [ ] OpenAPI: use fixed map keys for doors, segments
 - [ ] OpenAPI: fix all the new semantic/syntax errors
 - [ ] GetEvent - range
