@@ -40,7 +40,7 @@ func (cmd *Run) FlagSet() *flag.FlagSet {
 	flagset.StringVar(&cmd.configuration, "config", cmd.configuration, "Sets the configuration file path")
 	flagset.StringVar(&cmd.dir, "dir", cmd.dir, "Work directory")
 	flagset.StringVar(&cmd.pidFile, "pid", cmd.pidFile, "Sets the service PID file path")
-	flagset.StringVar(&cmd.logLevel, "log-level", cmd.logLevel, "Sets the logging level (none/debug/info/warn/error)")
+	flagset.StringVar(&cmd.logLevel, "log-level", cmd.logLevel, "Sets the logging level (debug/info/warn/error)")
 	flagset.StringVar(&cmd.logFile, "logfile", cmd.logFile, "Sets the log file path")
 	flagset.IntVar(&cmd.logFileSize, "logfilesize", cmd.logFileSize, "Sets the log file size before forcing a log rotate")
 	flagset.BoolVar(&cmd.console, "console", cmd.console, "Writes log entries to stdout")
