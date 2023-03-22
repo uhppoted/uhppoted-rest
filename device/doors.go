@@ -205,7 +205,7 @@ func OpenDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWrite
 
 		// Check start/end validity dates
 		today := types.Date(time.Now())
-		if card.From == nil || card.To == nil || today.Before(*card.From) || today.After(*card.To) {
+		if card.From.IsZero() || card.To.IsZero() || today.Before(card.From) || today.After(card.To) {
 			return http.StatusUnauthorized,
 				errors.NewRESTError("open-door", fmt.Sprintf("Card %v is not valid for %v", card.CardNumber, today)),
 				fmt.Errorf("card %v is not valid for %v", card, deviceID)

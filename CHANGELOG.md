@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Updated
+1. Replaced card `From` and `To` field pointers with zero values.
+
 
 ## [0.8.4](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.4) - 2023-03-17
 

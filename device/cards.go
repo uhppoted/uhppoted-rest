@@ -106,8 +106,8 @@ func PutCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 
 	card := struct {
 		CardNumber uint32                `json:"card-number"`
-		From       *types.Date           `json:"start-date"`
-		To         *types.Date           `json:"end-date"`
+		From       types.Date            `json:"start-date"`
+		To         types.Date            `json:"end-date"`
 		Doors      map[uint8]interface{} `json:"doors"`
 		PIN        uint32                `json:"PIN,omitempty"`
 	}{}

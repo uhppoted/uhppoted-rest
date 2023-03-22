@@ -2,6 +2,7 @@ DIST   ?= development
 DEBUG  ?= --debug
 CMD     = ./bin/uhppoted-rest
 
+.DEFAULT_GOAL := test
 .PHONY: update
 .PHONY: update-release
 .PHONY: open-api
