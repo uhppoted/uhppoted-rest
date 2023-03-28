@@ -79,4 +79,3 @@ func TestPermissionsToTable(t *testing.T) {
 		t.Errorf("Incorrect ACL table\n   expected: %+v\n   got:      %+v", expected, *table)
 	}
 }
-

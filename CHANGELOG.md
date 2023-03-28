@@ -4,6 +4,8 @@
 
 ### Updated
 1. Replaced card `From` and `To` field pointers with zero values.
+2. Reworked `put-acl` to discard cards with invalid _start_ and _end_ dates.
+3. Updated OpenAPI specification.
 
 
 ## [0.8.4](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.4) - 2023-03-17

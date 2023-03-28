@@ -54,7 +54,7 @@ properties:
     type: string
     format: yyyy-mm-dd HH:mm:ss
     description: "Current system date and time"
-    example: "2020-03-28 15:32:29"
+    example: "2023-03-28 15:32:29"
   packet-number:  
     type: integer
     format: uint8
@@ -91,6 +91,6 @@ properties:
         access-granted: true, 
         door: 2, 
         user-id: 762424255,  
-        timestamp: "2021-04-14 12:34:56", 
+        timestamp: "2023-01-14 12:34:56", 
         reason: 6 
       }

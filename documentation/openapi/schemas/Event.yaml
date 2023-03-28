@@ -34,12 +34,12 @@ properties:
     type: number
     format: uint32
     description: "User ID, typically card number"
-    example: 192837465
+    example: 10058400
   timestamp:  
     type: string
     format: yyyy-MM-dd HH:mm:ss
     description: "Event timestamp"
-    example: "2020-03-27 12:34:56"
+    example: "2023-03-27 12:34:56"
   event-result:  
     type: number
     format: uint8

@@ -9,5 +9,5 @@ properties:
        type: number
        format: uint32
        description: "Card number"
-    example: [ 192837465, 564738291 ]
+    example: [ 10058400, 10058401 ]
     description: "List of card numbers"

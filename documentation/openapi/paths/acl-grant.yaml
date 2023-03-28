@@ -13,8 +13,8 @@ put:
       required: true
       schema:
         type: integer
-        format: uint32åç
-        example: 192837465
+        format: uint32
+        example: 10058400
     - name: door
       in: path
       description: "Door ID ('ALL' will grant access to all doors)"
@@ -67,7 +67,7 @@ delete:
       schema:
         type: integer
         format: uint32
-        example: 192837465
+        example: 10058400
     - name: door
       in: path
       description: "Door ID ('ALL' will revoke access to all doors)"

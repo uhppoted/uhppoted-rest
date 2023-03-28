@@ -11,17 +11,17 @@ properties:
     type: number
     format: uint32
     description: "Card number"
-    example: 192837465
+    example: 10058400
   start-date:  
     type: string
     format: yyyy-MM-dd
     description: "First date card access is enabled (as from 00:00)"
-    example: "2020-01-01"
+    example: "2023-01-01"
   end-date:  
     type: string
     format: yyyy-MM-dd
     description: "Last date card is enabled (until 23:59)"
-    example: "2020-12-31"
+    example: "2023-12-31"
   doors:
     type: array
     items:

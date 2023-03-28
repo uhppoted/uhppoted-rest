@@ -7,4 +7,4 @@ properties:
     type: number
     format: uint32
     description: "Card number"
-    example: 1928374646
+    example: 10058400

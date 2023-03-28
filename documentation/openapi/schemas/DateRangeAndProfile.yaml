@@ -8,12 +8,12 @@ properties:
     type: string
     format: yyyy-MM-dd
     description: "First date card is valid"
-    example: "2020-01-01"
+    example: "2023-01-01"
   end-date:  
     type: string
     format: yyyy-MM-dd
     description: "Last date card is valid"
-    example: "2020-12-31"
+    example: "2023-12-31"
   profile:  
     type: number
     format: uint8

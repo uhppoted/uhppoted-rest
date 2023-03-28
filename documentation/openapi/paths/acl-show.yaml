@@ -14,7 +14,7 @@ get:
       schema:
         type: integer
         format: uint32
-        example: 192837465
+        example: 10058400
   responses:
     '200':
       description: "List of current card access permissions"

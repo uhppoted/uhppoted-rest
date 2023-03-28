@@ -22,7 +22,7 @@ get:
       schema:
         type: integer
         format: uint32
-        example: 192837465
+        example: 10058400
   responses:
     '200':
       description: "Card access information"
@@ -76,7 +76,7 @@ put:
       schema:
         type: integer
         format: uint32
-        example: 192837465
+        example: 10058400
   requestBody:
     description: "Card valid dates and access permissions"
     required: true
@@ -130,7 +130,7 @@ delete:
       schema:
         type: integer
         format: uint32
-        example: 192837465
+        example: 10058400
   responses:
     '200':
       description: "Card deleted"

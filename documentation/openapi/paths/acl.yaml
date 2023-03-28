@@ -36,7 +36,7 @@ put:
   tags:
     - acl
   summary: "Loads an access control list to a set of controllers"
-  description: "Updates the cards on a set of controllers from an access control list that specifies the access permissions for all users."
+  description: "Updates the cards on a set of controllers from an access control list that specifies the access permissions for all users. Cards with invalid start or end dates are discarded."
   operationId: aclPut
   requestBody:
     description: "Access control list"

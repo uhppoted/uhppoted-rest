@@ -16,12 +16,12 @@ properties:
     type: string
     format: yyyy-MM-dd
     description: "Date from which time profile is active"
-    example: "2021-01-01"
+    example: "2023-01-01"
   end-date:  
     type: string
     format: yyyy-MM-dd
     description: "Date after which time profile is no longer active"
-    example: "2021-12-31"
+    example: "2023-12-31"
   weekdays:  
     type: string
     items:

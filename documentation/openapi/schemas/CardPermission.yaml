@@ -14,12 +14,12 @@ properties:
     type: string
     format: yyyy-MM-dd
     description: "First date card access is enabled (as from 00:00)"
-    example: "2020-01-01"
+    example: "2023-01-01"
   end-date:  
     type: string
     format: yyyy-MM-dd
     description: "Last date card is enabled (until 23:59)"
-    example: "2020-12-31"
+    example: "2023-12-31"
   profile:  
     type: number
     format: integer in the range [2..254]

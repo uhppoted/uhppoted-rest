@@ -8,4 +8,4 @@ properties:
     items:
       $ref: "./CardPermission.yaml"                
 description: "List of doors to which the card has been granted access, along with associated access date ranges"      
-example: { "permissions": [ { "door":"Entrance", "start-date":"2020-01-01", "end-date":"2020-12-31" },{ "door":"Workshop", "start-date":"2020-01-01", "end-date":"2020-12-31" }] }
+example: { "permissions": [ { "door":"Entrance", "start-date":"2023-01-01", "end-date":"2023-12-31" },{ "door":"Workshop", "start-date":"2023-01-01", "end-date":"2023-12-31" }] }
