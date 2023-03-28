@@ -8,13 +8,15 @@ import (
 
 	"github.com/uhppoted/uhppote-core/types"
 	api "github.com/uhppoted/uhppoted-lib/acl"
+
+	"github.com/uhppoted/uhppoted-rest/log"
 )
 
 type permission struct {
-	CardNumber uint32      `json:"card-number"`
-	From       *types.Date `json:"start-date"`
-	To         *types.Date `json:"end-date"`
-	Doors      []door      `json:"doors,omitempty"`
+	CardNumber uint32     `json:"card-number"`
+	From       types.Date `json:"start-date"`
+	To         types.Date `json:"end-date"`
+	Doors      []door     `json:"doors,omitempty"`
 }
 
 type door struct {
@@ -28,14 +30,6 @@ func PermissionsToTable(p []permission) (*api.Table, error) {
 	index := map[string]int{}
 
 	for _, r := range p {
-		if r.From == nil {
-			return nil, fmt.Errorf("card %v: missing 'start-date'", r.CardNumber)
-		}
-
-		if r.To == nil {
-			return nil, fmt.Errorf("card %v: missing 'end-date'", r.CardNumber)
-		}
-
 		for _, door := range r.Doors {
 			d := clean(door.Door)
 			if _, ok := index[d]; !ok {
@@ -46,6 +40,18 @@ func PermissionsToTable(p []permission) (*api.Table, error) {
 	}
 
 	for _, r := range p {
+		// ... discard cards with invalid start/end dates
+		if r.From.IsZero() {
+			log.Warnf("ACL", "card %v discarded (missing start date)", r.CardNumber)
+			continue
+		}
+
+		if r.To.IsZero() {
+			log.Warnf("ACL", "card %v discarded (missing end date)", r.CardNumber)
+			continue
+		}
+
+		// ... create ACL record
 		record := make([]string, len(header))
 		record[0] = fmt.Sprintf("%v", r.CardNumber)
 		record[1] = fmt.Sprintf("%v", r.From)
@@ -127,12 +133,12 @@ func PermissionsFromTable(table *api.Table) ([]permission, error) {
 
 		from, err := types.DateFromString(row[index.from-1])
 		if err != nil {
-			return nil, fmt.Errorf("invalid ACL table - invalid 'from' date:%s (%w)", row[index.from-1], err)
+			log.Warnf("ACL", "card %v  invalid from date '%s' (%v)", cardID, row[index.from-1], err)
 		}
 
 		to, err := types.DateFromString(row[index.to-1])
 		if err != nil {
-			return nil, fmt.Errorf("invalid ACL table - invalid 'to' date:%s (%w)", row[index.to-1], err)
+			log.Warnf("ACL", "card %v  invalid to date   '%s' (%v)", cardID, row[index.to-1], err)
 		}
 
 		doors := []door{}
@@ -154,8 +160,8 @@ func PermissionsFromTable(table *api.Table) ([]permission, error) {
 
 		permissions = append(permissions, permission{
 			CardNumber: uint32(cardID),
-			From:       &from,
-			To:         &to,
+			From:       from,
+			To:         to,
 			Doors:      doors,
 		})
 	}

@@ -8,18 +8,18 @@ import (
 	"time"
 )
 
-var date = func(s string) *types.Date {
+var date = func(s string) types.Date {
 	d, _ := time.ParseInLocation("2006-01-02", s, time.Local)
-	p := types.Date(d)
-	return &p
+
+	return types.Date(d)
 }
 
 func TestPermissionsToTable(t *testing.T) {
 	p := []permission{
 		permission{
-			CardNumber: 192837465,
-			From:       date("2020-01-01"),
-			To:         date("2020-12-31"),
+			CardNumber: 10058400,
+			From:       date("2023-01-01"),
+			To:         date("2023-12-31"),
 			Doors: []door{
 				door{Door: "Entrance"},
 				door{Door: "Upstairs"},
@@ -27,13 +27,33 @@ func TestPermissionsToTable(t *testing.T) {
 			},
 		},
 		permission{
-			CardNumber: 729364646,
-			From:       date("2020-02-01"),
-			To:         date("2020-11-30"),
+			CardNumber: 10058401,
+			From:       date("2023-02-01"),
+			To:         date("2023-11-30"),
 			Doors: []door{
 				door{Door: "D1"},
 				door{Door: "Upstairs"},
 				door{Door: "D4"},
+			},
+		},
+		permission{
+			CardNumber: 10058402,
+			From:       date(""),
+			To:         date("2023-12-31"),
+			Doors: []door{
+				door{Door: "Entrance"},
+				door{Door: "Upstairs"},
+				door{Door: "Downstairs"},
+			},
+		},
+		permission{
+			CardNumber: 10058403,
+			From:       date("2023-01-01"),
+			To:         date(""),
+			Doors: []door{
+				door{Door: "Entrance"},
+				door{Door: "Upstairs"},
+				door{Door: "Downstairs"},
 			},
 		},
 	}
@@ -41,8 +61,8 @@ func TestPermissionsToTable(t *testing.T) {
 	expected := api.Table{
 		Header: []string{"Card Number", "From", "To", "Entrance", "Upstairs", "Downstairs", "D1", "D4"},
 		Records: [][]string{
-			[]string{"192837465", "2020-01-01", "2020-12-31", "Y", "Y", "Y", "N", "N"},
-			[]string{"729364646", "2020-02-01", "2020-11-30", "N", "Y", "N", "Y", "Y"},
+			[]string{"10058400", "2023-01-01", "2023-12-31", "Y", "Y", "Y", "N", "N"},
+			[]string{"10058401", "2023-02-01", "2023-11-30", "N", "Y", "N", "Y", "Y"},
 		},
 	}
 
@@ -59,3 +79,4 @@ func TestPermissionsToTable(t *testing.T) {
 		t.Errorf("Incorrect ACL table\n   expected: %+v\n   got:      %+v", expected, *table)
 	}
 }
+
