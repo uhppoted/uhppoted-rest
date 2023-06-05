@@ -1,0 +1,8 @@
+# schemas/DoorInterlock.yaml
+
+properties:
+  interlock:
+    type: number
+    format: uint8
+    description: "Door interlock mode - 0:none, 1:1&2, 2:3&4, 3:1&2,3&4, 4:1&2&3, 8: 1&2&3&4"
+    example: 4

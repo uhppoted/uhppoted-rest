@@ -272,6 +272,53 @@ func OpenDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWrite
 	}, nil
 }
 
+func SetInterlock(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	deviceID := ctx.Value(lib.DeviceID).(uint32)
+
+	blob, err := io.ReadAll(r.Body)
+	if err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-interlock", "Error reading request"),
+			err
+	}
+
+	body := struct {
+		Interlock *types.Interlock `json:"interlock"`
+	}{}
+
+	if err := json.Unmarshal(blob, &body); err != nil {
+		return http.StatusBadRequest,
+			errors.NewRESTError("set-interlock", "Error parsing request"),
+			err
+	}
+
+	if body.Interlock == nil {
+		return http.StatusBadRequest,
+			errors.NewRESTError("set-interlock", "Missing door interlock mode"),
+			fmt.Errorf("missing door interlock mode in request body (%s)", string(blob))
+	}
+
+	interlock := *body.Interlock
+
+	if interlock != 0 && interlock != 1 && interlock != 2 && interlock != 3 && interlock != 4 && interlock != 8 {
+		return http.StatusBadRequest,
+			errors.NewRESTError("set-interlock", "Invalid door interlock mode"),
+			fmt.Errorf("invalid door interlock mode in request body (%s)", interlock)
+	}
+
+	if err := impl.SetInterlock(deviceID, interlock); err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-interlock", "Error setting controller door interlock"),
+			err
+	}
+
+	return http.StatusOK, &struct {
+		Interlock types.Interlock `json:"interlock"`
+	}{
+		Interlock: interlock,
+	}, nil
+}
+
 func getTimeProfile(impl uhppoted.IUHPPOTED, deviceID uint32, profileID uint8) (*types.TimeProfile, error) {
 	rq := uhppoted.GetTimeProfileRequest{
 		DeviceID:  deviceID,

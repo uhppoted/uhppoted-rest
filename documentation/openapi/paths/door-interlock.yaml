@@ -1,0 +1,55 @@
+# paths/door-interlock.yaml
+
+put:
+  tags:
+    - device
+  summary: "Sets the controller door interlock mode"
+  description: "Sets the door interlock mode (none, 1&2, 3&4, 1&2+3&4, 1&2&3 or 1&2&3&4)"
+  operationId: putDoorInterlock
+  parameters:
+    - name: device-id
+      in: path
+      description: "Device serial number"
+      required: true
+      schema:
+        type: integer
+        format: uint32
+        example: 405419896
+  requestBody:
+    description: "Door delay in seconds"
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/DoorInterlock.yaml"
+  responses:
+    '200':
+      description: "Door Door interlock mode"
+      content:
+        application/json:
+          schema:
+              $ref: "../schemas/DoorInterlock.yaml"
+    '404':
+      description: "No device with ID matching device-id"
+      content:
+        application/json:
+          schema:
+              $ref: "../schemas/Error.yaml"
+    '405':
+      description: "Invalid request"
+      content:
+        application/json:
+          schema:
+              $ref: "../schemas/Error.yaml"
+    '500':
+      description: "Internal system error"
+      content:
+        application/json:
+          schema:
+              $ref: "../schemas/Error.yaml"
+    default:
+      description: "Request failed"
+      content:
+        application/json:
+          schema:
+              $ref: "../schemas/Error.yaml"

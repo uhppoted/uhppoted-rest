@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+1. `set-interlock` API function to set controller door interlock mode.
+
 ### Updated
 1. Replaced card `From` and `To` field pointers with zero values.
 2. Reworked `put-acl` to discard cards with invalid _start_ and _end_ dates.

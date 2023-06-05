@@ -44,6 +44,9 @@ paths:
   /device/{device-id}/door/{door}/swipes:
     $ref: "./paths/door-open.yaml"
 
+  /device/{device-id}/door/interlock:
+    $ref: "./paths/door-interlock.yaml"
+
   /device/{device-id}/status:
     $ref: "./paths/status.yaml"
 

@@ -40,6 +40,8 @@ github.com/uhppoted/uhppote-core v0.8.5-0.20230322165916-aad687785fc9 h1:EMwoGz+
 github.com/uhppoted/uhppote-core v0.8.5-0.20230322165916-aad687785fc9/go.mod h1:q3xZZc7GMkCfpVnKNmdoZQDjvMHfPvH79VNai7HDH3s=
 github.com/uhppoted/uhppote-core v0.8.5-0.20230328170429-e2d237dc75b1 h1:BXmRb9b4OJmWm+2j2fvbASr7acGMTAeHxFmsnShwEcQ=
 github.com/uhppoted/uhppote-core v0.8.5-0.20230328170429-e2d237dc75b1/go.mod h1:q3xZZc7GMkCfpVnKNmdoZQDjvMHfPvH79VNai7HDH3s=
+github.com/uhppoted/uhppote-core v0.8.5-0.20230529200857-f0bca4a3988b h1:GES1j7OjRf6xPMPzDVeDlAS8EAQ1e9h6vDt/eBO/aPY=
+github.com/uhppoted/uhppote-core v0.8.5-0.20230529200857-f0bca4a3988b/go.mod h1:q3xZZc7GMkCfpVnKNmdoZQDjvMHfPvH79VNai7HDH3s=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220128210643-c4d9a4bc1660 h1:BRLml03IH5I0wzAOaKrmQ3V/wbRdoBmRb/sBX+uX7Nw=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220128210643-c4d9a4bc1660/go.mod h1:HQChamquwltZIqT+tmMfDLTjaqLXEsokPQf8Utxi9MA=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220531204140-34d8876e5e89 h1:Cwp9o2KzliY85ERUkV9Z9RBFjVotzHLMAQ89EBblQcg=
@@ -102,6 +104,8 @@ github.com/uhppoted/uhppoted-lib v0.8.5-0.20230322171048-e6ae4e927070 h1:2kTPlQr
 github.com/uhppoted/uhppoted-lib v0.8.5-0.20230322171048-e6ae4e927070/go.mod h1:OWmHV5r3Twesl81rCxufOw+bcBueX0Vpy37CXfV5j+w=
 github.com/uhppoted/uhppoted-lib v0.8.5-0.20230323173011-5c3342984117 h1:vMbM9QOAoETIgyiEIuDFXfoWSbg00pjgjtHtKYKRlpk=
 github.com/uhppoted/uhppoted-lib v0.8.5-0.20230323173011-5c3342984117/go.mod h1:PKx2myFWQv/1f3/7rJ4hhLh7PxhKytMvyV9j8SZScw0=
+github.com/uhppoted/uhppoted-lib v0.8.5-0.20230605185923-3097aba1cd53 h1:PvjhSFKVbgGXWr8V6sCp/Z5iMwFMNl3ms6fO7Jx6ZFU=
+github.com/uhppoted/uhppoted-lib v0.8.5-0.20230605185923-3097aba1cd53/go.mod h1:XQgAFv5Do4RShVpgKpji/VmqFC8ipcsjo7Mnq2manj0=
 golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 h1:XfKQ4OlFl8okEOr5UvAqFRVj8pY/4yfcXrddB8qAbU0=
 golang.org/x/sys v0.0.0-20220114195835-da31bd327af9/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a h1:dGzPydgVsqGcTRVwiLJ1jVbufYwmzD3LfVPLKsKg+0k=
@@ -129,3 +133,5 @@ golang.org/x/sys v0.5.0 h1:MUK/U/4lj1t1oPg0HfuXDN/Z1wv31ZJ/YcPiGccS4DU=
 golang.org/x/sys v0.5.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.6.0 h1:MVltZSvRTcU2ljQOhs94SXPftV6DCNnZViHeQps87pQ=
 golang.org/x/sys v0.6.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.8.0 h1:EBmGv8NaZBZTWvrbjNoL6HVt+IVy3QDQpJs7VRIw3tU=
+golang.org/x/sys v0.8.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=

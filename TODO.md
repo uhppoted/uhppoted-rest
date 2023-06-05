@@ -1,15 +1,10 @@
 # TODO
 
-- [x] Install overwrites uhppoted.conf
-- [x] Card + PIN support
-      - [x] get-card
-      - [x] put-card
-      - [x] get-acl/get-acl-card
-      - [x] put-acl
-      - [x] revoke
-      - [x] OpenAPI
-
-- [x] OpenAPI: break up spec into sections
+- [ ] `set-interlock` (cf. https://github.com/uhppoted/uhppote-core/issues/14)
+      - [x] API function
+      - [x] OpenAPI YAML
+      - [x] CHANGELOG
+      - [x] README
 
 ### TODO
 

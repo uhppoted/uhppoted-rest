@@ -31,6 +31,9 @@ DoorControlState:
 DoorOpened:
   $ref: "./DoorOpened.yaml"
 
+DoorInterlock:
+  $ref: "./DoorInterlock.yaml"
+
 Card:
   $ref: "./Card.yaml"
 
