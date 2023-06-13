@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [0.8.5](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.5) - 2023-06-14
+## [0.8.5](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.5) - 2023-06-13
 
 ### Added
 1. `set-interlock` API function to set controller door interlock mode.
