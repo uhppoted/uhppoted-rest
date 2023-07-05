@@ -34,6 +34,9 @@ DoorOpened:
 DoorInterlock:
   $ref: "./DoorInterlock.yaml"
 
+AccessKeypads:
+  $ref: "./AccessKeypads.yaml"
+
 Card:
   $ref: "./Card.yaml"
 

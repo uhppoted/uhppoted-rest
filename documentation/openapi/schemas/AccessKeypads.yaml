@@ -1,0 +1,8 @@
+# schemas/AccessKeypads.yaml
+
+properties:
+  keypads:
+    type: object
+    format: map[uint8]boolean
+    description: "Maps keypads 1..4 to the corresponding activated/deactivated state"
+    example: { "1":true, "2":true, "3":false, "4":true }

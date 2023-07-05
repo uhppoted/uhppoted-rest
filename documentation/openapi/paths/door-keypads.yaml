@@ -1,36 +1,36 @@
-# paths/door-interlock.yaml
+# paths/door-keypads.yaml
 
 put:
   tags:
     - device
-  summary: "Sets the controller door interlock mode"
-  description: "Sets the door interlock mode (none, 1&2, 3&4, 1&2+3&4, 1&2&3 or 1&2&3&4)"
-  operationId: putDoorInterlock
+  summary: "Activates or deactivates the reader keypads"
+  description: "Activates or deactivates reader access keypads for cards with an associated PIN"
+  operationId: putActivateKeypads
   parameters:
     - name: device-id
       in: path
-      description: "Device serial number"
+      description: "Controller serial number"
       required: true
       schema:
         type: integer
         format: uint32
         example: 405419896
   requestBody:
-    description: "Door delay in seconds"
+    description: "Reader keypad state"
     required: true
     content:
       application/json:
         schema:
-          $ref: "../schemas/DoorInterlock.yaml"
+          $ref: "../schemas/AccessKeypads.yaml"
   responses:
     '200':
-      description: "Door interlock mode"
+      description: "Activated keypads"
       content:
         application/json:
           schema:
-              $ref: "../schemas/DoorInterlock.yaml"
+              $ref: "../schemas/AccessKeypads.yaml"
     '404':
-      description: "No device with ID matching device-id"
+      description: "No controller with ID matching device-id"
       content:
         application/json:
           schema:

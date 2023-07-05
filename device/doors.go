@@ -272,7 +272,7 @@ func OpenDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWrite
 	}, nil
 }
 
-func SetInterlock(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func SetInterlock(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	deviceID := ctx.Value(lib.DeviceID).(uint32)
 
 	blob, err := io.ReadAll(r.Body)
@@ -316,6 +316,53 @@ func SetInterlock(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseW
 		Interlock types.Interlock `json:"interlock"`
 	}{
 		Interlock: interlock,
+	}, nil
+}
+
+func ActivateKeypads(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
+	controller := ctx.Value(lib.DeviceID).(uint32)
+
+	blob, err := io.ReadAll(r.Body)
+	if err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("activate-keypads", "Error reading request"),
+			err
+	}
+
+	body := struct {
+		Keypads map[uint8]bool `json:"keypads"`
+	}{
+		Keypads: map[uint8]bool{
+			1: false,
+			2: false,
+			3: false,
+			4: false,
+		},
+	}
+
+	if err := json.Unmarshal(blob, &body); err != nil {
+		return http.StatusBadRequest,
+			errors.NewRESTError("activate-keypads", "Error parsing request"),
+			err
+	}
+
+	keypads := map[uint8]bool{
+		1: body.Keypads[1],
+		2: body.Keypads[2],
+		3: body.Keypads[3],
+		4: body.Keypads[4],
+	}
+
+	if err := impl.ActivateKeypads(controller, keypads); err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("activate-keypads", "Error activating controller reader keypads"),
+			err
+	}
+
+	return http.StatusOK, &struct {
+		Keypads map[uint8]bool `json:"keypads"`
+	}{
+		Keypads: keypads,
 	}, nil
 }
 

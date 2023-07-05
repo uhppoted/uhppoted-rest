@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] `set-interlock` (cf. https://github.com/uhppoted/uhppote-core/issues/14)
+- [ ] `activate-keypads` (cf. https://github.com/uhppoted/uhppoted/issues/35)
       - [x] API function
       - [x] OpenAPI YAML
       - [x] CHANGELOG

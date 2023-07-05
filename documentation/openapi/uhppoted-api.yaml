@@ -1,7 +1,7 @@
 openapi: "3.0.3"
 
 info:
-  version: 0.8.5
+  version: 0.8.6
   title: "uhppoted"
   description: "REST API for the uhppoted-rest service. The API currently supports both device level functions and higher level access control list management."
   license:
@@ -46,6 +46,9 @@ paths:
 
   /device/{device-id}/door/interlock:
     $ref: "./paths/door-interlock.yaml"
+
+  /device/{device-id}/door/keypads:
+    $ref: "./paths/door-keypads.yaml"
 
   /device/{device-id}/status:
     $ref: "./paths/status.yaml"
