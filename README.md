@@ -18,6 +18,7 @@ Supported operating systems:
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.8.6    | Added `activate-keypads` API to enable reader keypads                                     |
 | v0.8.5    | Added `set-interlock` API to set controller door interlock mode                           |
 | v0.8.4    | Added card keypad PIN support                                                             |
 | v0.8.3    | Reworked lockfile to use `flock` syscall                                                  |
