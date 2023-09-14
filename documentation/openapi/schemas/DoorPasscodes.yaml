@@ -1,0 +1,8 @@
+# schemas/DoorPasscodes.yaml          
+
+properties:
+  passcodes:
+    type: array
+    format: "array[uint32]"
+    description: "Array of up to four passcodes in the range [1..999999]"
+    example: [ 12345,99999,54321]

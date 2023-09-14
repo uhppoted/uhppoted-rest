@@ -146,6 +146,42 @@ func SetDoorControl(impl uhppoted.IUHPPOTED, ctx context.Context, w http.Respons
 	}, nil
 }
 
+func SetDoorPasscodes(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+	deviceID := ctx.Value(lib.DeviceID).(uint32)
+	door := ctx.Value(lib.Door).(uint8)
+
+	blob, err := io.ReadAll(r.Body)
+	if err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-door-passcodes", "Error reading request"),
+			err
+	}
+
+	body := struct {
+		Passcodes []uint32 `json:"passcodes"`
+	}{
+		Passcodes: []uint32{},
+	}
+
+	if err := json.Unmarshal(blob, &body); err != nil {
+		return http.StatusBadRequest,
+			errors.NewRESTError("set-door-passcodes", "Error parsing request"),
+			err
+	}
+
+	if err := impl.SetDoorPasscodes(deviceID, door, body.Passcodes...); err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-door-passcodes", "Error setting controller door passcodes"),
+			err
+	}
+
+	return http.StatusOK, &struct {
+		Passcodes []uint32 `json:"passcodes"`
+	}{
+		Passcodes: body.Passcodes,
+	}, nil
+}
+
 func OpenDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
 	deviceID := ctx.Value(lib.DeviceID).(uint32)
 	door := ctx.Value(lib.Door).(uint8)

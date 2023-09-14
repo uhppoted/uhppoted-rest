@@ -1,0 +1,64 @@
+# paths/door-passcodes.yaml
+
+put:
+  tags:
+    - device
+  summary: "Sets the supervisor passcodes for a door"
+  description: "Sets up to four supervisor passcodes for a door"
+  operationId: putSuperPasscodes
+  parameters:
+    - name: device-id
+      in: path
+      description: "Device serial number"
+      required: true
+      schema:
+        type: integer
+        format: uint32
+        example: 405419896
+    - name: door
+      in: path
+      description: "Door number"
+      required: true
+      schema:
+        type: integer
+        format: uint8
+        example: 3
+  requestBody:
+    description: "Supervisor passcodes"
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/DoorPasscodes.yaml"
+  responses:
+    '200':
+      description: "Supervisor passcodes configured"
+      content:
+        application/json:
+          schema:
+              $ref: "../schemas/DoorPasscodes.yaml"
+    '404':
+      description: "No device with ID matching device-id"
+      content:
+        application/json:
+          schema:
+              $ref: "../schemas/Error.yaml"
+    '405':
+      description: "Invalid request"
+      content:
+        application/json:
+          schema:
+              $ref: "../schemas/Error.yaml"
+    '500':
+      description: "Internal system error"
+      content:
+        application/json:
+          schema:
+              $ref: "../schemas/Error.yaml"
+
+    default:
+      description: "Request failed"
+      content:
+        application/json:
+          schema:
+              $ref: "../schemas/Error.yaml"
