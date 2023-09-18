@@ -56,6 +56,8 @@ github.com/uhppoted/uhppote-core v0.8.6 h1:uYtfCKPptYOxXYp8ckW2yIPjN6UWiF1uqQqvr
 github.com/uhppoted/uhppote-core v0.8.6/go.mod h1:q3xZZc7GMkCfpVnKNmdoZQDjvMHfPvH79VNai7HDH3s=
 github.com/uhppoted/uhppote-core v0.8.7-0.20230907181433-dd6f9fc71cb4 h1:idQAAHPkFluzSD0Swau1Fjj4/LQkI69frwQ+xgWNL2E=
 github.com/uhppoted/uhppote-core v0.8.7-0.20230907181433-dd6f9fc71cb4/go.mod h1:q3xZZc7GMkCfpVnKNmdoZQDjvMHfPvH79VNai7HDH3s=
+github.com/uhppoted/uhppote-core v0.8.7-0.20230918164143-32da3c8f0d91 h1:uSDn4ZMxLH4Qq4Bd+xkUDQgyIyRB2up0pgx2fC6WPJM=
+github.com/uhppoted/uhppote-core v0.8.7-0.20230918164143-32da3c8f0d91/go.mod h1:q3xZZc7GMkCfpVnKNmdoZQDjvMHfPvH79VNai7HDH3s=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220128210643-c4d9a4bc1660 h1:BRLml03IH5I0wzAOaKrmQ3V/wbRdoBmRb/sBX+uX7Nw=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220128210643-c4d9a4bc1660/go.mod h1:HQChamquwltZIqT+tmMfDLTjaqLXEsokPQf8Utxi9MA=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220531204140-34d8876e5e89 h1:Cwp9o2KzliY85ERUkV9Z9RBFjVotzHLMAQ89EBblQcg=
@@ -142,6 +144,8 @@ github.com/uhppoted/uhppoted-lib v0.8.7-0.20230830205318-6c396109f883 h1:XfapIzP
 github.com/uhppoted/uhppoted-lib v0.8.7-0.20230830205318-6c396109f883/go.mod h1:ZPUXoOYbe5dqQDBVnv4maGidcN3tiK6lU3dMeOnHBe0=
 github.com/uhppoted/uhppoted-lib v0.8.7-0.20230914181004-f434ae0f01b1 h1:mxvXOkymss632ELhdvLVVj2MthCi2+l+YkbZ5Qffu88=
 github.com/uhppoted/uhppoted-lib v0.8.7-0.20230914181004-f434ae0f01b1/go.mod h1:/dSQtLva0vteYrIId5yg8i7ckoKrWadteipBKhLscBw=
+github.com/uhppoted/uhppoted-lib v0.8.7-0.20230918183309-95af6f0742d1 h1:VjZP8WbI14d48cLGWlaNS0huR48He3Ycx/0IvIneVso=
+github.com/uhppoted/uhppoted-lib v0.8.7-0.20230918183309-95af6f0742d1/go.mod h1:H/r/Uq7SP3whI+kZfGHsvrnnK+9NNv+vyQP4zDVzJjU=
 golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 h1:XfKQ4OlFl8okEOr5UvAqFRVj8pY/4yfcXrddB8qAbU0=
 golang.org/x/sys v0.0.0-20220114195835-da31bd327af9/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a h1:dGzPydgVsqGcTRVwiLJ1jVbufYwmzD3LfVPLKsKg+0k=
