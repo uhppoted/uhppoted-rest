@@ -5,6 +5,9 @@
 ### Added
 1. `set-door-passcodes` API function to set the supervisor passcodes for a door.
 
+### Updated
+1. Replaced `nil` event pointer in `get-status` with zero value.
+
 
 ## [0.8.6](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.6) - 2023-08-30
 

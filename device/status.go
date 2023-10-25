@@ -62,9 +62,9 @@ func GetStatus(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWrit
 		response.Status.DoorButton[k] = v
 	}
 
-	if reply.Event != nil {
-		event := Transmogrify(*reply.Event)
-		response.Status.Event = &event
+	if !reply.Event.IsZero() {
+		event := Transmogrify(reply.Event)
+		response.Status.Event = event
 	}
 
 	return http.StatusOK, &response, nil

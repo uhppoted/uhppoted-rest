@@ -1,10 +1,8 @@
 # TODO
 
 - [x] `set-door-passcodes` (cf. https://github.com/uhppoted/uhppoted/issues/40)
-      - [x] API function
-      - [x] OpenAPI YAML
+- [x] Replace Event pointer in GetStatusResponse with zero value (cf. https://github.com/uhppoted/uhppote-core/issues/18)
       - [x] CHANGELOG
-      - [x] README
 
 ### TODO
 
