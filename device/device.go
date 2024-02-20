@@ -7,6 +7,9 @@ import (
 	"regexp"
 	"strconv"
 
+	"github.com/uhppoted/uhppoted-lib/uhppoted"
+
+	"github.com/uhppoted/uhppoted-rest/errors"
 	"github.com/uhppoted/uhppoted-rest/lib"
 )
 
@@ -59,4 +62,17 @@ func getTimeProfileID(r *http.Request) (uint8, error) {
 	}
 
 	return uint8(profileID), nil
+}
+
+func RestoreDefaultParameters(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
+	deviceID := ctx.Value(lib.DeviceID).(uint32)
+
+	if err := impl.RestoreDefaultParameters(deviceID); err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("restore-default-parameters", "Error restoring controller default parameters"),
+			err
+	}
+
+	return http.StatusOK, &struct {
+	}{}, nil
 }

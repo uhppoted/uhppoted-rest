@@ -3,13 +3,13 @@
 get:
   tags:
     - device
-  summary: "Retrieves a single device information"
-  description: "Retrieves the basic configuration for a UHPPOTE device"
+  summary: "Retrieves the configuration for a controller"
+  description: "Retrieves the IPv4 configuration for a UHPPOTE access controller"
   operationId: getDevice
   parameters:
     - name: device-id
       in: path
-      description: "Device serial number"
+      description: "Controller serial number"
       required: true
       schema:
         type: integer
@@ -27,6 +27,56 @@ get:
                 $ref: "../schemas/Device.yaml"
     '404':
       description: "No device with ID matching device-id"
+      content:
+        application/json:
+          schema:
+              $ref: "../schemas/Error.yaml"
+    '405':
+      description: "Invalid request"
+      content:
+        application/json:
+          schema:
+              $ref: "../schemas/Error.yaml"
+    '500':
+      description: "Internal system error"
+      content:
+        application/json:
+          schema:
+              $ref: "../schemas/Error.yaml"
+    default:
+      description: "Request failed"
+      content:
+        application/json:
+          schema:
+              $ref: "../schemas/Error.yaml"
+
+delete:
+  tags:
+    - device
+  summary: "Restores the manufacturer default configuration"
+  description: "Deletes all controller configuration information and restores the manufacturer default parameters"
+  operationId: restoreDefaultParameters
+  parameters:
+    - name: device-id
+      in: path
+      description: "Controller serial number"
+      required: true
+      schema:
+        type: integer
+        format: uint32
+        example: 405419896
+  responses:
+    '200':
+      description: "Controller reset to original manufacturer default paramters"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              device:
+                $ref: "../schemas/Device.yaml"
+    '404':
+      description: "No controller with ID matching device-id"
       content:
         application/json:
           schema:

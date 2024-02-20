@@ -125,6 +125,7 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device) {
 		handlers: []handler{
 			handler{regexp.MustCompile("^/uhppote/device$"), http.MethodGet, device.GetDevices},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+$"), http.MethodGet, device.GetDevice},
+			handler{regexp.MustCompile("^/uhppote/device/[0-9]+$"), http.MethodDelete, device.RestoreDefaultParameters},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/status$"), http.MethodGet, device.GetStatus},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time$"), http.MethodGet, device.GetTime},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/time$"), http.MethodPut, device.SetTime},

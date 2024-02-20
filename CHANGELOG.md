@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Added
+1. `restore-default-parameters` API function to reset a controller to the manufacturer default 
+    configuration.
+
+### Updated
+1. Bumped Go version to 1.22.
+
 
 ## [0.8.7](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.7) - 2023-12-30
 

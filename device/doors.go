@@ -146,7 +146,7 @@ func SetDoorControl(impl uhppoted.IUHPPOTED, ctx context.Context, w http.Respons
 	}, nil
 }
 
-func SetDoorPasscodes(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func SetDoorPasscodes(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	deviceID := ctx.Value(lib.DeviceID).(uint32)
 	door := ctx.Value(lib.Door).(uint8)
 
