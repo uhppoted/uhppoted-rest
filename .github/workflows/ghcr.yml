@@ -1,0 +1,46 @@
+name: ghcr
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+
+  build:
+    name: Push uhppoted-rest container to ghcr.io
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v5
+      with:
+        go-version: ^1.22
+        cache: false
+
+    - name: Install staticcheck
+      run: go install honnef.co/go/tools/cmd/staticcheck@latest
+
+    - name: Install govulncheck
+      run: go install golang.org/x/vuln/cmd/govulncheck@latest
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v4
+
+    - name: Build Docker image
+      run: |
+        make docker-ghcr
+        docker images
+
+    - name: Docker login to ghcr.io
+      run: |
+        echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+
+    - name: Push Docker 'latest' image to ghcr.io
+      run: |
+        docker push ghcr.io/uhppoted/restd:latest
+
+    - name: Push versioned Docker image to ghcr.io
+      if: github.event_name == 'release' && github.event.action == 'published'
+      run: |
+        echo ">>>>>> build Docker image version ${{ github.event.release.tag_name }}"

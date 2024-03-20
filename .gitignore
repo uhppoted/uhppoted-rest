@@ -1,5 +1,6 @@
 .DS_Store
 bin
+workdir
 dist
 go.work
 go.work.sum

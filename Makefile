@@ -112,4 +112,37 @@ swagger:
 	docker run --detach --publish 80:8080 --rm swaggerapi/swagger-editor 
 	open http://127.0.0.1:80
 
+docker-dev: build
+	rm -rf dist/docker/dev/*
+	mkdir -p dist/docker/dev
+	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/dev ./...
+	cp scripts/docker/dev/Dockerfile    dist/docker/dev
+	cp scripts/docker/dev/ca.cert       dist/docker/dev
+	cp scripts/docker/dev/uhppoted.cert dist/docker/dev
+	cp scripts/docker/dev/uhppoted.conf dist/docker/dev
+	cp scripts/docker/dev/uhppoted.key  dist/docker/dev
+	cd dist/docker/dev && docker build --no-cache -f Dockerfile -t uhppoted/uhppoted-rest-dev .
+
+docker-ghcr: build
+	rm -rf dist/docker/ghcr/*
+	mkdir -p dist/docker/ghcr
+	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/ghcr ./...
+	cp scripts/docker/ghcr/Dockerfile    dist/docker/ghcr
+	cp scripts/docker/ghcr/ca.cert       dist/docker/ghcr
+	cp scripts/docker/ghcr/uhppoted.cert dist/docker/ghcr
+	cp scripts/docker/ghcr/uhppoted.conf dist/docker/ghcr
+	cp scripts/docker/ghcr/uhppoted.key  dist/docker/ghcr
+	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t ghcr.io/uhppoted/restd:latest .
+
+docker-run-dev:
+	docker run --detach --publish 8080:8080 --name restd --rm uhppoted/uhppoted-rest-dev
+	sleep 1
+
+docker-run-ghcr:
+	docker run --publish 8080:8080 --publish 8443:8443 --name restd --mount source=uhppoted,target=/var/uhppoted --rm ghcr.io/uhppoted/restd
+	sleep 1
+
+docker-clean:
+	docker image     prune -f
+	docker container prune -f
 

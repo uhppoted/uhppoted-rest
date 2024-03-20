@@ -5,6 +5,7 @@
 ### Added
 1. `restore-default-parameters` API function to reset a controller to the manufacturer default 
     configuration.
+2. Added public Docker image to ghcr.io.
 
 ### Updated
 1. Bumped Go version to 1.22.

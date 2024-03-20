@@ -1,4 +1,5 @@
 ![build](https://github.com/uhppoted/uhppoted-rest/workflows/build/badge.svg)
+![build](https://github.com/uhppoted/uhppoted-rest/workflows/ghcr/badge.svg)
 
 # uhppoted-rest
 
