@@ -128,10 +128,7 @@ docker-ghcr: build
 	mkdir -p dist/docker/ghcr
 	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/ghcr ./...
 	cp scripts/docker/ghcr/Dockerfile    dist/docker/ghcr
-	cp scripts/docker/ghcr/ca.cert       dist/docker/ghcr
-	cp scripts/docker/ghcr/uhppoted.cert dist/docker/ghcr
 	cp scripts/docker/ghcr/uhppoted.conf dist/docker/ghcr
-	cp scripts/docker/ghcr/uhppoted.key  dist/docker/ghcr
 	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t ghcr.io/uhppoted/restd:latest .
 
 docker-run-dev:
@@ -142,7 +139,12 @@ docker-run-ghcr:
 	docker run --publish 8080:8080 --publish 8443:8443 --name restd --mount source=uhppoted,target=/var/uhppoted --rm ghcr.io/uhppoted/restd
 	sleep 1
 
+docker-compose:
+	cd scripts/docker/compose && docker compose up
+
 docker-clean:
 	docker image     prune -f
 	docker container prune -f
 
+get-controllers:
+	curl -X 'GET' 'http://127.0.0.1:8080/uhppote/device' -H 'accept: application/json' | jq .

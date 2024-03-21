@@ -2,11 +2,10 @@
 
 - [ ] [Prebuilt Docker containers](https://github.com/uhppoted/uhppoted/issues/47)
        - [x] docker-dev
-       - [ ] docker-ghcr
-       - [ ] compose.yml
-       - [ ] README
+       - [x] docker-ghcr
+       - [x] compose.yml
+       - [x] README
        - [x] CHANGELOG
-       - [ ] _latest_
        - [ ] Update uhppote to use uhppoted-rest docker
 
 - [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)

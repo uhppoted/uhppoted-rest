@@ -15,6 +15,23 @@ Supported operating systems:
 
 `uhppoted-rest` implements a REST API that facilitates integration of the access control function with other systems (e.g. web servers, mobile applications) without requiring the device level functionality being built-in to the application.
 
+---
+### Contents
+
+- [Release Notes](#release-notes)
+- [Installation](#installation)
+   - [Docker](#docker)
+   - [Building from source](#building-from-source)
+- [Command line](#uhppoted-rest)
+- [Configuration](#configuration)
+   - [Authorization](#api-authorization)
+       - [_users_ file](#users-file)
+       - [_groups_ file](#groups-file)
+       - ['Basic' authentication](#basic-authentication)
+       - [HOTP](#hotp-authentication)
+       - [`open-door`](#open-door-api)
+---
+
 ## Release Notes
 
 ### Current Release
@@ -50,6 +67,53 @@ eventually be) documented in [uhppoted](https://github.com/uhppoted/uhppoted). `
 - the _devices_ section to resolve non-local controller IP addresses and door to controller door identities.
 
 A sample [uhppoted.conf](https://github.com/uhppoted/uhppoted/blob/master/runtime/simulation/405419896.conf) file is included in the `uhppoted` distribution.
+
+### Docker
+
+A public _Docker_ image is published to [ghcr.io](https://github.com/uhppoted?tab=packages&repo_name=uhppoted-rest). 
+
+The image is configured to use the uhppoted.conf and TLS certificates from a Docker volume mapped to:
+- /var/uhppoted/etc/uhppoted.conf
+- /var/uhppoted/rest/ca.cert
+- /var/uhppoted/rest/uhppoted.key
+- /var/uhppoted/rest/uhppoted.cert
+
+#### `docker compose`
+
+A sample Docker `compose` configuration is provided in the [`scripts/docker/compose`](scripts/docker/compose) folder. 
+
+To run the example, download and extract the [zipped](script/docker/compose.zip) scripts and supporting files into folder
+of your choice and then:
+```
+cd <compose folder>
+docker compose up
+```
+
+The REST server can be tested using _curl_, e.g.:
+```
+curl -X 'GET' 'http://127.0.0.1:8080/uhppote/device' -H 'accept: application/json' | jq .
+```
+
+#### `docker run`
+
+To start a REST server using Docker `run`:
+```
+docker pull ghcr.io/uhppoted/restd:latest
+docker run --publish 8080:8080 --publish 8443:8443 --name restd --mount source=uhppoted,target=/var/uhppoted --rm ghcr.io/uhppoted/restd
+```
+
+The REST server can be tested using _curl_, e.g.:
+```
+curl -X 'GET' 'http://127.0.0.1:8080/uhppote/device' -H 'accept: application/json' | jq .
+```
+
+#### `docker build`
+
+For inclusion in a Dockerfile:
+```
+FROM ghcr.io/uhppoted/restd:latest
+```
+
 
 ### Building from source
 
@@ -127,6 +191,8 @@ Unregisters the `uhppoted-rest` REST API server as a system service, but does no
 Command line:
 
 `uhppoted-rest undaemonize `
+
+## Configuration
 
 ### API Authorization
 
