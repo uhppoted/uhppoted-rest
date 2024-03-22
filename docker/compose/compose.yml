@@ -6,11 +6,7 @@ services:
     restart: unless-stopped
     image: ghcr.io/uhppoted/restd:latest
     volumes:
-      - uhppoted:/var/uhppoted
-      - ./uhppoted.conf:/var/uhppoted/etc/uhppoted.conf:ro
-      - ./ca.cert:/var/uhppoted/rest/ca.cert:ro
-      - ./uhppoted.cert:/var/uhppoted/rest/uhppoted.cert:ro
-      - ./uhppoted.key:/var/uhppoted/rest/uhppoted.key:ro
+      - uhppoted:/usr/local/etc/uhppoted
     network_mode: "bridge"
     ports:
       - "8080:8080"
@@ -18,5 +14,4 @@ services:
 
 volumes:
   uhppoted:
-    external: true
     name: uhppoted

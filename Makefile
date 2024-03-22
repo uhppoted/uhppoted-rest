@@ -133,11 +133,11 @@ docker-ghcr: build
 	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t $(DOCKER) .
 
 docker-run-dev:
-	docker run --detach --publish 8080:8080 --name restd --rm uhppoted/uhppoted-rest-dev
+	docker run --publish 8080:8080 --name restd --rm uhppoted/uhppoted-rest-dev
 	sleep 1
 
 docker-run-ghcr:
-	docker run --publish 8080:8080 --publish 8443:8443 --name restd --mount source=uhppoted,target=/var/uhppoted --rm ghcr.io/uhppoted/restd
+	docker run --publish 8080:8080 --publish 8443:8443 --name restd --mount source=uhppoted,target=/usr/local/etc/uhppoted --rm ghcr.io/uhppoted/restd
 	sleep 1
 
 docker-compose:

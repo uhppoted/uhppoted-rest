@@ -72,11 +72,7 @@ A sample [uhppoted.conf](https://github.com/uhppoted/uhppoted/blob/master/runtim
 
 A public _Docker_ image is published to [ghcr.io](https://github.com/uhppoted?tab=packages&repo_name=uhppoted-rest). 
 
-The image is configured to use the uhppoted.conf and TLS certificates from a Docker volume mapped to:
-- /var/uhppoted/etc/uhppoted.conf
-- /var/uhppoted/rest/ca.cert
-- /var/uhppoted/rest/uhppoted.key
-- /var/uhppoted/rest/uhppoted.cert
+The image is configured to use the `/usr/local/etc/uhppoted/uhppoted.conf` file for configuration information.
 
 #### `docker compose`
 
@@ -92,6 +88,15 @@ docker compose up
 The REST server can be tested using _curl_, e.g.:
 ```
 curl -X 'GET' 'http://127.0.0.1:8080/uhppote/device' -H 'accept: application/json' | jq .
+```
+
+The default image is configured for HTTP only. To enable HTTPS, enable it in the _uhppoted.conf_ file on the Docker volume 
+mapped to _/usr/local/etc/uhppoted_ and copy the certificates and keys to the _/usr/local/etc/uhppoted/rest_ folder on 
+the Docker volume mapped to _/usr/local/etc/uhppoted_, e.g.
+```
+docker cp ca.cert       restd:/usr/local/etc/uhppoted/rest
+docker cp uhppoted.key  restd:/usr/local/etc/uhppoted/rest
+docker cp uhppoted.cert restd:/usr/local/etc/uhppoted/rest
 ```
 
 #### `docker run`
