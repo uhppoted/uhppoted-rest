@@ -1,13 +1,6 @@
 # TODO
 
-- [ ] [Prebuilt Docker containers](https://github.com/uhppoted/uhppoted/issues/47)
-       - [x] docker-dev
-       - [x] docker-ghcr
-       - [x] compose.yml
-       - [x] README
-       - [x] CHANGELOG
-       - [ ] Update uhppote to use uhppoted-rest docker
-
+- [x] [Prebuilt Docker containers](https://github.com/uhppoted/uhppoted/issues/47)
 - [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
 
 ### TODO

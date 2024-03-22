@@ -116,19 +116,19 @@ docker-dev: build
 	rm -rf dist/docker/dev/*
 	mkdir -p dist/docker/dev
 	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/dev ./...
-	cp scripts/docker/dev/Dockerfile    dist/docker/dev
-	cp scripts/docker/dev/ca.cert       dist/docker/dev
-	cp scripts/docker/dev/uhppoted.cert dist/docker/dev
-	cp scripts/docker/dev/uhppoted.conf dist/docker/dev
-	cp scripts/docker/dev/uhppoted.key  dist/docker/dev
-	cd dist/docker/dev && docker build --no-cache -f Dockerfile -t uhppoted/uhppoted-rest-dev .
+	cp docker/dev/Dockerfile    dist/docker/dev
+	cp docker/dev/ca.cert       dist/docker/dev
+	cp docker/dev/uhppoted.cert dist/docker/dev
+	cp docker/dev/uhppoted.conf dist/docker/dev
+	cp docker/dev/uhppoted.key  dist/docker/dev
+	cd docker/dev && docker build --no-cache -f Dockerfile -t uhppoted/uhppoted-rest-dev .
 
 docker-ghcr: build
 	rm -rf dist/docker/ghcr/*
 	mkdir -p dist/docker/ghcr
 	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/ghcr ./...
-	cp scripts/docker/ghcr/Dockerfile    dist/docker/ghcr
-	cp scripts/docker/ghcr/uhppoted.conf dist/docker/ghcr
+	cp docker/ghcr/Dockerfile    dist/docker/ghcr
+	cp docker/ghcr/uhppoted.conf dist/docker/ghcr
 	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t ghcr.io/uhppoted/restd:latest .
 
 docker-run-dev:
@@ -140,7 +140,7 @@ docker-run-ghcr:
 	sleep 1
 
 docker-compose:
-	cd scripts/docker/compose && docker compose up
+	cd docker/compose && docker compose up
 
 docker-clean:
 	docker image     prune -f
