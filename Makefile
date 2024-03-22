@@ -1,6 +1,7 @@
 DIST   ?= development
 DEBUG  ?= --debug
 CMD     = ./bin/uhppoted-rest
+DOCKER ?= ghcr.io/uhppoted/restd:latest
 
 .DEFAULT_GOAL := test
 .PHONY: update
@@ -121,7 +122,7 @@ docker-dev: build
 	cp docker/dev/uhppoted.cert dist/docker/dev
 	cp docker/dev/uhppoted.conf dist/docker/dev
 	cp docker/dev/uhppoted.key  dist/docker/dev
-	cd docker/dev && docker build --no-cache -f Dockerfile -t uhppoted/uhppoted-rest-dev .
+	cd dist/docker/dev && docker build --no-cache -f Dockerfile -t uhppoted/uhppoted-rest-dev .
 
 docker-ghcr: build
 	rm -rf dist/docker/ghcr/*
@@ -129,7 +130,7 @@ docker-ghcr: build
 	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/ghcr ./...
 	cp docker/ghcr/Dockerfile    dist/docker/ghcr
 	cp docker/ghcr/uhppoted.conf dist/docker/ghcr
-	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t ghcr.io/uhppoted/restd:latest .
+	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t $(DOCKER) .
 
 docker-run-dev:
 	docker run --detach --publish 8080:8080 --name restd --rm uhppoted/uhppoted-rest-dev
