@@ -36,9 +36,12 @@ Supported operating systems:
 
 ### Current Release
 
-**[v0.8.7](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.7) - 2023-12-30**
+**[v0.8.8](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.8) - 2024-03-27**
 
-1. `set-door-passcodes` API function to set the supervisor passcodes for a door.
+1. `restore-default-parameters` API function to reset a controller to the manufacturer default 
+    configuration.
+2. Added public Docker image to ghcr.io.
+3. Bumped Go version to 1.22.
 
 
 ## Installation
@@ -77,9 +80,9 @@ The image is configured to use the `/usr/local/etc/uhppoted/uhppoted.conf` file 
 
 #### `docker compose`
 
-A sample Docker `compose` configuration is provided in the [`scripts/docker/compose`](scripts/docker/compose) folder. 
+A sample Docker `compose` configuration is provided in the [`docker/compose`](docker) folder. 
 
-To run the example, download and extract the [zipped](script/docker/compose.zip) scripts and supporting files into folder
+To run the example, download and extract the [compose.zip](docker) scripts and supporting files into folder
 of your choice and then:
 ```
 cd <compose folder>

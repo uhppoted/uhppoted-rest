@@ -113,6 +113,9 @@ swagger:
 	docker run --detach --publish 80:8080 --rm swaggerapi/swagger-editor 
 	open http://127.0.0.1:80
 
+docker: docker-dev docker-ghcr
+	cd docker && find . -name .DS_Store -delete && rm -f compose.zip && zip --recurse-paths compose.zip compose
+
 docker-dev: build
 	rm -rf dist/docker/dev/*
 	mkdir -p dist/docker/dev
