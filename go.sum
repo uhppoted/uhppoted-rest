@@ -68,6 +68,8 @@ github.com/uhppoted/uhppote-core v0.8.8-0.20240323043459-64c58600a163 h1:9xI4/Cz
 github.com/uhppoted/uhppote-core v0.8.8-0.20240323043459-64c58600a163/go.mod h1:Q+DHtT8s74efLs2b0eF20DRBUL9yBkySwaTQ+0lsEVM=
 github.com/uhppoted/uhppote-core v0.8.8 h1:vMNGJPXJkVQe5IUPSf7BQPaynm1eK/4S5cLY8LKCIbw=
 github.com/uhppoted/uhppote-core v0.8.8/go.mod h1:Q+DHtT8s74efLs2b0eF20DRBUL9yBkySwaTQ+0lsEVM=
+github.com/uhppoted/uhppote-core v0.8.9-0.20240425174939-4517b8fa2dea h1:3abPpXYVjMd1Naj8dzNPGATEmOfgzOPuez8d21bdo/A=
+github.com/uhppoted/uhppote-core v0.8.9-0.20240425174939-4517b8fa2dea/go.mod h1:Q+DHtT8s74efLs2b0eF20DRBUL9yBkySwaTQ+0lsEVM=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220128210643-c4d9a4bc1660 h1:BRLml03IH5I0wzAOaKrmQ3V/wbRdoBmRb/sBX+uX7Nw=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220128210643-c4d9a4bc1660/go.mod h1:HQChamquwltZIqT+tmMfDLTjaqLXEsokPQf8Utxi9MA=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220531204140-34d8876e5e89 h1:Cwp9o2KzliY85ERUkV9Z9RBFjVotzHLMAQ89EBblQcg=
@@ -168,6 +170,8 @@ github.com/uhppoted/uhppoted-lib v0.8.8-0.20240323043606-2a706fbf3256 h1:5ir0S5E
 github.com/uhppoted/uhppoted-lib v0.8.8-0.20240323043606-2a706fbf3256/go.mod h1:CGZb/vz7qpkAo6tW37ONFDGFoKUjd2hC/yytf/eAOlU=
 github.com/uhppoted/uhppoted-lib v0.8.8 h1:xA7NDdnFbD97nv5aWHFWK3W4X1cj8H5kwwMfjY/+CQY=
 github.com/uhppoted/uhppoted-lib v0.8.8/go.mod h1:wQklz7nrnmkPii6E8VLolI/7PF48oE4YrEMk3MjbHFI=
+github.com/uhppoted/uhppoted-lib v0.8.9-0.20240425181745-4d8513b936f7 h1:dFPVj13QS/rXJTe6670gUFFtuBgVGJANS1AchDHbw9k=
+github.com/uhppoted/uhppoted-lib v0.8.9-0.20240425181745-4d8513b936f7/go.mod h1:1LLDFGvFoDOu8pk7vhSTwzKrE4sGBt31pUTCxzOWLaw=
 golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 h1:XfKQ4OlFl8okEOr5UvAqFRVj8pY/4yfcXrddB8qAbU0=
 golang.org/x/sys v0.0.0-20220114195835-da31bd327af9/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a h1:dGzPydgVsqGcTRVwiLJ1jVbufYwmzD3LfVPLKsKg+0k=
@@ -213,3 +217,5 @@ golang.org/x/sys v0.17.0 h1:25cE3gD+tdBA7lp7QfhuV+rJiE9YXTcS3VG1SqssI/Y=
 golang.org/x/sys v0.17.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
 golang.org/x/sys v0.18.0 h1:DBdB3niSjOA/O0blCZBqDefyWNYveAYMNF1Wum0DYQ4=
 golang.org/x/sys v0.18.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
+golang.org/x/sys v0.19.0 h1:q5f1RH2jigJ1MoAWp2KTp3gm5zAGFUTarQZ5U386+4o=
+golang.org/x/sys v0.19.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
