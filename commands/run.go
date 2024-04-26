@@ -181,14 +181,9 @@ func (cmd *Run) listen(c *config.Config, interrupt chan os.Signal) error {
 		listen = *c.ListenAddress
 	}
 
-	devices := []uhppote.Device{}
-	for id, d := range c.Devices {
-		if device := uhppote.NewDevice(d.Name, id, d.Address, d.Protocol, d.Doors); device != nil {
-			devices = append(devices, *device)
-		}
-	}
+	controllers := c.Devices.ToControllers()
 
-	u := uhppote.NewUHPPOTE(bind, broadcast, listen, c.Timeout, devices, cmd.debug)
+	u := uhppote.NewUHPPOTE(bind, broadcast, listen, c.Timeout, controllers, cmd.debug)
 
 	// ... REST task
 
@@ -215,7 +210,7 @@ func (cmd *Run) listen(c *config.Config, interrupt chan os.Signal) error {
 	}
 
 	go func() {
-		restd.Run(u, devices)
+		restd.Run(u, controllers)
 	}()
 
 	defer rest.Close()
