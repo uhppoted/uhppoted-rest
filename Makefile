@@ -18,7 +18,7 @@ clean:
 
 update:
 	go get -u github.com/uhppoted/uhppote-core@master
-	go get -u github.com/uhppoted/uhppoted-lib@master
+	go get -u github.com/uhppoted/uhppoted-lib@main
 	go get -u golang.org/x/sys
 
 update-release:
