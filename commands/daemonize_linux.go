@@ -3,7 +3,6 @@ package commands
 import (
 	"flag"
 	"fmt"
-	"net/netip"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -166,7 +165,7 @@ func (cmd *Daemonize) Execute(args ...interface{}) error {
 	fmt.Println()
 	fmt.Println("   The firewall may need additional rules to allow UDP broadcast e.g. for UFW:")
 	fmt.Println()
-	fmt.Printf("     > sudo ufw allow from %s to any port 60000 proto udp\n", (*netip.AddrPort)(d.BindAddress).Addr()) // FIXME BindAddr.Addr()
+	fmt.Printf("     > sudo ufw allow from %s to any port 60000 proto udp\n", d.BindAddress.Addr())
 	fmt.Println()
 
 	return nil
