@@ -88,6 +88,8 @@ github.com/uhppoted/uhppote-core v0.8.9-0.20240509163908-b200689a2d93 h1:iDbEpZj
 github.com/uhppoted/uhppote-core v0.8.9-0.20240509163908-b200689a2d93/go.mod h1:Q+DHtT8s74efLs2b0eF20DRBUL9yBkySwaTQ+0lsEVM=
 github.com/uhppoted/uhppote-core v0.8.9-0.20240510182729-e4962f0d00cc h1:LY1mSrLrz3e1waqX3aRK93IYs1cYnMSzUJq5dWDS0OI=
 github.com/uhppoted/uhppote-core v0.8.9-0.20240510182729-e4962f0d00cc/go.mod h1:Q+DHtT8s74efLs2b0eF20DRBUL9yBkySwaTQ+0lsEVM=
+github.com/uhppoted/uhppote-core v0.8.9-0.20240513160920-e2828097f382 h1:E2D87k6wTi8L8uYQcheZHDOS26H4L7qejJisuvnIDyo=
+github.com/uhppoted/uhppote-core v0.8.9-0.20240513160920-e2828097f382/go.mod h1:Q+DHtT8s74efLs2b0eF20DRBUL9yBkySwaTQ+0lsEVM=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220128210643-c4d9a4bc1660 h1:BRLml03IH5I0wzAOaKrmQ3V/wbRdoBmRb/sBX+uX7Nw=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220128210643-c4d9a4bc1660/go.mod h1:HQChamquwltZIqT+tmMfDLTjaqLXEsokPQf8Utxi9MA=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220531204140-34d8876e5e89 h1:Cwp9o2KzliY85ERUkV9Z9RBFjVotzHLMAQ89EBblQcg=
@@ -208,6 +210,8 @@ github.com/uhppoted/uhppoted-lib v0.8.9-0.20240509165255-ba0f3112b25a h1:omVqCdW
 github.com/uhppoted/uhppoted-lib v0.8.9-0.20240509165255-ba0f3112b25a/go.mod h1:QqD+2KzeV2/J67ETwb3GNm4qJQirfjCDREMfZonAU70=
 github.com/uhppoted/uhppoted-lib v0.8.9-0.20240510202149-46a787f12735 h1:T6juWphBpCGDZ/tfGSrtb5r+SkxRcCOgNeE6xaU3OlU=
 github.com/uhppoted/uhppoted-lib v0.8.9-0.20240510202149-46a787f12735/go.mod h1:efHzzXdJtwq2mV/Mbmj1dD5kgta+dxQt6ryQGqSc6cQ=
+github.com/uhppoted/uhppoted-lib v0.8.9-0.20240513172018-f816b3fa1428 h1:613DGW88fdX2l0LVoPKfoV2bylb+RzzWA3N1JTc8OOM=
+github.com/uhppoted/uhppoted-lib v0.8.9-0.20240513172018-f816b3fa1428/go.mod h1:uVfsYSGQ8NH51uxeBYbHS1aU2F0yvkPL05SKf+39OB8=
 golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 h1:XfKQ4OlFl8okEOr5UvAqFRVj8pY/4yfcXrddB8qAbU0=
 golang.org/x/sys v0.0.0-20220114195835-da31bd327af9/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a h1:dGzPydgVsqGcTRVwiLJ1jVbufYwmzD3LfVPLKsKg+0k=
