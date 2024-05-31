@@ -131,12 +131,12 @@ func PermissionsFromTable(table *api.Table) ([]permission, error) {
 			return nil, fmt.Errorf("invalid ACL table - invalid 'card number':%s (%w)", row[index.cardnumber-1], err)
 		}
 
-		from, err := types.DateFromString(row[index.from-1])
+		from, err := types.ParseDate(row[index.from-1])
 		if err != nil {
 			log.Warnf("ACL", "card %v  invalid from date '%s' (%v)", cardID, row[index.from-1], err)
 		}
 
-		to, err := types.DateFromString(row[index.to-1])
+		to, err := types.ParseDate(row[index.to-1])
 		if err != nil {
 			log.Warnf("ACL", "card %v  invalid to date   '%s' (%v)", cardID, row[index.to-1], err)
 		}
