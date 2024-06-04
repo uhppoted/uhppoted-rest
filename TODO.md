@@ -5,6 +5,7 @@
 
 ### TODO
 
+- (?) [Kiota](https://learn.microsoft.com/en-us/openapi/kiota/overview)
 - [ ] Clean up REST error handling (complete 'mare, what was I thinking :-()
 - [ ] Replace internal healthcheck with implementation from `uhppoted-lib`
 - [ ] OpenAPI: use fixed map keys for doors, segments
