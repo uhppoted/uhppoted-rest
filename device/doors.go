@@ -420,7 +420,7 @@ func checkTimeProfile(deviceID, cardNumber uint32, profileID uint8, profile type
 	now := types.NewHHmm(time.Now().Hour(), time.Now().Minute())
 	today := types.Date(time.Now())
 
-	if profile.From == nil || profile.To == nil || today.Before(*profile.From) || today.After(*profile.To) {
+	if profile.From.IsZero() || profile.To.IsZero() || today.Before(profile.From) || today.After(profile.To) {
 		return fmt.Errorf("card %v: time profile %v on device %v is not valid for %v", cardNumber, profileID, deviceID, today)
 	}
 
