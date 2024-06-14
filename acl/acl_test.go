@@ -1,25 +1,19 @@
 package acl
 
 import (
-	"github.com/uhppoted/uhppote-core/types"
-	api "github.com/uhppoted/uhppoted-lib/acl"
 	"reflect"
 	"testing"
-	"time"
+
+	"github.com/uhppoted/uhppote-core/types"
+	lib "github.com/uhppoted/uhppoted-lib/acl"
 )
-
-var date = func(s string) types.Date {
-	d, _ := time.ParseInLocation("2006-01-02", s, time.Local)
-
-	return types.Date(d)
-}
 
 func TestPermissionsToTable(t *testing.T) {
 	p := []permission{
 		permission{
 			CardNumber: 10058400,
-			From:       date("2023-01-01"),
-			To:         date("2023-12-31"),
+			From:       types.MustParseDate("2023-01-01"),
+			To:         types.MustParseDate("2023-12-31"),
 			Doors: []door{
 				door{Door: "Entrance"},
 				door{Door: "Upstairs"},
@@ -28,8 +22,8 @@ func TestPermissionsToTable(t *testing.T) {
 		},
 		permission{
 			CardNumber: 10058401,
-			From:       date("2023-02-01"),
-			To:         date("2023-11-30"),
+			From:       types.MustParseDate("2023-02-01"),
+			To:         types.MustParseDate("2023-11-30"),
 			Doors: []door{
 				door{Door: "D1"},
 				door{Door: "Upstairs"},
@@ -38,8 +32,8 @@ func TestPermissionsToTable(t *testing.T) {
 		},
 		permission{
 			CardNumber: 10058402,
-			From:       date(""),
-			To:         date("2023-12-31"),
+			From:       types.Date{},
+			To:         types.MustParseDate("2023-12-31"),
 			Doors: []door{
 				door{Door: "Entrance"},
 				door{Door: "Upstairs"},
@@ -48,8 +42,8 @@ func TestPermissionsToTable(t *testing.T) {
 		},
 		permission{
 			CardNumber: 10058403,
-			From:       date("2023-01-01"),
-			To:         date(""),
+			From:       types.MustParseDate("2023-01-01"),
+			To:         types.Date{},
 			Doors: []door{
 				door{Door: "Entrance"},
 				door{Door: "Upstairs"},
@@ -58,7 +52,7 @@ func TestPermissionsToTable(t *testing.T) {
 		},
 	}
 
-	expected := api.Table{
+	expected := lib.Table{
 		Header: []string{"Card Number", "From", "To", "Entrance", "Upstairs", "Downstairs", "D1", "D4"},
 		Records: [][]string{
 			[]string{"10058400", "2023-01-01", "2023-12-31", "Y", "Y", "Y", "N", "N"},
