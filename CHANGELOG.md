@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Added
+1. TCP/IP support.
+
+### Updated
+1. Updated to Go 1.23.
+
 
 ## [0.8.8](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.8) - 2024-03-27
 
