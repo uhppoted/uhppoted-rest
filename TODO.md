@@ -1,9 +1,7 @@
 # TODO
 
-- [x] [Prebuilt Docker containers](https://github.com/uhppoted/uhppoted/issues/47)
-- [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
-- [x] Update to Go 1.23 (cf. https://github.com/uhppoted/uhppoted/issues/53)
 - [x] TCP/IP protocol (cf. https://github.com/uhppoted/uhppote-core/issues/17)
+- [x] Update to Go 1.23 (cf. https://github.com/uhppoted/uhppoted/issues/53)
 
 ### TODO
 
