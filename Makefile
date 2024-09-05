@@ -57,26 +57,37 @@ open-api:
 	swagger-cli bundle documentation/openapi/uhppoted-api.yaml --outfile generated.yaml --type yaml
 
 build-all: build test vet lint
-	mkdir -p dist/$(DIST)/windows
-	mkdir -p dist/$(DIST)/darwin
 	mkdir -p dist/$(DIST)/linux
 	mkdir -p dist/$(DIST)/arm
 	mkdir -p dist/$(DIST)/arm7
-	env GOOS=linux   GOARCH=amd64         GOWORK=off go build -trimpath -o dist/$(DIST)/linux   ./...
-	env GOOS=linux   GOARCH=arm64         GOWORK=off go build -trimpath -o dist/$(DIST)/arm     ./...
-	env GOOS=linux   GOARCH=arm   GOARM=7 GOWORK=off go build -trimpath -o dist/$(DIST)/arm7    ./...
-	env GOOS=darwin  GOARCH=amd64         GOWORK=off go build -trimpath -o dist/$(DIST)/darwin  ./...
-	env GOOS=windows GOARCH=amd64         GOWORK=off go build -trimpath -o dist/$(DIST)/windows ./...
+	mkdir -p dist/$(DIST)/darwin-x64
+	mkdir -p dist/$(DIST)/darwin-arm64
+	mkdir -p dist/$(DIST)/windows
+	env GOOS=linux   GOARCH=amd64         GOWORK=off go build -trimpath -o dist/$(DIST)/linux        ./...
+	env GOOS=linux   GOARCH=arm64         GOWORK=off go build -trimpath -o dist/$(DIST)/arm          ./...
+	env GOOS=linux   GOARCH=arm   GOARM=7 GOWORK=off go build -trimpath -o dist/$(DIST)/arm7         ./...
+	env GOOS=darwin  GOARCH=amd64         GOWORK=off go build -trimpath -o dist/$(DIST)/darwin-x64   ./...
+	env GOOS=darwin  GOARCH=arm64         GOWORK=off go build -trimpath -o dist/$(DIST)/darwin-arm64 ./...
+	env GOOS=windows GOARCH=amd64         GOWORK=off go build -trimpath -o dist/$(DIST)/windows      ./...
 
 release: update-release build-all
 	find . -name ".DS_Store" -delete
-	tar --directory=dist --exclude=".DS_Store" -cvzf dist/$(DIST).tar.gz $(DIST)
-	cd dist; zip --recurse-paths $(DIST).zip $(DIST)
+	tar --directory=dist/$(DIST)/linux        --exclude=".DS_Store" -cvzf dist/$(DIST)-linux-x64.tar.gz    .
+	tar --directory=dist/$(DIST)/arm          --exclude=".DS_Store" -cvzf dist/$(DIST)-arm-x64.tar.gz      .
+	tar --directory=dist/$(DIST)/arm7         --exclude=".DS_Store" -cvzf dist/$(DIST)-arm7.tar.gz         .
+	tar --directory=dist/$(DIST)/darwin-x64   --exclude=".DS_Store" -cvzf dist/$(DIST)-darwin-x64.tar.gz   .
+	tar --directory=dist/$(DIST)/darwin-arm64 --exclude=".DS_Store" -cvzf dist/$(DIST)-darwin-arm64.tar.gz .
+	cd dist/$(DIST)/windows && zip --recurse-paths ../../$(DIST)-windows-x64.zip . -x ".DS_Store"
 
 publish: release
 	echo "Releasing version $(VERSION)"
-	rm -f dist/development.tar.gz
-	gh release create "$(VERSION)" "./dist/uhppoted-rest_$(VERSION).tar.gz" "./dist/uhppoted-rest_$(VERSION).zip" --draft --prerelease --title "$(VERSION)-beta" --notes-file release-notes.md
+	gh release create "$(VERSION)" "./dist/$(DIST)-arm-x64.tar.gz"      \
+	                               "./dist/$(DIST)-arm7.tar.gz"         \
+	                               "./dist/$(DIST)-darwin-arm64.tar.gz" \
+	                               "./dist/$(DIST)-darwin-x64.tar.gz"   \
+	                               "./dist/$(DIST)-linux-x64.tar.gz"    \
+	                               "./dist/$(DIST)-windows-x64.zip"     \
+	                               --draft --prerelease --title "$(VERSION)-beta" --notes-file release-notes.md
 
 debug: build
 	$(CMD) run --console

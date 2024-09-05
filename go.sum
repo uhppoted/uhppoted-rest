@@ -120,6 +120,10 @@ github.com/uhppoted/uhppote-core v0.8.9-0.20240617170953-4d35e4f646db h1:5ewkOnv
 github.com/uhppoted/uhppote-core v0.8.9-0.20240617170953-4d35e4f646db/go.mod h1:Q+DHtT8s74efLs2b0eF20DRBUL9yBkySwaTQ+0lsEVM=
 github.com/uhppoted/uhppote-core v0.8.9-0.20240823182843-e0981da9c4a4 h1:7zcs93hYt0sBp+kCIbgju4Tgc1zvaRVgReksSs4K1uM=
 github.com/uhppoted/uhppote-core v0.8.9-0.20240823182843-e0981da9c4a4/go.mod h1:oUQdz4NBMXkcwzEHUd6lYQgF6He32+jnb+FMwehZRwg=
+github.com/uhppoted/uhppote-core v0.8.9-0.20240905182113-96b4c7f5bb0e h1:4K/9n6bxViy4GC2fZVO3N5onun4/glU3gOYY6aczO/M=
+github.com/uhppoted/uhppote-core v0.8.9-0.20240905182113-96b4c7f5bb0e/go.mod h1:oUQdz4NBMXkcwzEHUd6lYQgF6He32+jnb+FMwehZRwg=
+github.com/uhppoted/uhppote-core v0.8.9 h1:1+PE/rSS5fWJfPZ97UXkRBWHmp/h80QLgQ+P3942WZU=
+github.com/uhppoted/uhppote-core v0.8.9/go.mod h1:oUQdz4NBMXkcwzEHUd6lYQgF6He32+jnb+FMwehZRwg=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220128210643-c4d9a4bc1660 h1:BRLml03IH5I0wzAOaKrmQ3V/wbRdoBmRb/sBX+uX7Nw=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220128210643-c4d9a4bc1660/go.mod h1:HQChamquwltZIqT+tmMfDLTjaqLXEsokPQf8Utxi9MA=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220531204140-34d8876e5e89 h1:Cwp9o2KzliY85ERUkV9Z9RBFjVotzHLMAQ89EBblQcg=
@@ -272,6 +276,10 @@ github.com/uhppoted/uhppoted-lib v0.8.9-0.20240617172854-6a8488c7ac5d h1:g/swcrE
 github.com/uhppoted/uhppoted-lib v0.8.9-0.20240617172854-6a8488c7ac5d/go.mod h1:2Q4sb+VcmC1gKSH/pIWmlUi/CqA84dGKiN6oetiiBs4=
 github.com/uhppoted/uhppoted-lib v0.8.9-0.20240823183521-d127a710cea0 h1:ZD9n1Q6w2ykR2KoORUKo2s4lFLiWsCwMj5ByYec12bU=
 github.com/uhppoted/uhppoted-lib v0.8.9-0.20240823183521-d127a710cea0/go.mod h1:vz01fBAy8QYbwUGBCfFEZh5naPt9Ma6SHlzp/SIRLcE=
+github.com/uhppoted/uhppoted-lib v0.8.9-0.20240827173223-f5262c207d8b h1:ItQCO+PnhGKlyOwn4SEpxq+pw7VXRy/+72mz4TM+yaE=
+github.com/uhppoted/uhppoted-lib v0.8.9-0.20240827173223-f5262c207d8b/go.mod h1:vz01fBAy8QYbwUGBCfFEZh5naPt9Ma6SHlzp/SIRLcE=
+github.com/uhppoted/uhppoted-lib v0.8.9 h1:PQmlZeESlYhLfkGpBxTeRyQaD2b3melImtcsgb8VVhw=
+github.com/uhppoted/uhppoted-lib v0.8.9/go.mod h1:tQgA5Jno0R2g8hlv7Wi52vVZYmdB9DFFLehLWLHuuKU=
 golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 h1:XfKQ4OlFl8okEOr5UvAqFRVj8pY/4yfcXrddB8qAbU0=
 golang.org/x/sys v0.0.0-20220114195835-da31bd327af9/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a h1:dGzPydgVsqGcTRVwiLJ1jVbufYwmzD3LfVPLKsKg+0k=
@@ -325,3 +333,5 @@ golang.org/x/sys v0.21.0 h1:rF+pYz3DAGSQAxAu1CbC7catZg4ebC4UIeIhKxBZvws=
 golang.org/x/sys v0.21.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
 golang.org/x/sys v0.24.0 h1:Twjiwq9dn6R1fQcyiK+wQyHWfaz/BJB+YIpzU/Cv3Xg=
 golang.org/x/sys v0.24.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
+golang.org/x/sys v0.25.0 h1:r+8e+loiHxRqhXVl6ML1nO3l1+oFoWbnlu2Ehimmi34=
+golang.org/x/sys v0.25.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=

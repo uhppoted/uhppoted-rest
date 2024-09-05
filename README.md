@@ -36,12 +36,10 @@ Supported operating systems:
 
 ### Current Release
 
-**[v0.8.8](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.8) - 2024-03-27**
+**[v0.8.9](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.9) - 2024-09-06**
 
-1. `restore-default-parameters` API function to reset a controller to the manufacturer default 
-    configuration.
-2. Added public Docker image to ghcr.io.
-3. Bumped Go version to 1.22.
+1. Added TCP/IP support.
+2. Updated to Go 1.23.
 
 
 ## Installation
