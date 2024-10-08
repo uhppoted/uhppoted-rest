@@ -1,9 +1,8 @@
 # TODO
 
-- [x] TCP/IP protocol (cf. https://github.com/uhppoted/uhppote-core/issues/17)
-- [x] Update to Go 1.23 (cf. https://github.com/uhppoted/uhppoted/issues/53)
+- [x] event listener: add listen auto-send interval (cf. https://github.com/uhppoted/uhppote-core/issues/21)
 
-### TODO
+### To Be Done
 
 - (?) [Kiota](https://learn.microsoft.com/en-us/openapi/kiota/overview)
 - [ ] Clean up REST error handling (complete 'mare, what was I thinking :-()

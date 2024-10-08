@@ -112,8 +112,6 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device) {
 		log.Fatalf("RESTD", "error initialising AuthProvider (%v)", err)
 	}
 
-	device.SetProtocol(r.Protocol)
-
 	d := dispatcher{
 		uhppote: u,
 		uhppoted: &uhppoted.UHPPOTED{

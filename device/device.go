@@ -13,13 +13,6 @@ import (
 	"github.com/uhppoted/uhppoted-rest/lib"
 )
 
-// NTS: future use
-// var protocol string = ""
-
-func SetProtocol(version string) {
-	// protocol = version
-}
-
 func authorized(ctx context.Context, cardNumber uint32) bool {
 	cards := ctx.Value(lib.AuthorizedCards).([]string)
 	c := fmt.Sprintf("%v", cardNumber)
