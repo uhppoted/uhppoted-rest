@@ -1,7 +1,7 @@
 DIST   ?= development
 DEBUG  ?= --debug
 CMD     = ./bin/uhppoted-rest
-DOCKER ?= ghcr.io/uhppoted/restd:latest
+DOCKER ?= ghcr.io/anaryk/restd:latest
 
 .DEFAULT_GOAL := test
 .PHONY: update
