@@ -38,12 +38,12 @@ jobs:
 
     - name: Push Docker 'latest' image to ghcr.io
       run: |
-        docker push ghcr.io/uhppoted/restd:latest
+        docker push ghcr.io/anaryk/restd:latest
 
     - name: Push versioned Docker image to ghcr.io
       if: github.event_name == 'release' && github.event.action == 'published'
       run: |
         echo ">>>>>> build Docker image version ${{ github.event.release.tag_name }}"
-        make docker-ghcr DOCKER=ghcr.io/uhppoted/restd:0.8.8
+        make docker-ghcr DOCKER=ghcr.io/anaryk/restd:0.8.8
         docker images
-        docker push ghcr.io/uhppoted/restd:0.8.8
+        docker push ghcr.io/anaryk/restd:0.8.8
