@@ -5,11 +5,11 @@
 
 Implements a REST API for use with access control systems based on the *UHPPOTE UT0311-L0x* TCP/IP Wiegand access control boards.
 
-Supported operating systems:
+Supported platforms:
 - Linux
 - MacOS
 - Windows
-- ARM7 _(e.g. RaspberryPi)_
+- RaspberryPi (ARM/ARM7/ARM6)
 
 ## Raison d'être
 
