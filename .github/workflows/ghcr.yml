@@ -44,6 +44,6 @@ jobs:
       if: github.event_name == 'release' && github.event.action == 'published'
       run: |
         echo ">>>>>> build Docker image version ${{ github.event.release.tag_name }}"
-        make docker-ghcr DOCKER=ghcr.io/uhppoted/restd:0.8.8
+        make docker-ghcr DOCKER=ghcr.io/uhppoted/restd:0.8.9
         docker images
-        docker push ghcr.io/uhppoted/restd:0.8.8
+        docker push ghcr.io/uhppoted/restd:0.8.9
