@@ -3,7 +3,7 @@
 ## Unreleased
 
 ### Added
-1. ARMv6 build target (for Pi ZeroW).
+1. ARMv6 build target (RaspberryPi ZeroW).
 
 
 ## [0.8.9](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.9) - 2024-09-06
