@@ -36,11 +36,10 @@ Supported platforms:
 
 ### Current Release
 
-**[v0.8.9](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.9) - 2024-09-06**
+**[v0.8.10](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.10) - 2024-01-30**
 
-1. Added TCP/IP support.
-2. Updated to Go 1.23.
-
+1. ARMv6 build target (RaspberryPi ZeroW).
+2. Added support for _auto-send_ interval.
 
 ## Installation
 
