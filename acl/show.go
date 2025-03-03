@@ -20,7 +20,7 @@ func Show(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r
 	url := r.URL.Path
 
 	matches := regexp.MustCompile("^/uhppote/acl/card/([0-9]+)$").FindStringSubmatch(url)
-	if matches == nil || len(matches) < 2 {
+	if len(matches) < 2 {
 		return http.StatusBadRequest,
 			errors.NewRESTError("show", "Missing card number/door"),
 			fmt.Errorf("missing card number/door in request URL %s)", url)

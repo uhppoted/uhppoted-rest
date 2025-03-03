@@ -20,7 +20,7 @@ func Revoke(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter,
 	url := r.URL.Path
 
 	matches := regexp.MustCompile(`^/uhppote/acl/card/([0-9]+)/door/(\S.*)$`).FindStringSubmatch(url)
-	if matches == nil || len(matches) < 3 {
+	if len(matches) < 3 {
 		return http.StatusBadRequest,
 			errors.NewRESTError("revoke", "Missing card number/door"),
 			fmt.Errorf("missing card number/door in request URL (%s)", url)
