@@ -19,6 +19,9 @@ DeviceTime:
 DeviceStatus:
   $ref: "./DeviceStatus.yaml"
 
+AntiPassback:
+  $ref: "./AntiPassback.yaml"
+
 Door:
   $ref: "./Door.yaml"
 

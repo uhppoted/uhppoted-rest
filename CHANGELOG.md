@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+1. Added `get/set-antipassback` API function to retrieve or set a controller antipassback mode.
+
 ### Updated
 1. Bumped to Go 1.24.
 
