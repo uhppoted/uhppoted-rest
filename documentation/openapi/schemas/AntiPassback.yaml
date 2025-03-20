@@ -1,0 +1,13 @@
+# schemas/AntiPassback.yaml
+
+properties:
+  anti-passback:
+    type: string
+    format: string enum
+            - disabled
+            - (1:2);(3:4)
+            - (1,3):(2:4)
+            - 1:(2,3)
+            - 1:(2,3,4)
+    description: "Controller anti-passback mode"
+    example: "(1,3):(2,4)"

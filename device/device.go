@@ -2,11 +2,14 @@ package device
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"regexp"
 	"strconv"
 
+	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-lib/uhppoted"
 
 	"github.com/uhppoted/uhppoted-rest/errors"
@@ -55,6 +58,89 @@ func getTimeProfileID(r *http.Request) (uint8, error) {
 	}
 
 	return uint8(profileID), nil
+}
+
+func GetAntiPassback(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
+	controller := ctx.Value(lib.DeviceID).(uint32)
+
+	if antipassback, err := impl.GetAntiPassback(controller); err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("get-antipassback", "Error retrieving controller anti-passback"),
+			err
+	} else {
+		return http.StatusOK, &struct {
+			AntiPassback string `json:"anti-passback"`
+		}{
+			AntiPassback: fmt.Sprintf("%v", antipassback),
+		}, nil
+	}
+}
+
+func SetAntiPassback(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
+	controller := ctx.Value(lib.DeviceID).(uint32)
+
+	blob, err := io.ReadAll(r.Body)
+	if err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-antipassback", "Error reading request"),
+			err
+	}
+
+	body := struct {
+		AntiPassback string `json:"anti-passback"`
+	}{}
+
+	if err := json.Unmarshal(blob, &body); err != nil {
+		return http.StatusBadRequest,
+			errors.NewRESTError("set-antipassback", "Error parsing request"),
+			err
+	}
+
+	if antipassback, err := func(s string) (types.AntiPassback, error) {
+		v := regexp.MustCompile(`[ (),]+`).ReplaceAllString(s, "")
+
+		switch v {
+		case "disabled":
+			return types.Disabled, nil
+
+		case "1:2;3:4":
+			return types.Readers12_34, nil
+
+		case "13:24":
+			return types.Readers13_24, nil
+
+		case "1:23":
+			return types.Readers1_23, nil
+
+		case "1:234":
+			return types.Readers1_234, nil
+
+		default:
+			return types.Disabled, fmt.Errorf("invalid anti-passback value (%v)", s)
+		}
+
+	}(body.AntiPassback); err != nil {
+		return http.StatusBadRequest,
+			errors.NewRESTError("set-antipassback", "Missing/invalid AntiPassback"),
+			fmt.Errorf("missing/invalid anti-passback value in request body (%s)", string(blob))
+
+	} else if ok, err := impl.SetAntiPassback(controller, antipassback); err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-antipassback", "Error setting controller anti-passback"),
+			err
+
+	} else if !ok {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-antipassback", "Failed to set controller anti-passback"),
+			err
+
+	} else {
+		return http.StatusOK, &struct {
+			AntiPassback string `json:"anti-passback"`
+		}{
+			AntiPassback: fmt.Sprintf("%v", antipassback),
+		}, nil
+	}
 }
 
 func RestoreDefaultParameters(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {

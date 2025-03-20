@@ -1,0 +1,108 @@
+# paths/antipassback.yaml
+
+get:
+   tags:
+     - device
+   summary: "Gets the controller anti-passback mode"
+   description: "Gets the controller anti-passback mode"
+   operationId: getAntiPassback
+   parameters:
+     - name: device-id
+       in: path
+       description: "Controller serial number"
+       required: true
+       schema:
+         type: integer
+         format: uint32
+         example: 405419896
+   responses:
+     '200':
+       description: "Controller anti-passback"
+       content:
+         application/json:
+           schema:
+             $ref: "../schemas/AntiPassback.yaml"        
+     '404':
+       description: "No controller with ID matching device-id"
+       content:
+         application/json:
+           schema:
+             $ref: "../schemas/Error.yaml"
+     '405':
+       description: "Invalid request"
+       content:
+         application/json:
+           schema:
+             $ref: "../schemas/Error.yaml"
+     '500':
+       description: "Internal system error"
+       content:
+         application/json:
+           schema:
+             $ref: "../schemas/Error.yaml"
+     default:
+       description: "Request failed"
+       content:
+         application/json:
+           schema:
+             $ref: "../schemas/Error.yaml"
+
+put:
+   tags:
+     - device
+   summary: "Sets the controller anti-passback mode"
+   description: "Sets the controller anti-passback mode"
+   operationId: putAntiPassback
+   parameters:
+     - name: device-id
+       in: path
+       description: "Controller serial number"
+       required: true
+       schema:
+         type: integer
+         format: uint32
+         example: 405419896
+   requestBody:
+     description: "Anti-passback"
+     required: true
+     content:
+       application/json:
+         schema:
+           $ref: "../schemas/AntiPassback.yaml"        
+   responses:
+     '200':
+       description: "Controller anti-passback"
+       content:
+         application/json:
+           schema:
+             $ref: "../schemas/AntiPassback.yaml"        
+     '403':
+       description: "Access denied"
+       content:
+         application/json:
+           schema:
+             $ref: "../schemas/Error.yaml"
+     '404':
+       description: "No controller with ID matching device-id"
+       content:
+         application/json:
+           schema:
+             $ref: "../schemas/Error.yaml"
+     '405':
+       description: "Invalid request"
+       content:
+         application/json:
+           schema:
+             $ref: "../schemas/Error.yaml"        
+     '500':
+       description: "Internal system error"
+       content:
+         application/json:
+           schema:
+             $ref: "../schemas/Error.yaml"        
+     default:
+       description: "Request failed"
+       content:
+         application/json:
+           schema:
+             $ref: "../schemas/Error.yaml"        
