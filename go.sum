@@ -134,6 +134,8 @@ github.com/uhppoted/uhppote-core v0.8.11-0.20250303170208-c3e821f32ec2 h1:IzYHCd
 github.com/uhppoted/uhppote-core v0.8.11-0.20250303170208-c3e821f32ec2/go.mod h1:s6QikGwy+nS7nZjgba/k8ugszVreqgqGg7oxDgnLLGg=
 github.com/uhppoted/uhppote-core v0.8.11-0.20250319165734-ab12a1b81497 h1:H7uqMqk24Tz/Sr/9FNRJ2Ih45DZTq2LaD3XEVpJb8ZY=
 github.com/uhppoted/uhppote-core v0.8.11-0.20250319165734-ab12a1b81497/go.mod h1:s6QikGwy+nS7nZjgba/k8ugszVreqgqGg7oxDgnLLGg=
+github.com/uhppoted/uhppote-core v0.8.11-0.20250331165159-e04fd7de7eab h1:WNEcaWNUVuho2fxlXf4Uj+8K6mpO/lloQGkSjorHaAY=
+github.com/uhppoted/uhppote-core v0.8.11-0.20250331165159-e04fd7de7eab/go.mod h1:s6QikGwy+nS7nZjgba/k8ugszVreqgqGg7oxDgnLLGg=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220128210643-c4d9a4bc1660 h1:BRLml03IH5I0wzAOaKrmQ3V/wbRdoBmRb/sBX+uX7Nw=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220128210643-c4d9a4bc1660/go.mod h1:HQChamquwltZIqT+tmMfDLTjaqLXEsokPQf8Utxi9MA=
 github.com/uhppoted/uhppoted-lib v0.7.3-0.20220531204140-34d8876e5e89 h1:Cwp9o2KzliY85ERUkV9Z9RBFjVotzHLMAQ89EBblQcg=
@@ -302,6 +304,8 @@ github.com/uhppoted/uhppoted-lib v0.8.11-0.20250303171607-666b90007516 h1:d9BCZg
 github.com/uhppoted/uhppoted-lib v0.8.11-0.20250303171607-666b90007516/go.mod h1:t5aszw2vJtiBRhdPumZecQh5DM8ilTNOeJtgNCfl0SM=
 github.com/uhppoted/uhppoted-lib v0.8.11-0.20250320171133-b16ba975288d h1:3lWNLhsDJy7dKCAIlHqAhhsLPBZq1o/aulk0IYyqMyI=
 github.com/uhppoted/uhppoted-lib v0.8.11-0.20250320171133-b16ba975288d/go.mod h1:QZdMBkSSQGSsE4uE2MP/Sls9RaF6Ic9t+9IpZ+EuUWw=
+github.com/uhppoted/uhppoted-lib v0.8.11-0.20250331180353-7ccb6f69d17e h1:WZSCfdpqoQeRzNGC72RMS+iMESbkQ9POC25HICvBBe4=
+github.com/uhppoted/uhppoted-lib v0.8.11-0.20250331180353-7ccb6f69d17e/go.mod h1:l/PougoF5uQzmXRIQ5LPNnkAGFqrhv+rYWrG63xjGCc=
 golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 h1:XfKQ4OlFl8okEOr5UvAqFRVj8pY/4yfcXrddB8qAbU0=
 golang.org/x/sys v0.0.0-20220114195835-da31bd327af9/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a h1:dGzPydgVsqGcTRVwiLJ1jVbufYwmzD3LfVPLKsKg+0k=
