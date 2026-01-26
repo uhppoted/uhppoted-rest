@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Updated
+1. Updated to Go 1.25.
+
 
 ## [0.8.11](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.8.11) - 2025-07-01
 
