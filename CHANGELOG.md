@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## [0.9.0](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.9.0) - 2026-01-27
 
 ### Updated
 1. Updated to Go 1.25.
