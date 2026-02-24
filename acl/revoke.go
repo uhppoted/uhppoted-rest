@@ -16,7 +16,7 @@ import (
 	"github.com/uhppoted/uhppoted-rest/lib"
 )
 
-func Revoke(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func Revoke(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	url := r.URL.Path
 
 	matches := regexp.MustCompile(`^/uhppote/acl/card/([0-9]+)/door/(\S.*)$`).FindStringSubmatch(url)

@@ -49,7 +49,7 @@ func (cmd *Run) FlagSet() *flag.FlagSet {
 	return flagset
 }
 
-func (cmd *Run) Execute(args ...interface{}) error {
+func (cmd *Run) Execute(args ...any) error {
 	log.Infof("", "uhppoted-rest daemon %s - %s (PID %d)\n", uhppote.VERSION, "MacOS", os.Getpid())
 
 	f := func(c *config.Config) error {

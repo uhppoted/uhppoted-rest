@@ -43,7 +43,7 @@ func (cmd *Undaemonize) Help() {
 	helpOptions(cmd.FlagSet())
 }
 
-func (cmd *Undaemonize) Execute(args ...interface{}) error {
+func (cmd *Undaemonize) Execute(args ...any) error {
 	fmt.Println("   ... undaemonizing")
 
 	path := filepath.Join("/Library/LaunchDaemons", "com.github.uhppoted-rest.plist")

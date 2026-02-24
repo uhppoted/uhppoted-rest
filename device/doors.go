@@ -15,7 +15,7 @@ import (
 	"github.com/uhppoted/uhppoted-rest/lib"
 )
 
-func GetDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	deviceID := ctx.Value(lib.DeviceID).(uint32)
 	door := ctx.Value(lib.Door).(uint8)
 
@@ -60,13 +60,13 @@ func GetDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 	}
 
 	return http.StatusOK, &struct {
-		Door interface{} `json:"door"`
+		Door any `json:"door"`
 	}{
 		Door: reply,
 	}, nil
 }
 
-func SetDoorDelay(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func SetDoorDelay(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	deviceID := ctx.Value(lib.DeviceID).(uint32)
 	door := ctx.Value(lib.Door).(uint8)
 
@@ -106,7 +106,7 @@ func SetDoorDelay(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseW
 	}, nil
 }
 
-func SetDoorControl(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func SetDoorControl(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	deviceID := ctx.Value(lib.DeviceID).(uint32)
 	door := ctx.Value(lib.Door).(uint8)
 
@@ -182,7 +182,7 @@ func SetDoorPasscodes(impl uhppoted.IUHPPOTED, ctx context.Context, w http.Respo
 	}, nil
 }
 
-func OpenDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func OpenDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	deviceID := ctx.Value(lib.DeviceID).(uint32)
 	door := ctx.Value(lib.Door).(uint8)
 

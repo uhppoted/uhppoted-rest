@@ -14,7 +14,7 @@ import (
 	"github.com/uhppoted/uhppoted-rest/lib"
 )
 
-func GetCards(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetCards(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	deviceID := ctx.Value(lib.DeviceID).(uint32)
 
 	rq := uhppoted.GetCardsRequest{
@@ -39,7 +39,7 @@ func GetCards(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWrite
 	}, nil
 }
 
-func DeleteCards(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func DeleteCards(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	deviceID := ctx.Value(lib.DeviceID).(uint32)
 
 	rq := uhppoted.DeleteCardsRequest{
@@ -66,7 +66,7 @@ func DeleteCards(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWr
 	return http.StatusOK, nil, nil
 }
 
-func GetCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	deviceID := ctx.Value(lib.DeviceID).(uint32)
 	cardNumber := ctx.Value(lib.CardNumber).(uint32)
 
@@ -87,13 +87,13 @@ func GetCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 	}
 
 	return http.StatusOK, struct {
-		Card interface{} `json:"card"`
+		Card any `json:"card"`
 	}{
 		Card: response.Card,
 	}, nil
 }
 
-func PutCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func PutCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	deviceID := ctx.Value(lib.DeviceID).(uint32)
 	cardNumber := ctx.Value(lib.CardNumber).(uint32)
 
@@ -105,11 +105,11 @@ func PutCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 	}
 
 	card := struct {
-		CardNumber uint32                `json:"card-number"`
-		From       types.Date            `json:"start-date"`
-		To         types.Date            `json:"end-date"`
-		Doors      map[uint8]interface{} `json:"doors"`
-		PIN        uint32                `json:"PIN,omitempty"`
+		CardNumber uint32        `json:"card-number"`
+		From       types.Date    `json:"start-date"`
+		To         types.Date    `json:"end-date"`
+		Doors      map[uint8]any `json:"doors"`
+		PIN        uint32        `json:"PIN,omitempty"`
 	}{}
 
 	if err = json.Unmarshal(blob, &card); err != nil {
@@ -156,7 +156,7 @@ func PutCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 	return http.StatusOK, nil, nil
 }
 
-func DeleteCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func DeleteCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	deviceID := ctx.Value(lib.DeviceID).(uint32)
 	cardNumber := ctx.Value(lib.CardNumber).(uint32)
 

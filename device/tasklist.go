@@ -12,7 +12,7 @@ import (
 	rerrors "github.com/uhppoted/uhppoted-rest/errors"
 )
 
-func PutTaskList(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func PutTaskList(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	deviceID, err := getDeviceID(r)
 	if err != nil {
 		return http.StatusBadRequest,

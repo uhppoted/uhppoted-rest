@@ -16,7 +16,7 @@ import (
 // Implements the record-special-events REST API. Extracts the 'enabled' value from the
 // request body and invokes the uhppoted-lib.RecordSpecialEvents API function to update
 // the controller 'record special events' flag.
-func SpecialEvents(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func SpecialEvents(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	deviceID := ctx.Value(lib.DeviceID).(uint32)
 
 	blob, err := io.ReadAll(r.Body)

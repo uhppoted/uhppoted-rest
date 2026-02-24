@@ -45,7 +45,7 @@ func (p permission) String() string {
 func NewAuthProvider(enabled bool, users, groups, counters string, window uint64) (*AuthProvider, error) {
 	separator := regexp.MustCompile(`\s*,\s*`)
 
-	f := func(value string) (interface{}, error) {
+	f := func(value string) (any, error) {
 		u := user{}
 		err := json.Unmarshal([]byte(value), &u)
 		if err != nil {
@@ -55,7 +55,7 @@ func NewAuthProvider(enabled bool, users, groups, counters string, window uint64
 		return &u, nil
 	}
 
-	g := func(value string) (interface{}, error) {
+	g := func(value string) (any, error) {
 		permissions := []permission{}
 		re := regexp.MustCompile(`(.*?):(.*)`)
 		tokens := separator.Split(value, -1)

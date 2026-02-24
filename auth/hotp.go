@@ -27,7 +27,7 @@ type HOTP struct {
 const DIGITS = 6
 
 func NewHOTP(window uint64, counters string) (*HOTP, error) {
-	v := func(value string) (interface{}, error) {
+	v := func(value string) (any, error) {
 		return strconv.ParseUint(value, 10, 64)
 	}
 

@@ -3,6 +3,7 @@ package device
 import (
 	"context"
 	"fmt"
+	"maps"
 	"net/http"
 
 	"github.com/uhppoted/uhppote-core/types"
@@ -24,7 +25,7 @@ type Status struct {
 	Event          any            `json:"event,omitempty"`
 }
 
-func GetStatus(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, interface{}, error) {
+func GetStatus(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	deviceID := ctx.Value(lib.DeviceID).(uint32)
 
 	reply, err := impl.GetStatus(deviceID)
@@ -54,13 +55,9 @@ func GetStatus(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWrit
 		},
 	}
 
-	for k, v := range reply.DoorState {
-		response.Status.DoorState[k] = v
-	}
+	maps.Copy(response.Status.DoorState, reply.DoorState)
 
-	for k, v := range reply.DoorButton {
-		response.Status.DoorButton[k] = v
-	}
+	maps.Copy(response.Status.DoorButton, reply.DoorButton)
 
 	if !reply.Event.IsZero() {
 		event := Transmogrify(reply.Event)

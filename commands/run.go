@@ -387,7 +387,7 @@ func watchdog(u uhppote.IUHPPOTE, st *state) error {
 
 	// Any unexpected devices?
 
-	st.devices.status.Range(func(key, value interface{}) bool {
+	st.devices.status.Range(func(key, value any) bool {
 		alerted := alerts{
 			missing:      false,
 			unexpected:   false,

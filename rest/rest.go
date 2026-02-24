@@ -86,7 +86,7 @@ type RESTD struct {
 	OpenAPI
 }
 
-type handlerfn func(uhppoted.IUHPPOTED, context.Context, http.ResponseWriter, *http.Request) (int, interface{}, error)
+type handlerfn func(uhppoted.IUHPPOTED, context.Context, http.ResponseWriter, *http.Request) (int, any, error)
 
 type handler struct {
 	re     *regexp.Regexp
@@ -175,20 +175,16 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device) {
 	var wg sync.WaitGroup
 
 	if r.HTTPEnabled {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
+		wg.Go(func() {
 			log.Infof("RESTD", "... listening on port %d\n", r.HTTPPort)
 			if err := http.ListenAndServe(fmt.Sprintf(":%d", r.HTTPPort), &d); err != nil {
 				log.Fatalf("RESTD", "%v", err)
 			}
-		}()
+		})
 	}
 
 	if r.HTTPSEnabled {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
+		wg.Go(func() {
 			log.Infof("RESTD", "... listening on port %d\n", r.HTTPSPort)
 
 			ca, err := os.ReadFile(r.CACertificateFile)
@@ -231,7 +227,7 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device) {
 			if err := httpsd.ListenAndServeTLS(r.TLSCertificateFile, r.TLSKeyFile); err != nil {
 				log.Fatalf("RESTD", "%v", err)
 			}
-		}()
+		})
 	}
 
 	wg.Wait()
@@ -248,8 +244,8 @@ func (d *dispatcher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	for key, headers := range r.Header {
 		if http.CanonicalHeaderKey(key) == "Accept-Encoding" {
 			for _, header := range headers {
-				encodings := strings.Split(header, ",")
-				for _, encoding := range encodings {
+				encodings := strings.SplitSeq(header, ",")
+				for encoding := range encodings {
 					if strings.TrimSpace(encoding) == "gzip" {
 						compression = "gzip"
 					}
@@ -337,7 +333,7 @@ func parse(ctx context.Context, r *http.Request) context.Context {
 	return ctx
 }
 
-func reply(ctx context.Context, w http.ResponseWriter, status int, response interface{}) {
+func reply(ctx context.Context, w http.ResponseWriter, status int, response any) {
 	var err error
 	b := []byte{}
 	if response != nil {
