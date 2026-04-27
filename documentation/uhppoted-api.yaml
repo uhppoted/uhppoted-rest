@@ -2339,9 +2339,9 @@ components:
           example: "normally-open"
         inactive-mode:
           type: string
-          format: controlled, normally-open, normally-closed or firstcard-only
+          format: controlled, normally-open, normally-closed or firstcard
           description: "Door control mode when a valid first-card has not been swiped"
-          example: "firstcard-only"
+          example: "deleteFirstCard"
         weekdays:
           type: string
           format: "comma seperated list of weekdays"

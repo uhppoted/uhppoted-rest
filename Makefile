@@ -96,7 +96,7 @@ publish: release
 	                               --draft --prerelease --title "$(VERSION)-beta" --notes-file release-notes.md
 
 debug: build
-	$(CMD) run --console
+	$(CMD) --debug --log-level debug --config workdir/uhppoted.conf --console
 
 godoc:
 	godoc -http=:80	-index_interval=60s
@@ -124,7 +124,7 @@ undaemonize: build
 	sudo $(CMD) undaemonize
 
 run: build
-	$(CMD) --log-level debug --console
+	$(CMD) --log-level debug --config workdir/uhppoted.conf --console
 
 swagger: 
 	docker run --detach --publish 80:80 --rm swaggerapi/swagger-editor 

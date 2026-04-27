@@ -1,10 +1,13 @@
 # TODO
 
-- [ ] 'first card' API (cf. https://github.com/uhppoted/uhppoted/issues/82)
-   - [ ] OpenAPI
-   - [ ] API
-   - [ ] README
-   - [ ] CHANGELOG
+- [x] 'first card' API (cf. https://github.com/uhppoted/uhppoted/issues/82)
+   - [x] OpenAPI
+   - [x] API
+      - [x] PUT firstcard
+      - [x] DELETE firstcard
+   - [x] CHANGELOG
+
+- [ ] clean up OpenAPI
 
 ### To Be Done
 

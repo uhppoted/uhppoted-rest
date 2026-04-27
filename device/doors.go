@@ -182,6 +182,79 @@ func SetDoorPasscodes(impl uhppoted.IUHPPOTED, ctx context.Context, w http.Respo
 	}, nil
 }
 
+func SetFirstCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
+	controller := ctx.Value(lib.DeviceID).(uint32)
+	door := ctx.Value(lib.Door).(uint8)
+
+	blob, err := io.ReadAll(r.Body)
+	if err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-firstcard", "Error reading request"),
+			err
+	}
+
+	body := struct {
+		StartTime types.HHmm         `json:"start-time"`
+		EndTime   types.HHmm         `json:"end-time"`
+		Active    types.ControlState `json:"active-mode"`
+		Inactive  types.ControlState `json:"inactive-mode"`
+		Weekdays  types.Weekdays     `json:"weekdays"`
+	}{
+		Weekdays: types.Weekdays{},
+	}
+
+	if err := json.Unmarshal(blob, &body); err != nil {
+		return http.StatusBadRequest,
+			errors.NewRESTError("set-firstcard", "Error parsing request"),
+			err
+	}
+
+	firstcard := types.FirstCard{
+		StartTime: body.StartTime,
+		EndTime:   body.EndTime,
+		Active:    body.Active,
+		Inactive:  body.Inactive,
+		Weekdays:  body.Weekdays,
+	}
+
+	if ok, err := impl.SetFirstCard(controller, door, firstcard); err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-firstcard", "Error setting controller door first-card"),
+			err
+	} else if !ok {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-firstcard", "Failed to set controller door first-card"),
+			fmt.Errorf("set-firstcard failed")
+	} else {
+		return http.StatusOK, &struct{}{}, nil
+	}
+}
+
+func DeleteFirstCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
+	controller := ctx.Value(lib.DeviceID).(uint32)
+	door := ctx.Value(lib.Door).(uint8)
+
+	firstcard := types.FirstCard{
+		StartTime: types.HHmm{},
+		EndTime:   types.HHmm{},
+		Active:    types.ModeControlled,
+		Inactive:  types.ModeControlled,
+		Weekdays:  types.Weekdays{},
+	}
+
+	if ok, err := impl.SetFirstCard(controller, door, firstcard); err != nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("delete-firstcard", "Error clearing ontroller door first-card"),
+			err
+	} else if !ok {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("set-firstcard", "Failed to clear controller door first-card"),
+			fmt.Errorf("delete-firstcard failed")
+	} else {
+		return http.StatusOK, &struct{}{}, nil
+	}
+}
+
 func OpenDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	deviceID := ctx.Value(lib.DeviceID).(uint32)
 	door := ctx.Value(lib.Door).(uint8)
