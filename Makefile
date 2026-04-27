@@ -127,7 +127,7 @@ run: build
 	$(CMD) --log-level debug --console
 
 swagger: 
-	docker run --detach --publish 80:8080 --rm swaggerapi/swagger-editor 
+	docker run --detach --publish 80:80 --rm swaggerapi/swagger-editor 
 	open http://127.0.0.1:80
 
 docker: docker-dev docker-ghcr

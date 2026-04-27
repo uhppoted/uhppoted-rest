@@ -1,0 +1,34 @@
+# schemas/FirstCard.yaml
+
+required: 
+  - start-time
+  - end-time
+  - active-mode
+  - inactive-mode
+  - weekdays
+properties:
+  start-time:
+    type: string
+    format: HH:mm
+    description: "Time from which first-card can be activated"
+    example: "08:30"
+  end-time:
+    type: string
+    format: HH:mm
+    description: "Time until which first-card can be activated"
+    example: "16:45"
+  active-mode:
+    type: string
+    format: controlled, normally-open or normally-closed
+    description: "Door control mode after a first-card swipe"
+    example: "normally-open"
+  inactive-mode:
+    type: string
+    format: controlled, normally-open, normally-closed or firstcard-only
+    description: "Door control mode when a valid first-card has not been swiped"
+    example: "firstcard-only"
+  weekdays:
+    type: string
+    format: "comma seperated list of weekdays"
+    description: "List of weekdays on which first-card can be activated. Weekday names are case-insensitive and 3 letter abbreviations are valid."
+    example: "Monday,Wednesday,Friday"

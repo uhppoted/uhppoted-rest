@@ -53,6 +53,12 @@ paths:
   /device/{device-id}/door/keypads:
     $ref: "./paths/door-keypads.yaml"
 
+  /device/{device-id}/door/passcodes:
+    $ref: "./paths/door-passcodes.yaml"
+
+  /device/{device-id}/door/first-card:
+    $ref: "./paths/door-firstcard.yaml"
+
   /device/{device-id}/status:
     $ref: "./paths/status.yaml"
 

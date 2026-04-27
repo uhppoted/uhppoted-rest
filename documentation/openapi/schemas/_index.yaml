@@ -40,6 +40,9 @@ DoorInterlock:
 AccessKeypads:
   $ref: "./AccessKeypads.yaml"
 
+FirstCard:
+  $ref: "./FirstCard.yaml"
+
 Card:
   $ref: "./Card.yaml"
 

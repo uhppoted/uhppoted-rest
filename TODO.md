@@ -1,11 +1,10 @@
 # TODO
 
-- [x] anti-passback (cf. https://github.com/uhppoted/uhppoted/issues/60)
-      - [x] `get-antipassback`
-      - [x] `set-antipassback`
-      - [x] OpenAPI
-      - [x] CHANGELOG
-      - [x] README
+- [ ] 'first card' API (cf. https://github.com/uhppoted/uhppoted/issues/82)
+   - [ ] OpenAPI
+   - [ ] API
+   - [ ] README
+   - [ ] CHANGELOG
 
 ### To Be Done
 
