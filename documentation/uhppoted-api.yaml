@@ -1,7 +1,7 @@
 openapi: "3.0.3"
 
 info:
-  version: 0.9.1  
+  version: "0.9.1"
   title: "uhppoted"
   description: "REST API for the uhppoted-rest service. The API currently supports both device level functions and higher level access control list management."
   license:
@@ -9,8 +9,8 @@ info:
     url: "https://github.com/uhppoted/uhppoted/blob/master/LICENSE"
     
 servers:    
-  - url: "http://127.0.0.1:8080/uhppote"
-  - url: "https://127.0.0.1:8443/uhppote"
+  - url: "http://localhost:8080/uhppote"
+  - url: "https://localhost:8443/uhppote"
   
 tags:
   - name: "device"
@@ -2141,19 +2141,18 @@ components:
           description: "Fire alarm status flag set"
           example: 0
         event:
-          type: object
-          $ref: "#/components/schemas/DeviceStatus" 
-          format: json
+          nullable: true
+          allOf:
+            - $ref: "#/components/schemas/StatusEvent"
           description: "Last event (if present)"
-          example:  { 
-              index: 37, 
-              type: 3, 
-              access-granted: true, 
-              door: 2, 
-              user-id: 10058400,  
-              timestamp: "2023-01-14 12:34:56", 
-              reason: 6 
-            }
+          example:
+            index: 37
+            type: 3
+            access-granted: true
+            door: 2
+            user-id: 10058400
+            timestamp: "2023-01-14 12:34:56"
+            reason: 6
 
     StatusEvent:
       required: 
@@ -2296,8 +2295,12 @@ components:
       properties:
         keypads:
           type: array
-          additionalProperties: false
-          format: array[uint32]
+          maxItems: 4
+          items:
+            type: integer
+            format: uint32
+            minimum: 1
+            maximum: 999999
           description: "Array of up to four passcodes in the range [1..999999]"
           example: [ 12345,99999,54321]
 
@@ -2373,12 +2376,15 @@ components:
           example: "2023-12-31"
         doors:  
           type: object
-          items:
-             type: boolean
-             format: true/false
-             description: "Door access permitted"
-          example: { "1":true, "2":false, "3":false, "4":true }
-          description: "List of doors and access"
+          additionalProperties:
+            oneOf:
+              - type: boolean
+                description: "Enable/disable door access"
+              - type: integer
+                minimum: 0
+                maximum: 254
+                description: "Door access permission (0:none, 1:24x7, 2-254:timezone"
+          description: "List of doors and access permissions"
         PIN:  
           type: number
           format: uint32
@@ -2404,11 +2410,15 @@ components:
           example: "2023-12-31"
         doors:  
           type: object
-          items:
-             type: object
-             format: map[uint8]boolean
-             description: "maps door number 1..4 to the corresponding door access permission (true, false or a valid time profile ID"
-          example: { "1":true, "2":false, "3":55, "4":true }
+          additionalProperties:
+            oneOf:
+              - type: boolean
+                description: "Enable/disable door access"
+              - type: integer
+                minimum: 0
+                maximum: 254
+                description: "Door access permission (0:none, 1:24x7, 2-254:timezone"
+          example: { "1":1, "2":false, "3":29, "4":true }
           description: "List of doors and access"
         PIN:  
           type: number
@@ -2499,26 +2509,23 @@ components:
           example: "2023-12-31"
         weekdays:  
           type: string
-          items:
-             type: string
-             format: "comma seperated list of weekdays"
-             description: "List of weekdays for which the time profile is active. Weekday name are case-insensitive and 3 letter abbreviations are valid."
+          format: "comma seperated list of weekdays"
+          description: "List of weekdays for which the time profile is active. Weekday name are case-insensitive and 3 letter abbreviations are valid."
           example: "Monday,Wednesday,Friday"
-          description: "List of weekdays for which the time profile is active"
-        segments:  
-          type: array
-          # properties:
-          #   1: "#/components/schemas/TimeSegment"
-          #   2: "#/components/schemas/TimeSegment"
-          #   3: "#/components/schemas/TimeSegment"
-          additionalProperties: false 
-          example:  [ { "start":"08:30", "end":"11:15" }, { "start":"12:00", "end":"16:45" }  ]
-          description: "Array of up to 3 time intervals during which the time profile is active"
         linked-profile:  
           type: number
           format: uint8
           description: "ID of time profile linked to this time profile."
           example: 71
+        segments:
+          type: array
+          maxItems: 3
+          items:
+            $ref: "#/components/schemas/TimeSegment"
+          example:
+            - { "start": "08:30", "end": "11:15" }
+            - { "start": "12:00", "end": "16:45" }
+          description: "Array of up to 3 time intervals during which the time profile is active"
 
     TimeProfileBody:
       required: 
@@ -2539,16 +2546,17 @@ components:
           example: "2023-12-31"
         weekdays:  
           type: string
-          items:
-             type: string
-             format: "comma seperated list of weekdays"
-             description: "List of weekdays for which the time profile is active. Weekday name are case-insensitive and 3 letter abbreviations are valid."
+          format: "comma seperated list of weekdays"
+          description: "List of weekdays for which the time profile is active. Weekday name are case-insensitive and 3 letter abbreviations are valid."
           example: "Monday,Wednesday,Friday"
-          description: "List of weekdays for which the time profile is active"
-        segments:  
+        segments:
           type: array
-          additionalProperties: false 
-          example:  [ { "start":"08:30", "end":"11:15" }, { "start":"12:00", "end":"16:45" } ]
+          maxItems: 3
+          items:
+            $ref: "#/components/schemas/TimeSegment"
+          example:
+            - { "start": "08:30", "end": "11:15" }
+            - { "start": "12:00", "end": "16:45" }
           description: "Array of up to 3 time intervals during which the time profile is active"
         linked-profile:  
           type: number
@@ -2624,12 +2632,9 @@ components:
           example: "2023-12-31"
         weekdays:  
           type: string
-          items:
-             type: string
-             format: "comma seperated list of weekdays"
-             description: "List of weekdays for which the task is active. Weekday name are case-insensitive and 3 letter abbreviations are valid."
+          format: "comma seperated list of weekdays"
+          description: "List of weekdays for which the time profile is active. Weekday name are case-insensitive and 3 letter abbreviations are valid."
           example: "Monday,Wednesday,Friday"
-          description: "List of weekdays for which the time profile is active"
         start:  
           type: string
           format: HH:mm

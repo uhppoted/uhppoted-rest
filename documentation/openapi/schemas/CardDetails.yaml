@@ -18,12 +18,15 @@ properties:
     example: "2023-12-31"
   doors:  
     type: object
-    items:
-       type: object
-       format: map[uint8]boolean
-       description: "maps door number 1..4 to the corresponding door access permission (true, false or a time profile ID)"
-    example: { "1":true, "2":false, "3":29, "4":true }
-    description: "List of doors and access"
+    additionalProperties:
+      oneOf:
+        - type: boolean
+          description: "Enable/disable door access"
+        - type: integer
+          minimum: 0
+          maximum: 254
+          description: "Door access permission (0:none, 1:24x7, 2-254:timezone"
+    description: "List of doors and access permissions"
   PIN:  
     type: number
     format: uint32

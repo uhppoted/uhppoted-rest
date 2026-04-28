@@ -1,7 +1,7 @@
 openapi: "3.0.3"
 
 info:
-  version: 0.9.1
+  version: "0.9.1"
   title: "uhppoted"
   description: "REST API for the uhppoted-rest service. The API currently supports both device level functions and higher level access control list management."
   license:
@@ -9,8 +9,8 @@ info:
     url: "https://github.com/uhppoted/uhppoted/blob/master/LICENSE"
     
 servers:    
-  - url: "http://127.0.0.1:8080/uhppote"
-  - url: "https://127.0.0.1:8443/uhppote"
+  - url: "http://localhost:8080/uhppote"
+  - url: "https://localhost:8443/uhppote"
   
 tags:
   - name: "device"
