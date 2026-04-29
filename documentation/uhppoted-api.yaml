@@ -907,56 +907,6 @@ paths:
             application/json:
               schema:
                   $ref: "#/components/schemas/Error"
-    delete:
-      tags:
-        - device
-      summary: "Clears the first-card configuration for a door"
-      description: "Sets the door first-card configuration to zero values"
-      operationId: deleteFirstCard
-      parameters:
-        - name: device-id
-          in: path
-          description: "Controller serial number"
-          required: true
-          schema:
-            type: integer
-            format: uint32
-            example: 405419896
-        - name: door
-          in: path
-          description: "Door number"
-          required: true
-          schema:
-            type: integer
-            format: uint8
-            example: 3
-      responses:
-        '200':
-          description: "FirsCard deleted"
-        '404':
-          description: "No matching controller"
-          content:
-            application/json:
-              schema:
-                  $ref: "#/components/schemas/Error"        
-        '405':
-          description: "Invalid request"
-          content:
-            application/json:
-              schema:
-                  $ref: "#/components/schemas/Error"        
-        '500':
-          description: "Internal system error"
-          content:
-            application/json:
-              schema:
-                  $ref: "#/components/schemas/Error"        
-        default:
-          description: "Request failed"
-          content:
-            application/json:
-              schema:
-                  $ref: "#/components/schemas/Error"        
 
   /device/{device-id}/cards:
     get:

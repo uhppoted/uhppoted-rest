@@ -2,7 +2,6 @@
 
 ## Unreleased
 1. `set-firstcard` API function to set the _first card_ configuration for a controller door.
-1. `delete-firstcard` API function to clear the _first card_ configuration for a controller door.
 
 ### Added
 

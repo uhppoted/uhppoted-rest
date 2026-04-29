@@ -133,7 +133,6 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device) {
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/control$"), http.MethodPut, device.SetDoorControl},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/passcodes$"), http.MethodPut, device.SetDoorPasscodes},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/first-card$"), http.MethodPut, device.SetFirstCard},
-			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/[1-4]/first-card$"), http.MethodDelete, device.DeleteFirstCard},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/interlock$"), http.MethodPut, device.SetInterlock},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/door/keypads$"), http.MethodPut, device.ActivateKeypads},
 			handler{regexp.MustCompile("^/uhppote/device/[0-9]+/antipassback$"), http.MethodGet, device.GetAntiPassback},

@@ -230,31 +230,6 @@ func SetFirstCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseW
 	}
 }
 
-func DeleteFirstCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
-	controller := ctx.Value(lib.DeviceID).(uint32)
-	door := ctx.Value(lib.Door).(uint8)
-
-	firstcard := types.FirstCard{
-		StartTime: types.HHmm{},
-		EndTime:   types.HHmm{},
-		Active:    types.ModeControlled,
-		Inactive:  types.ModeControlled,
-		Weekdays:  types.Weekdays{},
-	}
-
-	if ok, err := impl.SetFirstCard(controller, door, firstcard); err != nil {
-		return http.StatusInternalServerError,
-			errors.NewRESTError("delete-firstcard", "Error clearing ontroller door first-card"),
-			err
-	} else if !ok {
-		return http.StatusInternalServerError,
-			errors.NewRESTError("set-firstcard", "Failed to clear controller door first-card"),
-			fmt.Errorf("delete-firstcard failed")
-	} else {
-		return http.StatusOK, &struct{}{}, nil
-	}
-}
-
 func OpenDoor(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	deviceID := ctx.Value(lib.DeviceID).(uint32)
 	door := ctx.Value(lib.Door).(uint8)
