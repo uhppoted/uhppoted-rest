@@ -2086,16 +2086,6 @@ components:
           example: 0
         event:
           $ref: "#/components/schemas/StatusEvent"
-          nullable: true
-          description: "Last event (if present)"
-          example:
-            index: 37
-            type: 3
-            access-granted: true
-            door: 2
-            user-id: 10058400
-            timestamp: "2023-01-14 12:34:56"
-            reason: 6
 
     StatusEvent:
       required: 
@@ -2289,7 +2279,7 @@ components:
           type: string
           format: controlled, normally-open, normally-closed or firstcard
           description: "Door control mode when a valid first-card has not been swiped"
-          example: "deleteFirstCard"
+          example: "normally-closed"
         weekdays:
           type: string
           format: "comma seperated list of weekdays"

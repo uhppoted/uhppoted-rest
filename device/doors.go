@@ -193,28 +193,14 @@ func SetFirstCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseW
 			err
 	}
 
-	body := struct {
-		StartTime types.HHmm         `json:"start-time"`
-		EndTime   types.HHmm         `json:"end-time"`
-		Active    types.ControlState `json:"active-mode"`
-		Inactive  types.ControlState `json:"inactive-mode"`
-		Weekdays  types.Weekdays     `json:"weekdays"`
-	}{
+	firstcard := types.FirstCard{
 		Weekdays: types.Weekdays{},
 	}
 
-	if err := json.Unmarshal(blob, &body); err != nil {
+	if err := json.Unmarshal(blob, &firstcard); err != nil {
 		return http.StatusBadRequest,
 			errors.NewRESTError("set-firstcard", "Error parsing request"),
 			err
-	}
-
-	firstcard := types.FirstCard{
-		StartTime: body.StartTime,
-		EndTime:   body.EndTime,
-		Active:    body.Active,
-		Inactive:  body.Inactive,
-		Weekdays:  body.Weekdays,
 	}
 
 	if ok, err := impl.SetFirstCard(controller, door, firstcard); err != nil {
