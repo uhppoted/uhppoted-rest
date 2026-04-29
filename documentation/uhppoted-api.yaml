@@ -1648,7 +1648,8 @@ paths:
           description: "Numeric event index or 'first', 'last', 'current' or 'next'"
           required: true
           schema:
-            type: string
+            type: integer
+            format: uint32
             example: 31
       responses:
         '200':
@@ -2061,14 +2062,6 @@ components:
 
     DeviceStatus:
       required: 
-        - last-event-index
-        - event-type
-        - access-granted
-        - door
-        - door-opened
-        - user-id
-        - event-timestamp
-        - event-result
         - door-state 
         - door-buttons
         - system-state
@@ -2078,33 +2071,34 @@ components:
         - special-message
         - battery-status
         - fire-alarm-status
+        - event
       properties:
         door-state:  
           type: object
-          # properties:
-          #   1: bool
-          #   2: bool
-          #   3: bool
-          #   4: bool
-          additionalProperties: false 
+          additionalProperties:
+            type: boolean
+            description: "true if the door is open"
           format: map[uint8]boolean
           description: "maps door number 1..4 to the corresponding door open/closed state"
           example: { 
-            1: true, 
-            2: false, 
-            3: false, 
-            4: true 
+            "1": true, 
+            "2": false, 
+            "3": false, 
+            "4": true 
           }
         door-buttons:  
           type: object
-          format: map[uint8]boolean
+          additionalProperties:
+            type: boolean
+            description: "true if the button for the door is pressed"
           description: "maps door number 1..4 to the corresponding door button pressed/released state"
           example: { 
-            1: true, 
-            2: true, 
-            3: false, 
-            4: true 
+            "1": true, 
+            "2": true, 
+            "3": false, 
+            "4": true 
           }
+
         system-state:  
           type: integer
           format: uint8
@@ -2141,9 +2135,8 @@ components:
           description: "Fire alarm status flag set"
           example: 0
         event:
+          $ref: "#/components/schemas/StatusEvent"
           nullable: true
-          allOf:
-            - $ref: "#/components/schemas/StatusEvent"
           description: "Last event (if present)"
           example:
             index: 37
@@ -2162,8 +2155,8 @@ components:
         - door
         - door-opened
         - user-id
-        - event-timestamp
-        - event-result
+        - timestamp
+        - reason
       properties:
         index:
           type: number
@@ -2281,14 +2274,16 @@ components:
       properties:
         keypads:
           type: object
-          additionalProperties: false
+          additionalProperties:
+            type: boolean
+            description: "Enable/disable keypad for door"
           format: map[uint8]boolean
           description: "Maps keypads 1..4 to the corresponding activated/deactivated state"
           example: {
-            1: true,
-            2: true,
-            3: false,
-            4: true
+            "1": true,
+            "2": true,
+            "3": false,
+            "4": true
           }
 
     SuperPasscodes:
@@ -2635,7 +2630,7 @@ components:
           format: "comma seperated list of weekdays"
           description: "List of weekdays for which the time profile is active. Weekday name are case-insensitive and 3 letter abbreviations are valid."
           example: "Monday,Wednesday,Friday"
-        start:  
+        start-time:  
           type: string
           format: HH:mm
           description: "Time at which to run task"
@@ -2677,6 +2672,13 @@ components:
           format: uint32
           description: "Card number"
           example: 10058400
+        door:
+          type: number
+          format: uint8
+          minimum: 1
+          maximum: 4
+          description: "Door ID [1..4]"
+          example: 3
         start-date:  
           type: string
           format: yyyy-MM-dd
@@ -2811,7 +2813,6 @@ components:
         - event-type
         - access-granted
         - door-id
-        - door-opened
         - user-id
         - timestamp
         - event-result

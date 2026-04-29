@@ -56,7 +56,8 @@ vuln:
 	govulncheck ./...
 
 open-api:
-	swagger-cli bundle documentation/openapi/uhppoted-api.yaml --outfile generated.yaml --type yaml
+	npx @redocly/cli@latest lint documentation/uhppoted-api.yaml
+# 	swagger-cli bundle documentation/openapi/uhppoted-api.yaml --outfile generated.yaml --type yaml
 
 build-all: build test vet lint
 	mkdir -p dist/$(DIST)/linux
