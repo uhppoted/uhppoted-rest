@@ -5,10 +5,9 @@ required:
   - event-type
   - access-granted
   - door-id
-  - door-opened
   - user-id
   - timestamp
-  - event-result
+  - reason
 properties:
   event-id:  
     type: number
@@ -40,8 +39,8 @@ properties:
     format: yyyy-MM-dd HH:mm:ss
     description: "Event timestamp"
     example: "2023-03-27 12:34:56"
-  event-result:  
+  reason:  
     type: number
     format: uint8
-    description: "Event result"
+    description: "Event reason"
     example: 6

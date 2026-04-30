@@ -1,11 +1,10 @@
 # schemas/TimeProfileList.yaml
 
-TimeProfileList:
-  required: 
-    - profiles
-  properties:
-    profiles:
-      type: array
-      items:
-        $ref: "../schemas/TimeProfile.yaml"                
-      description: "List of time profiles"
+required: 
+  - profiles
+properties:
+  profiles:
+    type: array
+    items:
+      $ref: "../schemas/TimeProfile.yaml"                
+    description: "List of time profiles"

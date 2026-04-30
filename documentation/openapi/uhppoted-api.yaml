@@ -53,10 +53,10 @@ paths:
   /device/{device-id}/door/keypads:
     $ref: "./paths/door-keypads.yaml"
 
-  /device/{device-id}/door/passcodes:
+  /device/{device-id}/door/{door}/passcodes:
     $ref: "./paths/door-passcodes.yaml"
 
-  /device/{device-id}/door/first-card:
+  /device/{device-id}/door/{door}/first-card:
     $ref: "./paths/door-firstcard.yaml"
 
   /device/{device-id}/status:
@@ -83,7 +83,7 @@ paths:
   /device/{device-id}/events/{range}:
     $ref: "./paths/events-range.yaml"
 
-  /device/{device-id}/event/{event-id}:
+  /device/{device-id}/event/{event-index}:
     $ref: "./paths/event.yaml"
 
   /device/{device-id}/special-events:

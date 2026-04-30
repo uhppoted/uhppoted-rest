@@ -2,7 +2,6 @@
 
 required: 
   - card-number
-  - door
   - start-date
   - end-date
   - doors

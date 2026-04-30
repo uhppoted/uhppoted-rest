@@ -57,6 +57,7 @@ vuln:
 
 open-api:
 	npx @redocly/cli@latest lint documentation/uhppoted-api.yaml
+	npx @redocly/cli@latest lint documentation/openapi/uhppoted-api.yaml
 # 	swagger-cli bundle documentation/openapi/uhppoted-api.yaml --outfile generated.yaml --type yaml
 
 build-all: build test vet lint

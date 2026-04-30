@@ -7,8 +7,8 @@ required:
   - door
   - door-opened
   - user-id
-  - event-timestamp
-  - event-result
+  - timestamp
+  - reason
 properties:
   index:
     type: number

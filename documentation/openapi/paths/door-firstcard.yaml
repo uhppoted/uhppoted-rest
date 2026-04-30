@@ -29,35 +29,35 @@ put:
     content:
       application/json:
         schema:
-          $ref: "#/components/schemas/FirstCard"
+          $ref: "../schemas/Error.yaml"
   responses:
     '200':
       description: "First card configured ok"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/FirstCard"
+            $ref: "../schemas/FirstCard.yaml"
     '404':
       description: "No controller with ID matching device-id"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/Error"
+            $ref: "../schemas/Error.yaml"
     '405':
       description: "Invalid request"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/Error"
+            $ref: "../schemas/Error.yaml"
     '500':
       description: "Internal system error"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/Error"
+            $ref: "../schemas/Error.yaml"
     default:
       description: "Request failed"
       content:
         application/json:
           schema:
-              $ref: "#/components/schemas/Error"
+            $ref: "../schemas/Error.yaml"

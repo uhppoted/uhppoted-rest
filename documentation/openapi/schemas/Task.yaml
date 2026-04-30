@@ -6,7 +6,7 @@ required:
   - start-date
   - end-date
   - weekdays
-  - start-time
+  - start
 properties:
   task:  
     type: string

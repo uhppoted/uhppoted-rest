@@ -1,14 +1,6 @@
 # schemas/DeviceStatus.yaml
 
 required: 
-  - last-event-index
-  - event-type
-  - access-granted
-  - door
-  - door-opened
-  - user-id
-  - event-timestamp
-  - event-result
   - door-state 
   - door-buttons
   - system-state
@@ -18,32 +10,32 @@ required:
   - special-message
   - battery-status
   - fire-alarm-status
+  - event
 properties:
   door-state:  
     type: object
-    # properties:
-    #   1: bool
-    #   2: bool
-    #   3: bool
-    #   4: bool
-    additionalProperties: false 
+    additionalProperties:
+      type: boolean
+      description: "true if the door is open"
     format: map[uint8]boolean
     description: "maps door number 1..4 to the corresponding door open/closed state"
     example: { 
-      1: true, 
-      2: false, 
-      3: false, 
-      4: true 
+      "1": true, 
+      "2": false, 
+      "3": false, 
+      "4": true 
     }
   door-buttons:  
     type: object
-    format: map[uint8]boolean
+    additionalProperties:
+      type: boolean
+      description: "true if the button for the door is pressed"
     description: "maps door number 1..4 to the corresponding door button pressed/released state"
     example: { 
-      1: true, 
-      2: true, 
-      3: false, 
-      4: true 
+      "1": true, 
+      "2": true, 
+      "3": false, 
+      "4": true 
     }
   system-state:  
     type: integer
@@ -81,16 +73,4 @@ properties:
     description: "Fire alarm status flag set"
     example: 0
   event:
-    type: object
-    $ref: "./DeviceStatus.yaml" 
-    format: json
-    description: "Last event (if present)"
-    example:  { 
-        index: 37, 
-        type: 3, 
-        access-granted: true, 
-        door: 2, 
-        user-id: 762424255,  
-        timestamp: "2023-01-14 12:34:56", 
-        reason: 6 
-      }
+    $ref: "./StatusEvent.yaml"

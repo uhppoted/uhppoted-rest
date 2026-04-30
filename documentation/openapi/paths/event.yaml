@@ -20,7 +20,8 @@ get:
       description: "Numeric event index or 'first', 'last', 'current' or 'next'"
       required: true
       schema:
-        type: string
+        type: integer
+        format: uint32
         example: 31
   responses:
     '200':
