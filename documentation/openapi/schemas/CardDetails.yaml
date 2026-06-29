@@ -10,12 +10,12 @@ properties:
     type: string
     format: yyyy-MM-dd
     description: "First date card is valid"
-    example: "2023-01-01"
+    example: "2026-01-01"
   end-date:  
     type: string
     format: yyyy-MM-dd
     description: "Last date card is valid"
-    example: "2023-12-31"
+    example: "2026-12-31"
   doors:  
     type: object
     additionalProperties:
@@ -27,8 +27,15 @@ properties:
           maximum: 254
           description: "Door access permission (0:none, 1:24x7, 2-254:timezone"
     description: "List of doors and access permissions"
+    example: { "1":1, "2":false, "3":29, "4":true }
   PIN:  
     type: number
     format: uint32
     description: "(optional) keypad PIN code in the range 0 to 999999"
     example: 7531
+  first-card:
+    type: object
+    additionalProperties:
+      type: boolean
+    description: "Map of card first-card privileges"
+    example: { "1":true, "2":false, "3":true, "4":true }

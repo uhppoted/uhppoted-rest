@@ -105,12 +105,16 @@ func PutCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 	}
 
 	card := struct {
-		CardNumber uint32        `json:"card-number"`
-		From       types.Date    `json:"start-date"`
-		To         types.Date    `json:"end-date"`
-		Doors      map[uint8]any `json:"doors"`
-		PIN        uint32        `json:"PIN,omitempty"`
-	}{}
+		CardNumber uint32         `json:"card-number"`
+		From       types.Date     `json:"start-date"`
+		To         types.Date     `json:"end-date"`
+		Doors      map[uint8]any  `json:"doors"`
+		PIN        uint32         `json:"PIN"`
+		FirstCard  map[uint8]bool `json:"first-card"`
+	}{
+		Doors:     map[uint8]any{},
+		FirstCard: map[uint8]bool{},
+	}
 
 	if err = json.Unmarshal(blob, &card); err != nil {
 		return http.StatusBadRequest,
@@ -130,6 +134,7 @@ func PutCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 		To:         card.To,
 		Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
 		PIN:        types.PIN(card.PIN),
+		FirstCard:  types.FirstCardPrivileges{},
 	}
 
 	for k, v := range card.Doors {
@@ -146,6 +151,11 @@ func PutCard(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter
 			c.Doors[k] = uint8(vv)
 		}
 	}
+
+	c.FirstCard.Door1 = card.FirstCard[1]
+	c.FirstCard.Door2 = card.FirstCard[2]
+	c.FirstCard.Door3 = card.FirstCard[3]
+	c.FirstCard.Door4 = card.FirstCard[4]
 
 	if _, err = impl.PutCard(deviceID, c); err != nil {
 		return http.StatusInternalServerError,

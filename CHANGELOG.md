@@ -1,9 +1,12 @@
 # CHANGELOG
 
 ## Unreleased
-1. `set-firstcard` API function to set the _first card_ configuration for a controller door.
+
 
 ### Added
+1. `set-firstcard` API function to set the _first card_ configuration for a controller door.
+2. Added _first-card_ privileges to `put-card`.
+3. Added _first-card_ privileges to `get-card`.
 
 ### Updated
 1. Updated to Go 1.26.

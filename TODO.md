@@ -1,6 +1,15 @@
 # TODO
 
 - [x] 'first card' API (cf. https://github.com/uhppoted/uhppoted/issues/82)
+    - [x] update put-card
+    - [x] update get-card
+    - [x] CHANGELOG
+    - [x] README
+    - [x] OpenAPI
+    - [ ] translate the set-firstcard request body
+       - [ ] 'firstcard' or 'first-card only'
+    - (?) update ACL functions
+
 - [ ] clean up OpenAPI
 
 ### To Be Done
