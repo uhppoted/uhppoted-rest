@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/uhppoted/uhppote-core/types"
-	lib "github.com/uhppoted/uhppoted-lib/acl"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	lib "codeberg.org/uhppoted/uhppoted-lib/acl"
 )
 
 func TestPermissionsToTable(t *testing.T) {

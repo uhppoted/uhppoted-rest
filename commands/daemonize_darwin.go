@@ -9,9 +9,9 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppoted-lib/config"
-	xpath "github.com/uhppoted/uhppoted-lib/encoding/plist"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	"codeberg.org/uhppoted/uhppoted-lib/config"
+	xpath "codeberg.org/uhppoted/uhppoted-lib/encoding/plist"
 )
 
 type info struct {

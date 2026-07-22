@@ -9,11 +9,11 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppoted-lib/uhppoted"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	"codeberg.org/uhppoted/uhppoted-lib/uhppoted"
 
-	"github.com/uhppoted/uhppoted-rest/errors"
-	"github.com/uhppoted/uhppoted-rest/lib"
+	"codeberg.org/uhppoted/uhppoted-rest/errors"
+	"codeberg.org/uhppoted/uhppoted-rest/lib"
 )
 
 func authorized(ctx context.Context, cardNumber uint32) bool {

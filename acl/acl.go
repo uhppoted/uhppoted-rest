@@ -6,10 +6,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/uhppoted/uhppote-core/types"
-	api "github.com/uhppoted/uhppoted-lib/acl"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	api "codeberg.org/uhppoted/uhppoted-lib/acl"
 
-	"github.com/uhppoted/uhppoted-rest/log"
+	"codeberg.org/uhppoted/uhppoted-rest/log"
 )
 
 type permission struct {

@@ -7,9 +7,9 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppoted-lib/uhppoted"
-	rerrors "github.com/uhppoted/uhppoted-rest/errors"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	"codeberg.org/uhppoted/uhppoted-lib/uhppoted"
+	rerrors "codeberg.org/uhppoted/uhppoted-rest/errors"
 )
 
 func PutTaskList(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {

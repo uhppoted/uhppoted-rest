@@ -7,10 +7,10 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/uhppoted/uhppoted-lib/uhppoted"
+	"codeberg.org/uhppoted/uhppoted-lib/uhppoted"
 
-	"github.com/uhppoted/uhppoted-rest/errors"
-	"github.com/uhppoted/uhppoted-rest/lib"
+	"codeberg.org/uhppoted/uhppoted-rest/errors"
+	"codeberg.org/uhppoted/uhppoted-rest/lib"
 )
 
 // Implements the record-special-events REST API. Extracts the 'enabled' value from the

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	syslog "log"
 
-	"github.com/uhppoted/uhppoted-lib/log"
+	"codeberg.org/uhppoted/uhppoted-lib/log"
 )
 
 const f = "%-12v %v"

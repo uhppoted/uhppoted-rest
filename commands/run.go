@@ -11,14 +11,14 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/uhppoted/uhppoted-lib/config"
-	"github.com/uhppoted/uhppoted-lib/locales"
-	"github.com/uhppoted/uhppoted-lib/lockfile"
+	"codeberg.org/uhppoted/uhppoted-lib/config"
+	"codeberg.org/uhppoted/uhppoted-lib/locales"
+	"codeberg.org/uhppoted/uhppoted-lib/lockfile"
 
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted-rest/log"
-	"github.com/uhppoted/uhppoted-rest/rest"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	"codeberg.org/uhppoted/uhppoted-core/uhppote"
+	"codeberg.org/uhppoted/uhppoted-rest/log"
+	"codeberg.org/uhppoted/uhppoted-rest/rest"
 )
 
 type status struct {

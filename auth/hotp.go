@@ -12,8 +12,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/uhppoted/uhppoted-lib/kvs"
-	"github.com/uhppoted/uhppoted-rest/log"
+	"codeberg.org/uhppoted/uhppoted-lib/kvs"
+	"codeberg.org/uhppoted/uhppoted-rest/log"
 )
 
 type HOTP struct {

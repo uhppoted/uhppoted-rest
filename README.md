@@ -62,16 +62,16 @@ The `uhppoted-rest` service requires the following additional files:
 ### `uhppoted.conf`
 
 `uhppoted.conf` is the communal configuration file shared by all the `uhppoted` project modules and is (or will 
-eventually be) documented in [uhppoted](https://github.com/uhppoted/uhppoted). `uhppoted-rest` requires:
+eventually be) documented in [uhppoted](https://codeberg.org/uhppoted/uhppoted). `uhppoted-rest` requires:
 - the _REST_ section to define the configuration for the REST _httpd_ server
 - the _devices_ section to resolve non-local controller IP addresses and door to controller door identities.
 
-A sample [uhppoted.conf](https://github.com/uhppoted/uhppoted/blob/master/runtime/simulation/405419896.conf) file is included in the `uhppoted` distribution.
+A sample [uhppoted.conf](https://codeberg.org/uhppoted/uhppoted/blob/master/runtime/simulation/405419896.conf) file is included in the `uhppoted` distribution.
 
 
 ### Docker
 
-A public _Docker_ image is published to [ghcr.io](https://github.com/uhppoted?tab=packages&repo_name=uhppoted-rest). 
+A public _Docker_ image is published to [ghcr.io](https://codeberg.org/uhppoted?tab=packages&repo_name=uhppoted-rest). 
 
 The image is configured to use the `/usr/local/etc/uhppoted/uhppoted.conf` file for configuration information.
 
@@ -126,14 +126,14 @@ FROM ghcr.io/uhppoted/restd:latest
 Assuming you have `Go` and `make` installed:
 
 ```
-git clone https://github.com/uhppoted/uhppoted-rest.git
+git clone https://codeberg.org/uhppoted/uhppoted-rest.git
 cd uhppoted-rest
 make build
 ```
 
 If you prefer not to use `make`:
 ```
-git clone https://github.com/uhppoted/uhppoted-rest.git
+git clone https://codeberg.org/uhppoted/uhppoted-rest.git
 cd uhppoted-rest
 mkdir bin
 go build -trimpath -o bin ./...
@@ -142,12 +142,6 @@ go build -trimpath -o bin ./...
 The above commands build the `'uhppoted-rest` executable to the `bin` directory.
 
 #### Dependencies
-
-| *Dependency*                                             | *Description*                              |
-| -------------------------------------------------------- | ------------------------------------------ |
-| [uhppote-core](https://github.com/uhppoted/uhppote-core) | Device level API implementation            |
-| [uhppoted-lib](https://github.com/uhppoted/uhppoted-lib) | common API for external                    |
-| golang.org/x/sys                                         | Support for Windows services               |
 
 ## uhppoted-rest
 
@@ -163,7 +157,7 @@ Supported commands:
 
 Defaults to `run` if the command it not provided i.e. ```uhppoted-rest <options>``` is equivalent to ```uhppoted-rest run <options>```.
 
-The OpenAPI specification for the [REST API](https://github.com/uhppoted/uhppoted-rest/blob/master/documentation/uhppoted-api.yaml) is included in the documentation folder.
+The OpenAPI specification for the [REST API](https://codeberg.org/uhppoted/uhppoted-rest/blob/master/documentation/uhppoted-api.yaml) is included in the documentation folder.
 
 ### `run`
 

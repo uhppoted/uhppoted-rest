@@ -1,9 +1,9 @@
 package commands
 
 import (
+	xml "codeberg.org/uhppoted/uhppoted-lib/encoding/plist"
 	"flag"
 	"fmt"
-	xml "github.com/uhppoted/uhppoted-lib/encoding/plist"
 	"os"
 	"os/exec"
 	"path/filepath"

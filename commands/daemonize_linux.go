@@ -11,8 +11,8 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppoted-lib/config"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	"codeberg.org/uhppoted/uhppoted-lib/config"
 )
 
 type usergroup string
@@ -123,7 +123,7 @@ func (cmd *Daemonize) Execute(args ...interface{}) error {
 
 	d := info{
 		Description:      "UHPPOTE UTO311-L0x access card controllers service/daemon ",
-		Documentation:    "https://github.com/uhppoted/uhppoted-rest",
+		Documentation:    "https://codeberg.org/uhppoted/uhppoted-rest",
 		WorkDir:          "/var/uhppoted/rest",
 		Executable:       executable,
 		PID:              "/var/uhppoted/uhppoted-rest.pid",

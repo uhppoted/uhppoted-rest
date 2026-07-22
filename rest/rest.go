@@ -14,14 +14,14 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted-lib/uhppoted"
+	"codeberg.org/uhppoted/uhppoted-core/uhppote"
+	"codeberg.org/uhppoted/uhppoted-lib/uhppoted"
 
-	"github.com/uhppoted/uhppoted-rest/acl"
-	"github.com/uhppoted/uhppoted-rest/auth"
-	"github.com/uhppoted/uhppoted-rest/device"
-	"github.com/uhppoted/uhppoted-rest/lib"
-	"github.com/uhppoted/uhppoted-rest/log"
+	"codeberg.org/uhppoted/uhppoted-rest/acl"
+	"codeberg.org/uhppoted/uhppoted-rest/auth"
+	"codeberg.org/uhppoted/uhppoted-rest/device"
+	"codeberg.org/uhppoted/uhppoted-rest/lib"
+	"codeberg.org/uhppoted/uhppoted-rest/log"
 )
 
 // OpenAPI is a container for the runtime flags for the Open API user interface

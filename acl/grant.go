@@ -10,13 +10,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
-	api "github.com/uhppoted/uhppoted-lib/acl"
-	"github.com/uhppoted/uhppoted-lib/uhppoted"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	"codeberg.org/uhppoted/uhppoted-core/uhppote"
+	api "codeberg.org/uhppoted/uhppoted-lib/acl"
+	"codeberg.org/uhppoted/uhppoted-lib/uhppoted"
 
-	"github.com/uhppoted/uhppoted-rest/errors"
-	"github.com/uhppoted/uhppoted-rest/lib"
+	"codeberg.org/uhppoted/uhppoted-rest/errors"
+	"codeberg.org/uhppoted/uhppoted-rest/lib"
 )
 
 func Grant(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
