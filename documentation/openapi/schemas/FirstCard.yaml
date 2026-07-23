@@ -19,14 +19,14 @@ properties:
     example: "16:45"
   active-mode:
     type: string
-    format: controlled, normally-open or normally-closed
+    format: controlled, normally open or normally closed
     description: "Door control mode after a first-card swipe"
-    example: "normally-open"
+    example: "normally open"
   inactive-mode:
     type: string
-    format: controlled, normally-open, normally-closed or firstcard
+    format: controlled, normally open, normally closed or firstcard only
     description: "Door control mode when a valid first-card has not been swiped"
-    example: "firstcard"
+    example: "firstcard only"
   weekdays:
     type: string
     format: "comma seperated list of weekdays"

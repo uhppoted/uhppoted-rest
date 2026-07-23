@@ -1,14 +1,16 @@
 # TODO
 
-- [x] 'first card' API (cf. https://github.com/uhppoted/uhppoted/issues/82)
-    - [x] update put-card
-    - [x] update get-card
+- [x] 'set-firstcard' API (cf. https://codeberg.org/uhppoted/uhppoted/issues/2)
     - [x] CHANGELOG
     - [x] README
     - [x] OpenAPI
-    - [ ] translate the set-firstcard request body
-       - [ ] 'firstcard' or 'first-card only'
-    - (?) update ACL functions
+    - [x] ~~translate the set-firstcard request body~~
+
+- [ ] add first-card privilege to `get-card` and `put-card` (cf. https://codeberg.org/uhppoted/uhppoted/issues/3)
+    - [x] put-card
+    - [x] get-card
+    - [x] ~get-card-by-index~
+    - [ ] update ACL functions
 
 - [ ] clean up OpenAPI
 
