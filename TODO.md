@@ -11,6 +11,9 @@
     - [x] get-card
     - [x] ~get-card-by-index~
     - [ ] update ACL functions
+        - [ ] config::withPIN
+        - [ ] config::withFirstCard
+        - [ ] getACL
 
 - [ ] clean up OpenAPI
 
