@@ -102,7 +102,8 @@ publish: release
 	                               --draft --prerelease --title "$(VERSION)-beta" --notes-file release-notes.md
 
 debug: build
-	$(CMD) --debug --log-level debug --config workdir/uhppoted.conf --console
+# 	$(CMD) --debug --log-level debug --config workdir/uhppoted.conf --console
+	go test -v -run TestPermissionsFromTable ./acl/...
 
 godoc:
 	godoc -http=:80	-index_interval=60s

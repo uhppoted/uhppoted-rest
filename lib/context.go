@@ -10,6 +10,8 @@ const (
 	Door
 	AuthorizedCards
 	Compression
+	WithPINs
+	WithFirstCard
 )
 
 func (k ContextKey) String() string {
@@ -21,5 +23,7 @@ func (k ContextKey) String() string {
 		"door",
 		"authorized-cards",
 		"compression",
+		"with-PINs",
+		"with-firstcard",
 	}[k]
 }

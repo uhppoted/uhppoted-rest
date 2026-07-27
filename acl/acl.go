@@ -3,6 +3,7 @@ package acl
 import (
 	"fmt"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -14,9 +15,11 @@ import (
 
 type permission struct {
 	CardNumber uint32     `json:"card-number"`
+	PIN        uint32     `json:"PIN,omitempty"`
 	From       types.Date `json:"start-date"`
 	To         types.Date `json:"end-date"`
 	Doors      []door     `json:"doors,omitempty"`
+	FirstCard  bool       `json:"first-card,omitempty"`
 }
 
 type door struct {
@@ -86,27 +89,46 @@ func PermissionsToTable(p []permission) (*api.Table, error) {
 	return &table, nil
 }
 
-func PermissionsFromTable(table *api.Table) ([]permission, error) {
+func PermissionsFromTable(table api.Table, withPINs bool, withFirstCard bool) ([]permission, error) {
 	index := struct {
 		cardnumber int
+		PIN        int
 		from       int
 		to         int
 		doors      map[int]string
+		firstcard  int
 	}{
 		cardnumber: 0,
+		PIN:        0,
 		from:       0,
 		to:         0,
 		doors:      map[int]string{},
+		firstcard:  0,
 	}
 
 	for i, h := range table.Header {
 		switch clean(h) {
 		case "cardnumber":
 			index.cardnumber = i + 1
+
+		case "pin":
+			if withPINs {
+				index.PIN = i + 1
+			}
+
 		case "from":
 			index.from = i + 1
+
 		case "to":
 			index.to = i + 1
+
+		case "firstcard":
+			if withFirstCard {
+				index.firstcard = i + 1
+			} else {
+				index.doors[i+1] = h
+			}
+
 		default:
 			index.doors[i+1] = h
 		}
@@ -114,6 +136,10 @@ func PermissionsFromTable(table *api.Table) ([]permission, error) {
 
 	if index.cardnumber == 0 {
 		return nil, fmt.Errorf("invalid ACL table - missing 'card number'")
+	}
+
+	if withPINs && index.PIN == 0 {
+		return nil, fmt.Errorf("invalid ACL table - missing 'PIN'")
 	}
 
 	if index.from == 0 {
@@ -124,11 +150,26 @@ func PermissionsFromTable(table *api.Table) ([]permission, error) {
 		return nil, fmt.Errorf("invalid ACL table - missing 'to' date")
 	}
 
+	if withFirstCard && index.firstcard == 0 {
+		return nil, fmt.Errorf("invalid ACL table - missing 'firstcard'")
+	}
+
 	permissions := []permission{}
 	for _, row := range table.Records {
 		cardID, err := strconv.ParseUint(row[index.cardnumber-1], 10, 32)
 		if err != nil {
 			return nil, fmt.Errorf("invalid ACL table - invalid 'card number':%s (%w)", row[index.cardnumber-1], err)
+		}
+
+		PIN := uint64(0)
+		if withPINs {
+			if v := clean(row[index.PIN-1]); v != "" {
+				if pin, err := strconv.ParseUint(v, 10, 32); err != nil {
+					return nil, fmt.Errorf("invalid ACL table - invalid 'PIN':%s (%w)", row[index.PIN-1], err)
+				} else {
+					PIN = pin
+				}
+			}
 		}
 
 		from, err := types.ParseDate(row[index.from-1])
@@ -141,10 +182,26 @@ func PermissionsFromTable(table *api.Table) ([]permission, error) {
 			log.Warnf("ACL", "card %v  invalid to date   '%s' (%v)", cardID, row[index.to-1], err)
 		}
 
+		firstcard := false
+		if withFirstCard {
+			if v := clean(row[index.firstcard-1]); v == "y" {
+				firstcard = true
+			}
+		}
+
 		doors := []door{}
-		for k, v := range index.doors {
+
+		keys := []int{}
+		for k := range index.doors {
+			keys = append(keys, k)
+		}
+
+		sort.Ints(keys)
+
+		for _, k := range keys {
+			v := index.doors[k]
 			switch {
-			case row[k-1] == "Y":
+			case clean(row[k-1]) == "y":
 				doors = append(doors, door{
 					Door: v,
 				})
@@ -160,9 +217,11 @@ func PermissionsFromTable(table *api.Table) ([]permission, error) {
 
 		permissions = append(permissions, permission{
 			CardNumber: uint32(cardID),
+			PIN:        uint32(PIN),
 			From:       from,
 			To:         to,
 			Doors:      doors,
+			FirstCard:  firstcard,
 		})
 	}
 

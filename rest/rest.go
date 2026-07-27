@@ -82,6 +82,12 @@ type RESTD struct {
 	//Protocol version sets the version used for encoding JSON structs in responses
 	Protocol string
 
+	// Enables/disables fetching PINs for get-acl
+	WithPINs bool
+
+	// Enables/disables fetching first-card privileges for get-acl
+	WithFirstCard bool
+
 	//OpenAPI runtime flags.
 	OpenAPI
 }
@@ -95,13 +101,15 @@ type handler struct {
 }
 
 type dispatcher struct {
-	corsEnabled bool
-	uhppote     uhppote.IUHPPOTE
-	uhppoted    *uhppoted.UHPPOTED
-	devices     []uhppote.Device
-	handlers    []handler
-	auth        auth.IAuth
-	openapi     http.Handler
+	corsEnabled   bool
+	uhppote       uhppote.IUHPPOTE
+	uhppoted      *uhppoted.UHPPOTED
+	devices       []uhppote.Device
+	handlers      []handler
+	auth          auth.IAuth
+	withPINs      bool
+	withFirstCard bool
+	openapi       http.Handler
 }
 
 // Run configures and starts the REST daemon HTTP and HTTPS request listeners. It returns once the listen
@@ -164,9 +172,11 @@ func (r *RESTD) Run(u uhppote.IUHPPOTE, devices []uhppote.Device) {
 			handler{regexp.MustCompile(`^/uhppote/acl/card/[0-9]+/door/\S.*$`), http.MethodDelete, acl.Revoke},
 		},
 
-		corsEnabled: r.CORSEnabled,
-		auth:        auth,
-		openapi:     http.NotFoundHandler(),
+		corsEnabled:   r.CORSEnabled,
+		auth:          auth,
+		withPINs:      r.WithPINs,
+		withFirstCard: r.WithFirstCard,
+		openapi:       http.NotFoundHandler(),
 	}
 
 	if r.OpenAPI.Enabled {
@@ -288,6 +298,8 @@ func (d *dispatcher) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			ctx = context.WithValue(ctx, lib.Devices, d.devices)
 			ctx = context.WithValue(ctx, lib.Compression, compression)
 			ctx = context.WithValue(ctx, lib.AuthorizedCards, cards)
+			ctx = context.WithValue(ctx, lib.WithPINs, d.withPINs)
+			ctx = context.WithValue(ctx, lib.WithFirstCard, d.withFirstCard)
 			ctx = parse(ctx, r)
 
 			status, response, err := h.fn(d.uhppoted, ctx, w, r)

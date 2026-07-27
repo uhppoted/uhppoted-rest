@@ -16,6 +16,8 @@ import (
 func GetACL(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
 	u := ctx.Value(lib.Uhppote).(uhppote.IUHPPOTE)
 	controllers := ctx.Value(lib.Devices).([]uhppote.Device)
+	withPINs := ctx.Value(lib.WithPINs).(bool)
+	withFirstCard := ctx.Value(lib.WithFirstCard).(bool)
 
 	acl, errs := api.GetACL(u, controllers)
 	if len(errs) > 0 {
@@ -24,14 +26,18 @@ func GetACL(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter,
 			fmt.Errorf("Error(s) retrieving access control list (%v)", errs)
 	}
 
-	table, err := api.MakeTable(acl, controllers, false, false)
+	table, err := api.MakeTable(acl, controllers, withPINs, withFirstCard)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("get-acl", "Error processing access control list"),
 			err
+	} else if table == nil {
+		return http.StatusInternalServerError,
+			errors.NewRESTError("get-acl", "Error processing access control list"),
+			fmt.Errorf("invalid table (%v)", table)
 	}
 
-	permissions, err := PermissionsFromTable(table)
+	permissions, err := PermissionsFromTable(*table, withPINs, withFirstCard)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("get-acl", "Error processing access control table"),

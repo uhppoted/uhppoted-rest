@@ -203,6 +203,9 @@ func (cmd *Run) listen(c *config.Config, interrupt chan os.Signal) error {
 		HOTPWindow:                c.REST.HOTP.Range,
 		HOTPCounters:              c.REST.HOTP.Counters,
 		Protocol:                  c.REST.Protocol,
+		WithPINs:                  c.REST.PIN.Enabled,
+		WithFirstCard:             c.REST.FirstCard.Enabled,
+
 		OpenAPI: rest.OpenAPI{
 			Enabled:   c.OpenAPI.Enabled,
 			Directory: c.OpenAPI.Directory,
