@@ -14,8 +14,14 @@
         - [x] config::withPIN
         - [x] config::withFirstCard
         - [x] getACL
-        - [ ] putACL
-        - [ ] compareACL
+        - [x] putACL
+            - [x] withPINs
+            - [ ] withFirstCard
+            - [ ] ParseTable
+            - [ ] PermissionsToTable
+        - [ ] grant
+        - [ ] revoke
+        - [ ] show
 
 - [ ] clean up OpenAPI
 

@@ -7,6 +7,7 @@
 1. `set-firstcard` API function to set the _first card_ configuration for a controller door.
 2. Added _first-card_ privileges to `put-card`.
 3. Added _first-card_ privileges to `get-card`.
+4. Added _PIN_ and _first-card_ fields to `get-acl`.
 
 ### Updated
 1. Updated to Go 1.26.

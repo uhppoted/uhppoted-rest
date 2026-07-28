@@ -27,19 +27,32 @@ type door struct {
 	Profile int    `json:"profile,omitempty"`
 }
 
-func PermissionsToTable(p []permission) (*api.Table, error) {
+func PermissionsToTable(p []permission, withPINs bool, withFirstCard bool) (*api.Table, error) {
 	header := []string{"Card Number", "From", "To"}
 	records := [][]string{}
 	index := map[string]int{}
+
+	if withPINs {
+		header = []string{"Card Number", "PIN", "From", "To"}
+	}
 
 	for _, r := range p {
 		for _, door := range r.Doors {
 			d := clean(door.Door)
 			if _, ok := index[d]; !ok {
-				index[d] = 3 + len(index)
+				if withPINs {
+					index[d] = 4 + len(index)
+				} else {
+					index[d] = 3 + len(index)
+				}
+
 				header = append(header, door.Door)
 			}
 		}
+	}
+
+	if withFirstCard {
+		header = append(header, "FirstCard")
 	}
 
 	for _, r := range p {
@@ -55,28 +68,53 @@ func PermissionsToTable(p []permission) (*api.Table, error) {
 		}
 
 		// ... create ACL record
+		ix := 0
+
 		record := make([]string, len(header))
-		record[0] = fmt.Sprintf("%v", r.CardNumber)
-		record[1] = fmt.Sprintf("%v", r.From)
-		record[2] = fmt.Sprintf("%v", r.To)
-		for i := 3; i < len(record); i++ {
-			record[i] = "N"
+
+		record[ix] = fmt.Sprintf("%v", r.CardNumber)
+		ix++
+
+		if withPINs {
+			if r.PIN > 0 {
+				record[ix] = fmt.Sprintf("%v", r.PIN)
+			} else {
+				record[ix] = ""
+			}
+			ix++
+		}
+
+		record[ix] = fmt.Sprintf("%v", r.From)
+		ix++
+
+		record[ix] = fmt.Sprintf("%v", r.To)
+		ix++
+
+		for i := ix; i < len(record); i++ {
+			record[ix] = "N"
+			ix++
 		}
 
 		for _, door := range r.Doors {
 			d := clean(door.Door)
-			if ix, ok := index[d]; ok {
+			if k, ok := index[d]; ok {
 				if door.Profile >= 2 && door.Profile <= 254 {
-					record[ix] = strconv.Itoa(door.Profile)
+					record[k] = strconv.Itoa(door.Profile)
 				} else {
-					record[ix] = "Y"
+					record[k] = "Y"
 				}
 
+				ix++
 				continue
 			}
 
 			return nil, fmt.Errorf("card %v: unindexed door '%v'", r.CardNumber, door.Door)
 		}
+
+		// FIXME
+		// if withFirstCard {
+		// 	record[ix] = fmt.Sprintf("%v", r.PIN)
+		// }
 
 		records = append(records, record)
 	}

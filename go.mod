@@ -4,6 +4,6 @@ go 1.26
 
 require (
 	codeberg.org/uhppoted/uhppoted-core v0.0.0-20260723154335-7d132936dee1
-	codeberg.org/uhppoted/uhppoted-lib v0.0.0-20260727160533-1532e691085e
+	codeberg.org/uhppoted/uhppoted-lib v0.0.0-20260728163125-37898aecc818
 	golang.org/x/sys v0.47.0
 )

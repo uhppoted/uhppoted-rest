@@ -16,6 +16,11 @@ import (
 )
 
 func PutACL(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
+	u := ctx.Value(lib.Uhppote).(uhppote.IUHPPOTE)
+	devices := ctx.Value(lib.Devices).([]uhppote.Device)
+	withPINs := ctx.Value(lib.WithPINs).(bool)
+	withFirstCard := false // ctx.Value(lib.WithFirstCard).(bool)
+
 	blob, err := io.ReadAll(r.Body)
 	if err != nil {
 		return http.StatusInternalServerError,
@@ -33,15 +38,14 @@ func PutACL(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter,
 			err
 	}
 
-	table, err := PermissionsToTable(body.ACL)
+	table, err := PermissionsToTable(body.ACL, withPINs, withFirstCard)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("put-acl", "Error parsing request"),
 			err
 	}
 
-	u := ctx.Value(lib.Uhppote).(uhppote.IUHPPOTE)
-	devices := ctx.Value(lib.Devices).([]uhppote.Device)
+	// fmt.Printf(">>>>>>>>>>>> TABLE: %v\n", table)
 
 	acl, _, err := api.ParseTable(table, devices, true)
 	if err != nil {
@@ -50,7 +54,9 @@ func PutACL(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter,
 			err
 	}
 
-	rpt, errs := api.PutACL(u, *acl, false)
+	// fmt.Printf(">>>>>>>>>>>> ACL: %v\n", acl)
+
+	rpt, errs := api.PutACL(u, *acl, false, withPINs, withFirstCard)
 	if len(errs) > 0 {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("put-table", "Error storing access control list"),
