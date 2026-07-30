@@ -20,6 +20,10 @@ import (
 )
 
 func Grant(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r *http.Request) (int, any, error) {
+	u := ctx.Value(lib.Uhppote).(uhppote.IUHPPOTE)
+	devices := ctx.Value(lib.Devices).([]uhppote.Device)
+	withFirstCard := ctx.Value(lib.WithFirstCard).(bool)
+
 	url := r.URL.Path
 
 	matches := regexp.MustCompile(`^/uhppote/acl/card/([0-9]+)/door/(\S.*)$`).FindStringSubmatch(url)
@@ -51,9 +55,10 @@ func Grant(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, 
 	}
 
 	body := struct {
-		From    *types.Date `json:"start-date"`
-		To      *types.Date `json:"end-date"`
-		Profile int         `json:"profile"`
+		From      *types.Date `json:"start-date"`
+		To        *types.Date `json:"end-date"`
+		Profile   int         `json:"profile"`
+		FirstCard bool        `json:"first-card"`
 	}{}
 
 	if err = json.Unmarshal(blob, &body); err != nil {
@@ -74,10 +79,14 @@ func Grant(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, 
 			fmt.Errorf("missing/invalid end date in request body")
 	}
 
-	u := ctx.Value(lib.Uhppote).(uhppote.IUHPPOTE)
-	devices := ctx.Value(lib.Devices).([]uhppote.Device)
+	err = func() error {
+		if withFirstCard && body.FirstCard {
+			return api.Grant(u, devices, uint32(cardID), *body.From, *body.To, body.Profile, []string{door}, api.FirstCardGranted)
+		} else {
+			return api.Grant(u, devices, uint32(cardID), *body.From, *body.To, body.Profile, []string{door}, api.FirstCardUnknown)
+		}
+	}()
 
-	err = api.Grant(u, devices, uint32(cardID), *body.From, *body.To, body.Profile, []string{door})
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("grant", fmt.Sprintf("%v", err)),

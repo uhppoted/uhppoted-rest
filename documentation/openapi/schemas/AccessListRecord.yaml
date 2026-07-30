@@ -25,3 +25,7 @@ properties:
     type: array
     items:
       $ref: "../schemas/Permission.yaml"                
+  first-card:
+     type: boolean
+     description: "Optional first-card privilege"
+     example: true               

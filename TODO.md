@@ -12,7 +12,7 @@
         - [x] config::withFirstCard
         - [x] getACL
         - [x] putACL
-        - [ ] grant
+        - [x] grant
         - [ ] revoke
         - [ ] show
         - [ ] compare

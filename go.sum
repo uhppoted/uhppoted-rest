@@ -12,5 +12,7 @@ codeberg.org/uhppoted/uhppoted-lib v0.0.0-20260728163125-37898aecc818 h1:FH2VWbt
 codeberg.org/uhppoted/uhppoted-lib v0.0.0-20260728163125-37898aecc818/go.mod h1:0GAYfXxnmDI4j5wxGx4+me4Xp+RHASifTfHRVvk3BIk=
 codeberg.org/uhppoted/uhppoted-lib v0.0.0-20260729174823-6c74d292868d h1:94s3tcuE7m/TWAu/jI8lNNsQLjKq+VvKq31QfVbkXMQ=
 codeberg.org/uhppoted/uhppoted-lib v0.0.0-20260729174823-6c74d292868d/go.mod h1:0GAYfXxnmDI4j5wxGx4+me4Xp+RHASifTfHRVvk3BIk=
+codeberg.org/uhppoted/uhppoted-lib v0.0.0-20260730164853-a9c9795085df h1:6AWH8plnZ1lrMdng8GnQ10/0+VZ6LovHoI4Qbrhibic=
+codeberg.org/uhppoted/uhppoted-lib v0.0.0-20260730164853-a9c9795085df/go.mod h1:0GAYfXxnmDI4j5wxGx4+me4Xp+RHASifTfHRVvk3BIk=
 golang.org/x/sys v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=
 golang.org/x/sys v0.47.0/go.mod h1:4GL1E5IUh+htKOUEOaiffhrAeqysfVGipDYzABqnCmw=

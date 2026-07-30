@@ -8,14 +8,18 @@ properties:
     type: string
     format: yyyy-MM-dd
     description: "First date card is valid"
-    example: "2023-01-01"
+    example: "2026-01-01"
   end-date:  
     type: string
     format: yyyy-MM-dd
     description: "Last date card is valid"
-    example: "2023-12-31"
+    example: "2026-12-31"
   profile:  
     type: number
     format: uint8
     description: "Optional time profile ID (in the range [2..254])"
     example: 29
+  first-card:  
+    type: boolean
+    description: "Optionally grants the first-card privilege"
+    example: true

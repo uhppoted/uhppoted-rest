@@ -8,6 +8,7 @@
 2. Added _first-card_ privileges to `put-card`.
 3. Added _first-card_ privileges to `get-card`.
 4. Added _PIN_ and _first-card_ fields to `get-acl`.
+5. Added optional _first-card_ field to `grant`.
 
 ### Updated
 1. Updated to Go 1.26.
