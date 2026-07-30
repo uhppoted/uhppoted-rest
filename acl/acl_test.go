@@ -79,8 +79,8 @@ func TestPermissionsToTableWithPIN(t *testing.T) {
 		permission{
 			CardNumber: 10058400,
 			PIN:        7530,
-			From:       types.MustParseDate("2023-01-01"),
-			To:         types.MustParseDate("2023-12-31"),
+			From:       types.MustParseDate("2026-01-01"),
+			To:         types.MustParseDate("2026-12-31"),
 			Doors: []door{
 				door{Door: "Entrance"},
 				door{Door: "Upstairs"},
@@ -89,8 +89,8 @@ func TestPermissionsToTableWithPIN(t *testing.T) {
 		},
 		permission{
 			CardNumber: 10058401,
-			From:       types.MustParseDate("2023-02-01"),
-			To:         types.MustParseDate("2023-11-30"),
+			From:       types.MustParseDate("2026-02-01"),
+			To:         types.MustParseDate("2026-11-30"),
 			Doors: []door{
 				door{Door: "D1"},
 				door{Door: "Upstairs"},
@@ -100,7 +100,7 @@ func TestPermissionsToTableWithPIN(t *testing.T) {
 		permission{
 			CardNumber: 10058402,
 			From:       types.Date{},
-			To:         types.MustParseDate("2023-12-31"),
+			To:         types.MustParseDate("2026-12-31"),
 			Doors: []door{
 				door{Door: "Entrance"},
 				door{Door: "Upstairs"},
@@ -109,7 +109,7 @@ func TestPermissionsToTableWithPIN(t *testing.T) {
 		},
 		permission{
 			CardNumber: 10058403,
-			From:       types.MustParseDate("2023-01-01"),
+			From:       types.MustParseDate("2026-01-01"),
 			To:         types.Date{},
 			Doors: []door{
 				door{Door: "Entrance"},
@@ -122,12 +122,81 @@ func TestPermissionsToTableWithPIN(t *testing.T) {
 	expected := lib.Table{
 		Header: []string{"Card Number", "PIN", "From", "To", "Entrance", "Upstairs", "Downstairs", "D1", "D4"},
 		Records: [][]string{
-			[]string{"10058400", "7530", "2023-01-01", "2023-12-31", "Y", "Y", "Y", "N", "N"},
-			[]string{"10058401", "", "2023-02-01", "2023-11-30", "N", "Y", "N", "Y", "Y"},
+			[]string{"10058400", "7530", "2026-01-01", "2026-12-31", "Y", "Y", "Y", "N", "N"},
+			[]string{"10058401", "", "2026-02-01", "2026-11-30", "N", "Y", "N", "Y", "Y"},
 		},
 	}
 
 	table, err := PermissionsToTable(p, true, false)
+	if err != nil {
+		t.Fatalf("Unexpected error converting permissions list to ACL table: %v", err)
+	}
+
+	if table == nil {
+		t.Fatalf("PermissionsToTable returned %v", table)
+	}
+
+	if !reflect.DeepEqual(*table, expected) {
+		t.Errorf("Incorrect ACL table\n   expected: %+v\n   got:      %+v", expected, *table)
+	}
+}
+
+func TestPermissionsToTableWithFirstCard(t *testing.T) {
+	p := []permission{
+		permission{
+			CardNumber: 10058400,
+			PIN:        7530,
+			From:       types.MustParseDate("2026-01-01"),
+			To:         types.MustParseDate("2026-12-31"),
+			Doors: []door{
+				door{Door: "Entrance"},
+				door{Door: "Upstairs"},
+				door{Door: "Downstairs"},
+			},
+			FirstCard: true,
+		},
+		permission{
+			CardNumber: 10058401,
+			From:       types.MustParseDate("2026-02-01"),
+			To:         types.MustParseDate("2026-11-30"),
+			Doors: []door{
+				door{Door: "D1"},
+				door{Door: "Upstairs"},
+				door{Door: "D4"},
+			},
+			FirstCard: false,
+		},
+		permission{
+			CardNumber: 10058402,
+			From:       types.Date{},
+			To:         types.MustParseDate("2026-12-31"),
+			Doors: []door{
+				door{Door: "Entrance"},
+				door{Door: "Upstairs"},
+				door{Door: "Downstairs"},
+			},
+		},
+		permission{
+			CardNumber: 10058403,
+			From:       types.MustParseDate("2026-01-01"),
+			To:         types.Date{},
+			Doors: []door{
+				door{Door: "Entrance"},
+				door{Door: "Upstairs"},
+				door{Door: "Downstairs"},
+			},
+		},
+	}
+
+	expected := lib.Table{
+		Header: []string{"Card Number", "From", "To", "Entrance", "Upstairs", "Downstairs", "D1", "D4", "FirstCard"},
+		Records: [][]string{
+			[]string{"10058400", "2026-01-01", "2026-12-31", "Y", "Y", "Y", "N", "N", "Y"},
+			[]string{"10058401", "2026-02-01", "2026-11-30", "N", "Y", "N", "Y", "Y", "N"},
+		},
+	}
+
+	table, err := PermissionsToTable(p, false, true)
 	if err != nil {
 		t.Fatalf("Unexpected error converting permissions list to ACL table: %v", err)
 	}

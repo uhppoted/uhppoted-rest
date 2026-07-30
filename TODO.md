@@ -1,10 +1,7 @@
 # TODO
 
+- [x] Migrate to codeberg.org (cf. https://codeberg.org/uhppoted/uhppoted/issues/1)
 - [x] 'set-firstcard' API (cf. https://codeberg.org/uhppoted/uhppoted/issues/2)
-    - [x] CHANGELOG
-    - [x] README
-    - [x] OpenAPI
-    - [x] ~~translate the set-firstcard request body~~
 
 - [ ] add first-card privilege to `get-card` and `put-card` (cf. https://codeberg.org/uhppoted/uhppoted/issues/3)
     - [x] put-card
@@ -15,13 +12,10 @@
         - [x] config::withFirstCard
         - [x] getACL
         - [x] putACL
-            - [x] withPINs
-            - [ ] withFirstCard
-            - [ ] ParseTable
-            - [ ] PermissionsToTable
         - [ ] grant
         - [ ] revoke
         - [ ] show
+        - [ ] compare
 
 - [ ] clean up OpenAPI
 

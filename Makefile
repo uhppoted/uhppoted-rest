@@ -103,7 +103,7 @@ publish: release
 
 debug: build
 # 	$(CMD) --debug --log-level debug --config workdir/uhppoted.conf --console
-	go test -v -run TestPermissionsFromTable ./acl/...
+	go test -v -run TestPermissionsToTableWithFirstCard ./acl/...
 
 godoc:
 	godoc -http=:80	-index_interval=60s

@@ -53,6 +53,11 @@ func PermissionsToTable(p []permission, withPINs bool, withFirstCard bool) (*api
 
 	if withFirstCard {
 		header = append(header, "FirstCard")
+		if withPINs {
+			index["firstcard"] = 4 + len(index)
+		} else {
+			index["firstcard"] = 3 + len(index)
+		}
 	}
 
 	for _, r := range p {
@@ -111,10 +116,15 @@ func PermissionsToTable(p []permission, withPINs bool, withFirstCard bool) (*api
 			return nil, fmt.Errorf("card %v: unindexed door '%v'", r.CardNumber, door.Door)
 		}
 
-		// FIXME
-		// if withFirstCard {
-		// 	record[ix] = fmt.Sprintf("%v", r.PIN)
-		// }
+		if withFirstCard {
+			if k, ok := index["firstcard"]; ok {
+				if r.FirstCard {
+					record[k] = "Y"
+				} else {
+					record[k] = "N"
+				}
+			}
+		}
 
 		records = append(records, record)
 	}

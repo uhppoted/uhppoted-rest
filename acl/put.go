@@ -19,7 +19,7 @@ func PutACL(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter,
 	u := ctx.Value(lib.Uhppote).(uhppote.IUHPPOTE)
 	devices := ctx.Value(lib.Devices).([]uhppote.Device)
 	withPINs := ctx.Value(lib.WithPINs).(bool)
-	withFirstCard := false // ctx.Value(lib.WithFirstCard).(bool)
+	withFirstCard := ctx.Value(lib.WithFirstCard).(bool)
 
 	blob, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -45,16 +45,12 @@ func PutACL(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter,
 			err
 	}
 
-	// fmt.Printf(">>>>>>>>>>>> TABLE: %v\n", table)
-
-	acl, _, err := api.ParseTable(table, devices, true)
+	acl, _, err := api.ParseTable(table, devices, true, withPINs, withFirstCard)
 	if err != nil {
 		return http.StatusInternalServerError,
 			errors.NewRESTError("put-acl", "Error processing access control list"),
 			err
 	}
-
-	// fmt.Printf(">>>>>>>>>>>> ACL: %v\n", acl)
 
 	rpt, errs := api.PutACL(u, *acl, false, withPINs, withFirstCard)
 	if len(errs) > 0 {
