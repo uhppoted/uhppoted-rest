@@ -48,6 +48,7 @@ func Show(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r
 		Profile   int        `json:"profile,omitempty"`
 		StartDate types.Date `json:"start-date"`
 		EndDate   types.Date `json:"end-date"`
+		FirstCard bool       `json:"first-card,omitempty"`
 	}{}
 
 	for k, v := range acl {
@@ -56,11 +57,13 @@ func Show(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r
 			Profile   int        `json:"profile,omitempty"`
 			StartDate types.Date `json:"start-date"`
 			EndDate   types.Date `json:"end-date"`
+			FirstCard bool       `json:"first-card,omitempty"`
 		}{
 			Door:      k,
 			StartDate: v.From,
 			EndDate:   v.To,
 			Profile:   v.Profile,
+			FirstCard: v.FirstCard,
 		})
 	}
 
@@ -70,6 +73,7 @@ func Show(impl uhppoted.IUHPPOTED, ctx context.Context, w http.ResponseWriter, r
 			Profile   int        `json:"profile,omitempty"`
 			StartDate types.Date `json:"start-date"`
 			EndDate   types.Date `json:"end-date"`
+			FirstCard bool       `json:"first-card,omitempty"`
 		} `json:"permissions"`
 	}{
 		Permissions: permissions,

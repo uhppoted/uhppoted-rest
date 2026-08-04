@@ -62,7 +62,7 @@ func TestPermissionsToTable(t *testing.T) {
 
 	table, err := PermissionsToTable(p, false, false)
 	if err != nil {
-		t.Fatalf("Unexpected error converting permissions list to ACL table: %v", err)
+		t.Fatalf("unexpected error converting permissions list to ACL table: %v", err)
 	}
 
 	if table == nil {
@@ -70,7 +70,7 @@ func TestPermissionsToTable(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(*table, expected) {
-		t.Errorf("Incorrect ACL table\n   expected: %+v\n   got:      %+v", expected, *table)
+		t.Errorf("incorrect ACL table\n   expected: %+v\n   got:      %+v", expected, *table)
 	}
 }
 

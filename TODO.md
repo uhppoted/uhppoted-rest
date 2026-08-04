@@ -2,20 +2,18 @@
 
 - [x] Migrate to codeberg.org (cf. https://codeberg.org/uhppoted/uhppoted/issues/1)
 - [x] 'set-firstcard' API (cf. https://codeberg.org/uhppoted/uhppoted/issues/2)
-
-- [ ] add first-card privilege to `get-card` and `put-card` (cf. https://codeberg.org/uhppoted/uhppoted/issues/3)
+- [x] add first-card privilege to `get-card` and `put-card` (cf. https://codeberg.org/uhppoted/uhppoted/issues/3)
     - [x] put-card
     - [x] get-card
     - [x] ~get-card-by-index~
-    - [ ] update ACL functions
+    - [x] update ACL functions
         - [x] config::withPIN
         - [x] config::withFirstCard
         - [x] getACL
         - [x] putACL
         - [x] grant
-        - [ ] revoke
-        - [ ] show
-        - [ ] compare
+        - [x] ~~revoke~~
+        - [x] show
 
 - [ ] clean up OpenAPI
 

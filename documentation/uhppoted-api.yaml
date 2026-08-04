@@ -2421,6 +2421,10 @@ components:
           format: integer in the range [2..254]
           description: "Time profile ID for access to the door"
           example: 29
+        first-card:  
+          type: boolean
+          description: "true if the card has been granted the first-card privilege for the door"
+          example: true
           
     TimeProfileList:
       required: 
