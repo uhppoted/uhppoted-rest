@@ -4,7 +4,7 @@ services:
   uhppoted-rest:
     container_name: uhppoted-rest
     restart: unless-stopped
-    image: ghcr.io/uhppoted/restd:latest
+    image: uhppoted/restd:latest
     volumes:
       - uhppoted:/usr/local/etc/uhppoted
     network_mode: "bridge"

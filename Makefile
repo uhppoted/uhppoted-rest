@@ -1,7 +1,8 @@
 DIST   ?= development
 DEBUG  ?= --debug
 CMD     = ./bin/uhppoted-rest
-DOCKER ?= ghcr.io/uhppoted/restd:latest
+DOCKER ?= uhppoted/restd:latest
+GHCR   ?= ghcr.io/uhppoted/restd:latest
 
 .DEFAULT_GOAL := test
 .PHONY: update
@@ -137,7 +138,7 @@ swagger:
 	docker run --detach --publish 80:80 --rm swaggerapi/swagger-editor 
 	open http://127.0.0.1:80
 
-docker: docker-dev docker-ghcr
+docker: docker-dev docker-dockerhub
 	cd docker && find . -name .DS_Store -delete && rm -f compose.zip && zip --recurse-paths compose.zip compose
 
 docker-dev: build
@@ -151,16 +152,33 @@ docker-dev: build
 	cp docker/dev/uhppoted.key  dist/docker/dev
 	cd dist/docker/dev && docker build --no-cache -f Dockerfile -t uhppoted/uhppoted-rest-dev .
 
+docker-dockerhub: build
+	rm -rf dist/docker/dockerhub/*
+	mkdir -p dist/docker/dockerhub
+	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/dockerhub ./...
+	cp docker/dockerhub/Dockerfile    dist/docker/dockerhub
+	cp docker/dockerhub/uhppoted.conf dist/docker/dockerhub
+	cd dist/docker/dockerhub && docker build --no-cache -f Dockerfile -t $(DOCKER) .
+
 docker-ghcr: build
 	rm -rf dist/docker/ghcr/*
 	mkdir -p dist/docker/ghcr
 	env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o dist/docker/ghcr ./...
 	cp docker/ghcr/Dockerfile    dist/docker/ghcr
 	cp docker/ghcr/uhppoted.conf dist/docker/ghcr
-	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t $(DOCKER) .
+	cd dist/docker/ghcr && docker build --no-cache -f Dockerfile -t $(GHCR) .
+
+docker-publish:
+	make docker-dockerhub DOCKER=uhppoted/restd:${VERSION}
+	docker images
+	docker login -u uhppoted && docker push uhppoted/restd:${VERSION}
 
 docker-run-dev:
 	docker run --publish 8080:8080 --name restd --rm uhppoted/uhppoted-rest-dev
+	sleep 1
+
+docker-run-dockerhub:
+	docker run --publish 8080:8080 --publish 8443:8443 --name restd --mount source=uhppoted-rest,target=/usr/local/etc/uhppoted --rm uhppoted/restd
 	sleep 1
 
 docker-run-ghcr:
