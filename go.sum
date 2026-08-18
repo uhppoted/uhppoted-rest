@@ -6,6 +6,8 @@ codeberg.org/uhppoted/uhppoted-core v0.0.0-20260730180352-a20ebb490510 h1:C5wOOg
 codeberg.org/uhppoted/uhppoted-core v0.0.0-20260730180352-a20ebb490510/go.mod h1:MoeCM7GWMq72F2tUs6/lBt9tlnBoOsMFT6effpitLRs=
 codeberg.org/uhppoted/uhppoted-core v0.9.1-0.20260730180352-a20ebb490510 h1:++9IvSQduL1ABoYMczkFdPn8wj6HRAIdkvCy495VJgI=
 codeberg.org/uhppoted/uhppoted-core v0.9.1-0.20260730180352-a20ebb490510/go.mod h1:MoeCM7GWMq72F2tUs6/lBt9tlnBoOsMFT6effpitLRs=
+codeberg.org/uhppoted/uhppoted-core v0.9.1-0.20260813185934-c004d9c86466 h1:i778JsUnaOMBOQ3SBS0HIt2YHt/BL/smFLj688Z5NBY=
+codeberg.org/uhppoted/uhppoted-core v0.9.1-0.20260813185934-c004d9c86466/go.mod h1:MoeCM7GWMq72F2tUs6/lBt9tlnBoOsMFT6effpitLRs=
 codeberg.org/uhppoted/uhppoted-lib v0.0.0-20260721134957-2397d188319f h1:zyV/AYsjzgH8qSrlPMERvITakLKdyiT8weJu1palL4g=
 codeberg.org/uhppoted/uhppoted-lib v0.0.0-20260721134957-2397d188319f/go.mod h1:lhLdbZQulgZ+opmKr0yaR1J+7LEY4pL2OyY+X9v+zXo=
 codeberg.org/uhppoted/uhppoted-lib v0.0.0-20260723173039-828de635eaf0 h1:95qnKhkF0bVeHJG1fi92x1xkTjgh8jg4sJa7/5Tr45Q=
@@ -22,5 +24,7 @@ codeberg.org/uhppoted/uhppoted-lib v0.9.1-0.20260804175125-01a903ca9233 h1:Ax3V1
 codeberg.org/uhppoted/uhppoted-lib v0.9.1-0.20260804175125-01a903ca9233/go.mod h1:0GAYfXxnmDI4j5wxGx4+me4Xp+RHASifTfHRVvk3BIk=
 codeberg.org/uhppoted/uhppoted-lib v0.9.1-0.20260810160944-5a7b8d090aa7 h1:Zeq3vHhxUcjH1i9SYW3wqFhUyFGPuJnk484XbRGZ4wY=
 codeberg.org/uhppoted/uhppoted-lib v0.9.1-0.20260810160944-5a7b8d090aa7/go.mod h1:0GAYfXxnmDI4j5wxGx4+me4Xp+RHASifTfHRVvk3BIk=
+codeberg.org/uhppoted/uhppoted-lib v0.9.1-0.20260811151401-370952f4629a h1:yFosg4nCarDYN3l+sY3eOfqWgu0PQruf8weJGAA13ko=
+codeberg.org/uhppoted/uhppoted-lib v0.9.1-0.20260811151401-370952f4629a/go.mod h1:0GAYfXxnmDI4j5wxGx4+me4Xp+RHASifTfHRVvk3BIk=
 golang.org/x/sys v0.47.0 h1:o7XGOvZQCADBQQ4Y7VNq2dRWQR7JmOUW8Kxx4ZsNgWs=
 golang.org/x/sys v0.47.0/go.mod h1:4GL1E5IUh+htKOUEOaiffhrAeqysfVGipDYzABqnCmw=
