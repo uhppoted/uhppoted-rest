@@ -1,5 +1,5 @@
 ![build](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/twystd/2609d9356470acaf904386ce4a74f54e/raw/uhppoted-rest.json)
-![docker](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/twystd/776a0d0a0d7ff1ca9a16749477381351/raw/uhppoted-rest.json)
+![docker](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/twystd/2609d9356470acaf904386ce4a74f54e/raw/uhppoted-rest-docker.json)
 
 # uhppoted-rest
 
