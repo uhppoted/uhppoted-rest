@@ -206,10 +206,8 @@ func (cmd *Run) listen(c *config.Config, interrupt chan os.Signal) error {
 		WithPINs:                  c.REST.PIN.Enabled,
 		WithFirstCard:             c.REST.FirstCard.Enabled,
 
-		OpenAPI: rest.OpenAPI{
-			Enabled:   c.OpenAPI.Enabled,
-			Directory: c.OpenAPI.Directory,
-		},
+		Enabled:   c.OpenAPI.Enabled,
+		Directory: c.OpenAPI.Directory,
 	}
 
 	go func() {
