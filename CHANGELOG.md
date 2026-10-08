@@ -1,7 +1,6 @@
 # CHANGELOG
 
-## Unreleased
-
+## [0.9.1](https://codeberg.org/uhppoted/uhppoted-rest/releases/tag/v0.9.1) - 2026-10-08
 
 ### Added
 1. `set-firstcard` API function to set the _first card_ configuration for a controller door.
@@ -12,12 +11,12 @@
 6. Added _first-card_ field to `show`.
 
 ### Updated
-1. Updated to Go 1.26.
+1. Updated to Go 1.27.
 2. Updated to _modern Go_ with `go fix`.
 3. Migrated from _github.com/uhppoted/uhppoted-rest_ to _codeberg.org/uhppoted/uhppoted-rest_.
 
 
-## [0.9.0](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.9.0) - 2026-01-27
+## [0.9.0](https://codeberg.org/uhppoted/uhppoted-rest/releases/tag/v0.9.0) - 2026-01-27
 
 ### Updated
 1. Updated to Go 1.25.

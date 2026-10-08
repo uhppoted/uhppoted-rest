@@ -36,9 +36,15 @@ Supported platforms:
 
 ### Current Release
 
-**[v0.9.0](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.9.0) - 2026-01-27**
+## [0.9.1](https://github.com/uhppoted/uhppoted-rest/releases/tag/v0.9.1) - 2026-10-08
 
-1. Updated to Go 1.25.
+1. Migrated from _github_ to _codeberg_.
+2. Updated to Go 1.27.
+3. Added `set-firstcard` API function to manage the _first card_ swipe configuration for a controller door.
+2. Included _first-card_ privileges to `get-card` and `put-card`.
+4. Included _PIN_ and _first-card_ fields to `get-acl`.
+5. Added (optional) _first-card_ field to `grant`.
+6. Added _first-card_ field to `show`.
 
 
 ## Installation
