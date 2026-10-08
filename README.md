@@ -41,10 +41,10 @@ Supported platforms:
 1. Migrated from _github_ to _codeberg_.
 2. Updated to Go 1.27.
 3. Added `set-firstcard` API function to manage the _first card_ swipe configuration for a controller door.
-2. Included _first-card_ privileges to `get-card` and `put-card`.
-4. Included _PIN_ and _first-card_ fields to `get-acl`.
-5. Added (optional) _first-card_ field to `grant`.
-6. Added _first-card_ field to `show`.
+4. Included _first-card_ privileges to `get-card` and `put-card`.
+5. Included _PIN_ and _first-card_ fields to `get-acl`.
+6. Added (optional) _first-card_ field to `grant`.
+7. Added _first-card_ field to `show`.
 
 
 ## Installation
