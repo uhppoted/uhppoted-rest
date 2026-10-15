@@ -1,5 +1,7 @@
-![build](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/twystd/2609d9356470acaf904386ce4a74f54e/raw/uhppoted-rest.json)
-![docker](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/twystd/2609d9356470acaf904386ce4a74f54e/raw/uhppoted-rest-docker.json)
+![build](https://github.com/uhppoted/uhppoted-rest/workflows/build/badge.svg)
+![docker](https://github.com/uhppoted/uhppoted-rest/workflows/docker/badge.svg)
+![ghcr](https://github.com/uhppoted/uhppoted-rest/workflows/ghcr/badge.svg)
+
 
 # uhppoted-rest
 
@@ -77,9 +79,11 @@ A sample [uhppoted.conf](https://codeberg.org/uhppoted/uhppoted/blob/master/runt
 
 ### Docker
 
-A public _Docker_ image is published to [ghcr.io](https://codeberg.org/uhppoted?tab=packages&repo_name=uhppoted-rest). 
+Public _Docker_ images are published to:
+- [docker.io](https://hub.docker.com/repository/docker/uhppoted/restd/general)
+- [ghcr.io](https://github.com/uhppoted/uhppoted-rest/pkgs/container/restd)
 
-The image is configured to use the `/usr/local/etc/uhppoted/uhppoted.conf` file for configuration information.
+The images are configured to use the `/usr/local/etc/uhppoted/uhppoted.conf` file for configuration information.
 
 #### `docker compose`
 
