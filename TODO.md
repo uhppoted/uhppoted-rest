@@ -1,23 +1,11 @@
 # TODO
 
-- [x] Migrate to codeberg.org (cf. https://codeberg.org/uhppoted/uhppoted/issues/1)
-- [x] 'set-firstcard' API (cf. https://codeberg.org/uhppoted/uhppoted/issues/2)
-- [x] add first-card privilege to `get-card` and `put-card` (cf. https://codeberg.org/uhppoted/uhppoted/issues/3)
-    - [x] put-card
-    - [x] get-card
-    - [x] ~get-card-by-index~
-    - [x] update ACL functions
-        - [x] config::withPIN
-        - [x] config::withFirstCard
-        - [x] getACL
-        - [x] putACL
-        - [x] grant
-        - [x] ~~revoke~~
-        - [x] show
+### In Progress
 
-- [ ] clean up OpenAPI
 
 ### To Be Done
+
+- [ ] clean up OpenAPI
 
 - (?) [Kiota](https://learn.microsoft.com/en-us/openapi/kiota/overview)
 - [ ] Clean up REST error handling (complete 'mare, what was I thinking :-()
