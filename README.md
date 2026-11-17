@@ -3,6 +3,15 @@
 ![ghcr](https://github.com/uhppoted/uhppoted-rest/workflows/ghcr/badge.svg)
 
 
+<div align="center">
+
+_The primary repository for this project is hosted on codeberg: https://codeberg.org/uhppoted/uhppoted-rest_
+
+_The [github repository](https://github.com/uhppoted/uhppoted-rest) will be kept up to date and maintained as a courtesy and for archival
+releases but please use _codeberg_ for reporting issues, etc._
+</div>
+
+
 # uhppoted-rest
 
 Implements a REST API for use with access control systems based on the *UHPPOTE UT0311-L0x* TCP/IP Wiegand access control boards.
